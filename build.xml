@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="cxfwsdl2java" basedir="." default="WSDLToJava">
+	<property name="cxf.home" location="D:\whn\Workspaces\standard\billing\"/>
+	<path id="cxf.classpath">
+		<fileset dir="${cxf.home}/lib">
+			<include name="*.jar"></include>
+		</fileset>
+	</path>
+	<target name="WSDLToJava">
+		<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+			<arg value="-p"/>
+			<arg value="com.zhcs.billing.use.wsdlinterfaces"/>
+			<arg value="-client"/>
+			<arg value="-d"/>
+			<arg value="${basedir}/src"/>
+			<arg value="http://172.17.0.15:9001/BillingWebService.asmx?wsdl"/>
+			<classpath>
+				<path refid="cxf.classpath"></path>
+			</classpath>
+		</java>
+	</target>
+</project>
