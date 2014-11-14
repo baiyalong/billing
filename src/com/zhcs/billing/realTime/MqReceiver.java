@@ -9,16 +9,16 @@ import org.springframework.jms.JmsException;
 
 import com.zhcs.billing.threadPool.ThreadPool;
 
-public class mqReceiver {
+public class MqReceiver {
 	private static class SingletonHolder {
-		private static final mqReceiver INSTANCE = new mqReceiver();
+		private static final MqReceiver INSTANCE = new MqReceiver();
 	}
 
-	private mqReceiver() {
+	private MqReceiver() {
 
 	}
 
-	public static final mqReceiver getInstance() {
+	public static final MqReceiver getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
@@ -36,13 +36,17 @@ public class mqReceiver {
 
 	}
 
-	public void receive(TextMessage message) throws JmsException, JMSException {
+	public void receive(TextMessage message) throws JmsException, JMSException,
+			InterruptedException {
 		// System.out.println(message.getStringProperty("phrCode"));
-		while(!ThreadPool.getInstance().AddTask(new ability(message.getText())))
-		{
-			
+		String li[] = Msg.liMsg(message.getText());
+		for (String l : li) {
+			while (!ThreadPool.getInstance().AddTask(new Ability(l))) {
+				Thread.sleep(10);
+			}
+
 		}
-		
+
 	}
 
 }
