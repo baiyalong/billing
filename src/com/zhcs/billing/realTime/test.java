@@ -1,13 +1,17 @@
 package com.zhcs.billing.realTime;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.zhcs.billing.util.DbUtil;
 
 public class test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		// MqReceiver.getInstance().init();
+
+		DbUtil.initBuisness();
+		DbUtil.initCalculate();
+		DbUtil.initEstimate();
+
+		MqReceiver.getInstance().init();
 
 		String cdr = "2459|02|20131126143952|902|104|20131126142452|20131126143952|0000000010|                                        |"
 				+ "\n"
@@ -30,12 +34,6 @@ public class test {
 				+ "201311261425110009|20131126142511||62142|17360010|||SI000001|42|||9|140|140|1736001000|||15606503408|15606503408|15606503408|0|20131126142511|20131126142511|0|||1|2|10||"
 				+ "\n"
 				+ "201311261425130010|20131126142513||62142|17360010|||SI000001|42|||9|140|140|1736001000|||15606503408|15606503408|15606503408|0|20131126142513|20131126142513|0|||1|2|10||";
-
-		System.out.println(cdr);
-
-		System.out.println();
-
-		System.out.println(Msg.count(cdr));
 
 	}
 }

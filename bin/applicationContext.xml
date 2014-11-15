@@ -27,7 +27,7 @@
     </bean>  
   
     <!-- 生产消息配置 （自己定义）-->  
-    <bean id="myTopicConsumer" class="com.zhcs.billing.realTime.mqReceiver" />  
+    <bean id="myTopicConsumer" class="com.zhcs.billing.realTime.MqReceiver" />  
   
     <!-- 消息监听器 -->  
     <bean id="myTopicListener"  

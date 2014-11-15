@@ -369,7 +369,7 @@ public class AppCalculateCharage {
 		List<HashMap<String, Object>> list = new BillingQueryDao().getYZFR(
 				OrderID, time);
 		double money = 0;
-		OrderDetailBean orderDetailBean = BillingQuerys
+		OrderDetailBean orderDetailBean = BillingQuery
 				.getProductNumber(OrderID);
 		log.info("订单为：" + OrderID + ",产品为" + orderDetailBean.getPRODUCT_ID()
 				+ "配置月租费的维度如下：");

@@ -41,7 +41,7 @@ public class MqReceiver {
 		// System.out.println(message.getStringProperty("phrCode"));
 		String li[] = Msg.liMsg(message.getText());
 		for (String l : li) {
-			while (!ThreadPool.getInstance().AddTask(new Ability(l))) {
+			while (!ThreadPool.getInstance().AddTask(new ThreadAbility(l))) {
 				Thread.sleep(10);
 			}
 

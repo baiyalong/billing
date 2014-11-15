@@ -49,7 +49,7 @@ public class BillingMethod {
 		}
 		
 		// 根据一张订单获取产品编号
-		OrderDetailBean detailBean = BillingQuerys.getProductNumber(orderInfoBean.getORDER_ID());
+		OrderDetailBean detailBean = BillingQuery.getProductNumber(orderInfoBean.getORDER_ID());
 		try {
 			if (detailBean ==null || detailBean.getPRODUCT_ID() == null|| "".equals(detailBean.getPRODUCT_ID())) {
 				log.error("订单：" + orderInfoBean.getORDER_ID() + "下没有产品");
@@ -62,11 +62,11 @@ public class BillingMethod {
 			return "0";
 		}
 		// 将订单下面所有的产品获取产品下所有的资源信息
-		List<ProductResourceBean> resourceBeans = BillingQuerys.getResourceInfo(detailBean.getPRODUCT_ID());
+		List<ProductResourceBean> resourceBeans = BillingQuery.getResourceInfo(detailBean.getPRODUCT_ID());
 		// 根据产品获取所有纬度信息
-		List<ProductItemBean> itemBeans = BillingQuerys.getProductItem(detailBean.getPRODUCT_ID());
+		List<ProductItemBean> itemBeans = BillingQuery.getProductItem(detailBean.getPRODUCT_ID());
 		// 根据产品编号、申购编号查询申购明细
-		List<SubscriptionItemBean> subscriptionItemBeans = BillingQuerys.getSubscriptionItems(detailBean.getSUBSCRIBER_ID(), detailBean.getPRODUCT_ID());
+		List<SubscriptionItemBean> subscriptionItemBeans = BillingQuery.getSubscriptionItems(detailBean.getSUBSCRIBER_ID(), detailBean.getPRODUCT_ID());
 		for (ProductItemBean ItemBean : itemBeans) {
 			for (SubscriptionItemBean subscription : subscriptionItemBeans) {
 				if (ItemBean.getITEM_ID().equals(subscription.getITEM_ID())&& ItemBean.getPRODUCT_ID().equals(subscription.getPRODUCT_ID())) {
@@ -82,7 +82,7 @@ public class BillingMethod {
 		BillingCumulative.getJson(orderInfoBean.getORDER_ID(), SCANNING_WAY,timeInterval);// 订单,扫描方式,时间
 
 		// 根据订单号到计费子系统获取产品纬度累积量 订单、时间、扫描方式）
-		List<TScanningAddTotalBean> addTotalBeans = BillingQuerys.getCumulants(orderInfoBean, timeInterval, SCANNING_WAY);
+		List<TScanningAddTotalBean> addTotalBeans = BillingQuery.getCumulants(orderInfoBean, timeInterval, SCANNING_WAY);
 		// 费率模型和优惠策略的公共算法
 		PriceModelAndDiscountCulDao model = new PriceModelAndDiscountCulDao();
 		// 把累积量赋值给纬度
@@ -143,7 +143,7 @@ public class BillingMethod {
 					itemBean.setMONEY(ua > 0 ? ua * itemBean.getPRICE() : 0);//当使用量超过套餐剩余量时，超出部分按标准批价收费
 					itemBean.setTwoMONEY(itemBean.getMONEY());// 二次批价
 					//更新数据库   申购明细编号，套餐剩余量
-					BillingQuerys.updateSubscriptionItem(itemBean.getSI_ID(),itemBean.getITEM_AMOUNT());
+					BillingQuery.updateSubscriptionItem(itemBean.getSI_ID(),itemBean.getITEM_AMOUNT());
 					log.info(itemBean.getITEM_NAME() + "累积量："+ itemBean.getUSAGE_AMOUNT() + ",套餐包剩余数量："+ (itemBean.getITEM_AMOUNT()>0 ? itemBean.getITEM_AMOUNT():0)  + ",超出量:" + (ua > 0 ? ua:0) + ",超出部分费用："+ itemBean.getMONEY() + "厘");
 					logUtil.info(itemBean.getITEM_NAME() + "累积量："+ itemBean.getUSAGE_AMOUNT() + ",套餐包内剩余数量："+ (itemBean.getITEM_AMOUNT()>0 ? itemBean.getITEM_AMOUNT():0) + ",超出部分费用："+ itemBean.getMONEY() + "厘");
 				}
@@ -180,7 +180,7 @@ public class BillingMethod {
 			}
 		}
 		//获取资源根节点编号
-		String root = BillingQuerys.getRootResourceInfo(detailBean.getPRODUCT_ID());
+		String root = BillingQuery.getRootResourceInfo(detailBean.getPRODUCT_ID());
 		// 根节点资源
 		List<ProductResourceBean> rootResources = new ArrayList<ProductResourceBean>();
 		for (ProductResourceBean productResourceBean : resourceBeans) {
@@ -205,7 +205,7 @@ public class BillingMethod {
 				bean.setSCANNING_WAY(SCANNING_WAY);// 扫描方式
 				bean.setBEFORE_AMOUNT(String.valueOf(rootResource.getMONEY()));// 资源资费模型前金额
 				bean.setAFTER_AMOUNT(String.valueOf(rootResource.getTwoMONEY())); // 资源资费模型后金额
-				InsertClass.AddTCulOrderDetail(bean);// 往计费系统数据库容器类产品资源分类三次批价记录表添加记录
+				BillingInsert.AddTCulOrderDetail(bean);// 往计费系统数据库容器类产品资源分类三次批价记录表添加记录
 				log.info("资源："+rootResource.getRESOURCE_NAME()+"标准批价费用金额："+rootResource.getMONEY()+"厘,二次批价费用金额："+rootResource.getTwoMONEY()+"厘。");
 				logUtil.info("资源："+rootResource.getRESOURCE_NAME()+"标准批价费用金额："+rootResource.getMONEY()+"厘,二次批价费用金额："+rootResource.getTwoMONEY()+"厘。");
 			}
@@ -229,7 +229,7 @@ public class BillingMethod {
 		logUtil.info("产品："+infoBean.getPRODUCT_ID()+"优惠前的金额为"+infoBean.getTwoMONEY()+"厘，优惠后的金额为："+infoBean.getSUMARY()+"厘。");
 		// 根据订单\时间最新的一条 取出已经扣费
 		// 查询订单上次扣费情况
-		List<TCulOrderDetailBean> culOrderDetailBeans = BillingQuerys.getCulOrderDetailBeans(orderInfoBean.getORDER_ID(),timeInterval, SCANNING_WAY);
+		List<TCulOrderDetailBean> culOrderDetailBeans = BillingQuery.getCulOrderDetailBeans(orderInfoBean.getORDER_ID(),timeInterval, SCANNING_WAY);
 		// 已经扣除费用DEDUCT_COST
 		for (TCulOrderDetailBean tCulOrderDetailBean : culOrderDetailBeans) {
 			try {
@@ -252,7 +252,7 @@ public class BillingMethod {
 		Double reality = sub(infoBean.getSUMARY(),new Double(bean.getDEDUCT_COST()));
 		Long moneyl = Math.round(reality);// double转long 四舍五入
 		bean.setREALITY(moneyl > 0 ? moneyl.toString() : "0");
-		InsertClass.AddTCulOrderDetail(bean);// 往计费系统数据库容器类产品三次批价记录表添加记录
+		BillingInsert.AddTCulOrderDetail(bean);// 往计费系统数据库容器类产品三次批价记录表添加记录
 		log.info("订单："+bean.getORDER_ID()+"本次扣费："+moneyl+"厘(优惠后金额："+infoBean.getSUMARY()+"厘,此前已经扣费金额："+bean.getDEDUCT_COST()+"厘)");
 		logUtil.info("订单："+bean.getORDER_ID()+"本次扣费："+moneyl+"厘(优惠后金额："+infoBean.getSUMARY()+"厘,此前已经扣费金额："+bean.getDEDUCT_COST()+"厘)");
 		return bean.getREALITY();// 订单此次扫描实际扣费 单位厘

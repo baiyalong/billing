@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zhcs.billing.use.bean.RErrorRecordBean;
 import com.zhcs.billing.use.bean.TCulOrderDetailBean;
 import com.zhcs.billing.use.bean.TScanningAddTotalBean;
 import com.zhcs.billing.util.BillingBaseDao;
@@ -16,11 +17,45 @@ import com.zhcs.billing.util.LoggerUtil;
  * @author hefa
  *
  */
-public class InsertClass {
-	private static LoggerUtil logUtil = LoggerUtil.getLogger(InsertClass.class);
-	private static Logger log = LoggerFactory.getLogger(InsertClass.class);
+public class BillingInsert {
+	private static LoggerUtil logUtil = LoggerUtil
+			.getLogger(BillingInsert.class);
+	private static Logger log = LoggerFactory.getLogger(BillingInsert.class);
+
+	/**
+	 * 实时计费 异常话单记录
+	 * 
+	 * @param bean
+	 * @return
+	 */
+	public static boolean RErrorRecord(RErrorRecordBean bean) {
+		boolean res = false;
+
+		String sql = "INSERT INTO R_ERROR_RECORD(MSG_TYPE,MSG,DESCRIPTION,TIMESTAMP) "
+				+ "VALUES (?,?,?,now());";
+
+		List params = new ArrayList();
+		params.add(bean.getMEG_TYPE());
+		params.add(bean.getMSG());
+		params.add(bean.getDESCRIPTION());
+
+		try {
+			new BillingBaseDao().doSaveOrUpdate(sql, params);
+			res = true;
+			log.info("实时计费 异常话单记录：" + sql);
+			logUtil.info("实时计费 异常话单记录：" + sql);
+		} catch (Exception e) {
+			log.error("实时计费 异常话单记录失败SQL:" + sql + "失败原因" + e.getMessage()
+					+ "SQL语句:" + sql);
+			logUtil.error("实时计费 异常话单记录失败SQL:" + sql + "失败原因" + e.getMessage()
+					+ "SQL语句:" + sql);
+		}
+		return res;
+	}
+
 	/**
 	 * 存入三次批价
+	 * 
 	 * @param bean
 	 * @return
 	 */
@@ -47,18 +82,21 @@ public class InsertClass {
 		try {
 			new BillingBaseDao().doSaveOrUpdate(sql, params);
 			result = "成功";
-			log.info("执行三次批价添加："+sql);
-			logUtil.info("执行三次批价添加："+sql);
+			log.info("执行三次批价添加：" + sql);
+			logUtil.info("执行三次批价添加：" + sql);
 		} catch (Exception e) {
 			result = "失败 " + e.getMessage();
-			log.error("执行三次批价添加失败SQL:"+sql+"失败原因"+e.getMessage()+"SQL语句:"+sql);
-			logUtil.error("执行三次批价添加失败SQL:"+sql+"失败原因"+e.getMessage()+"SQL语句:"+sql);
+			log.error("执行三次批价添加失败SQL:" + sql + "失败原因" + e.getMessage()
+					+ "SQL语句:" + sql);
+			logUtil.error("执行三次批价添加失败SQL:" + sql + "失败原因" + e.getMessage()
+					+ "SQL语句:" + sql);
 		}
 		return result;
 	}
 
 	/**
 	 * 添加累积量
+	 * 
 	 * @param bean
 	 * @return
 	 */
@@ -86,12 +124,14 @@ public class InsertClass {
 		try {
 			new BillingBaseDao().doSaveOrUpdate(sql, params);
 			result = "成功";
-			log.info("执行添加累积量："+sql);
-			logUtil.info("执行添加累积量："+sql);
+			log.info("执行添加累积量：" + sql);
+			logUtil.info("执行添加累积量：" + sql);
 		} catch (Exception e) {
 			result = "失败 " + e.getMessage();
-			log.error("执行添加累积量失败SQL:"+sql+"失败原因"+e.getMessage()+"SQL语句:"+sql);
-			logUtil.error("执行添加累积量失败SQL:"+sql+"失败原因"+e.getMessage()+"SQL语句:"+sql);
+			log.error("执行添加累积量失败SQL:" + sql + "失败原因" + e.getMessage()
+					+ "SQL语句:" + sql);
+			logUtil.error("执行添加累积量失败SQL:" + sql + "失败原因" + e.getMessage()
+					+ "SQL语句:" + sql);
 		}
 		return result;
 	}
