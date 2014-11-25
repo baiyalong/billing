@@ -1,5 +1,6 @@
 package com.zhcs.billing.realTime;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class Msg {
 				// TODO: handle exception
 
 			}
-			li = Arrays.copyOfRange(m, 1, count);
+			li = Arrays.copyOfRange(m, 1, count + 1);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -73,5 +74,9 @@ public class Msg {
 		public String toString() {
 			return String.valueOf(this.nCode);
 		}
+	}
+
+	public static Timestamp recordTime(String msg) {
+		return Timestamp.valueOf(msg.split("\\|")[1]);
 	}
 }

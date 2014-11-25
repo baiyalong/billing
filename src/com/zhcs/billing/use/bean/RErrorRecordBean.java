@@ -5,17 +5,9 @@ import java.sql.Timestamp;
 public class RErrorRecordBean {
 
 	public RErrorRecordBean(int MSG_TYPE, String MSG, String DESCRIPTION) {
-		this.setMEG_TYPE(MSG_TYPE);
+		this.setMSG_TYPE(MSG_TYPE);
 		this.setMSG(MSG);
 		this.setDESCRIPTION(DESCRIPTION);
-	}
-
-	public int getMEG_TYPE() {
-		return MEG_TYPE;
-	}
-
-	public void setMEG_TYPE(int mEG_TYPE) {
-		MEG_TYPE = mEG_TYPE;
 	}
 
 	public String getMSG() {
@@ -58,7 +50,15 @@ public class RErrorRecordBean {
 		RESOLVE = rESOLVE;
 	}
 
-	private int MEG_TYPE;// 消息类型 0：能力 1：应用
+	public int getMSG_TYPE() {
+		return MSG_TYPE;
+	}
+
+	public void setMSG_TYPE(int mSG_TYPE) {
+		MSG_TYPE = mSG_TYPE;
+	}
+
+	private int MSG_TYPE;// 消息类型 0：能力 1：应用
 	private String MSG;// 原始话单
 	private String DESCRIPTION;// 描述
 	private Timestamp TIMESTAMP;// 出错时间戳

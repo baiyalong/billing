@@ -11,10 +11,12 @@ import com.zhcs.billing.use.bean.OrderDetailBean;
 import com.zhcs.billing.use.bean.OrderInfoBean;
 import com.zhcs.billing.use.bean.ProductItemBean;
 import com.zhcs.billing.use.bean.ProductResourceBean;
+import com.zhcs.billing.use.bean.RDetailRecordAbilityBean;
 import com.zhcs.billing.use.bean.SubscriptionItemBean;
 import com.zhcs.billing.use.bean.TCulOrderDetailBean;
 import com.zhcs.billing.use.bean.TScanningAddTotalBean;
 import com.zhcs.billing.util.BaseDao;
+import com.zhcs.billing.util.BillingBaseDao;
 import com.zhcs.billing.util.LoggerUtil;
 
 /**
@@ -26,6 +28,28 @@ public class BillingQuery {
 	private static LoggerUtil logUtil = LoggerUtil
 			.getLogger(BillingQuery.class);
 	private static Logger log = LoggerFactory.getLogger(BillingQuery.class);
+
+	/**
+	 * 根据容器ID查询订购关系
+	 * 
+	 * @param orderInfoBean
+	 * @param objects
+	 * @return
+	 */
+	public static String getOrderID(String CONTAINER_ID) {
+		String res = null;
+		BaseDao basedao = new BaseDao();
+		List params = new ArrayList();
+		params.add(CONTAINER_ID);
+		String sql = "SELECT ORDER_ID FROM ORDER_INFO where CONTAINER_ID = ?; ";
+		List<HashMap<String, Object>> list = basedao.doSelect(sql, params);
+		params = null;
+		basedao = null;
+		if (list != null && !list.isEmpty()) {
+			res = (String) list.get(0).get("ORDER_ID");
+		}
+		return res;
+	}
 
 	/**
 	 * 根据订单编号查询有效申购产品
@@ -301,4 +325,103 @@ public class BillingQuery {
 		}
 		return root;
 	}
+
+	public static void rInfo(RDetailRecordAbilityBean bean) throws Exception {
+		// TODO Auto-generated method stub
+		BaseDao basedao = new BaseDao();
+		String sql = "";
+		List params = new ArrayList();
+		List<HashMap<String, Object>> list;
+
+		// 订单表: 根据容器ID获取订单编号 客户编号;
+		sql = "select ORDER_ID,CUSTOMER_ID from ORDER_INFO where CONTAINER_ID = ?;";
+		params.clear();
+		params.add(bean.getCOUNTAINER_ID());
+		list = basedao.doSelect(sql, params);
+		if (list != null && !list.isEmpty()) {
+			bean.setORDER_ID((String) list.get(0).get("ORDER_ID"));
+			bean.setCUSTOMER_ID((String) list.get(0).get("CUSTOMER_ID"));
+		}
+
+		// 根据订单获取产品编号.
+		sql = SqlString.getProductNumber;
+		params.clear();
+		params.add(bean.getORDER_ID());
+		list = basedao.doSelect(sql, params);
+		if (list != null && !list.isEmpty()) {
+			bean.setPRODUCT_ID((String) list.get(0).get("PRODUCT_ID"));
+			bean.setSUBSCRIBER_ID((String) list.get(0).get("SUBSCRIBER_ID"));
+		}
+
+		// // 根据产品获取所有纬度信息
+		sql = SqlString.getProductItem + " AND ITEM_CODE = ?;";
+		params.clear();
+		params.add(bean.getPRODUCT_ID());
+		params.add(BillingQuery.rMsgType(bean.getMSG_TYPE()));
+		list = basedao.doSelect(sql, params);
+		if (list != null && !list.isEmpty()) {
+			bean.setITEM_ID((String) list.get(0).get("ITEM_ID"));
+			bean.setPRICE(Integer.parseInt((String) list.get(0).get("PRICE")));
+		}
+
+		// 根据产品编号、申购编号查询申购明细
+		sql = SqlString.getSubscriptionItem + " AND ITEM_ID = ?";
+		params.clear();
+		params.add(bean.getSUBSCRIBER_ID());
+		params.add(bean.getPRODUCT_ID());
+		params.add(bean.getITEM_ID());
+		list = basedao.doSelect(sql, params);
+		if (list != null && !list.isEmpty()) {
+			bean.setSI_ID((String) list.get(0).get("SI_ID"));
+			bean.setPD_ID((String) list.get(0).get("PD_ID"));
+			bean.setREMAINING_AMOUNT(Integer.parseInt((String) list.get(0).get(
+					"REMAINING_AMOUNT")));
+		}
+
+		// 是否订购套餐
+		// 0， 没有套餐，没有优惠，扣余额；
+		// 1， 有套餐，套餐已用完，扣余额；
+		// 2， 有套餐，套餐未用完，扣套餐
+		bean.setDEDUCTION_TYPE(bean.getPD_ID() == null ? 0 : (bean
+				.getREMAINING_AMOUNT() > 0 ? 2 : 1));
+
+		// 结算部分 :付费类型 预付费/后付费 账户ID 账本ID 省份编码 地区编码
+		bean.setPAYMENT_TYPE(1); // ！暂定 默认后付费
+		sql = "select ACCOUNT_ID,PROVINCE_CODE,AREA_CODE from ACCOUNT_INFO where CUSTOMER_ID = ? and ACCOUNT_TYPE = ?;";
+		params.clear();
+		params.add(bean.getCUSTOMER_ID());
+		params.add(bean.getPAYMENT_TYPE() + 1);// 0、1 -> 1、2
+		list = basedao.doSelect(sql, params);
+		if (list != null && !list.isEmpty()) {
+			bean.setACCOUNT_ID((String) list.get(0).get("ACCOUNT_ID"));
+			bean.setPROVINCE_CODE((String) list.get(0).get("PROVINCE_CODE"));
+			bean.setAREA_CODE((String) list.get(0).get("REMAINING_AMOUNT"));
+		}
+
+		sql = "select BOOK_ID from ACCOUNT_BOOK where ACCOUNT_ID = ?;";
+		params.clear();
+		params.add(bean.getACCOUNT_ID());
+		list = basedao.doSelect(sql, params);
+		if (list != null && !list.isEmpty()) {
+			bean.setBOOK_ID((String) list.get(0).get("BOOK_ID"));
+		}
+
+	}
+
+	// 从字典查询能力类型（维度编码）
+	public static String rMsgType(int type) {
+		String res = null;
+		BillingBaseDao dao = new BillingBaseDao();
+		List params = new ArrayList();
+		params.add(Integer.toString(type));
+		String sql = "SELECT DICT_VALUE FROM R_DICT where DICT_KEY = ?; ";
+		List<HashMap<String, Object>> list = dao.doSelect(sql, params);
+		params = null;
+		dao = null;
+		if (list != null && !list.isEmpty()) {
+			res = (String) list.get(0).get("DICT_VALUE");
+		}
+		return res;
+	}
+
 }

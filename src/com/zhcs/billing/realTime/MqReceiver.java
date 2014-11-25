@@ -27,7 +27,7 @@ public class MqReceiver {
 	public void init() {
 		this.ctx = new ClassPathXmlApplicationContext("file:"
 				+ System.getProperty("user.dir")
-				+ "/config/applicationContext.xml");
+				+ "/config/mq.xml");
 		while (true) {
 		}
 	}

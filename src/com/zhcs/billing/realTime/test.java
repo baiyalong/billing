@@ -1,17 +1,17 @@
 package com.zhcs.billing.realTime;
 
+import com.zhcs.billing.use.dao.BillingQuery;
 import com.zhcs.billing.util.DbUtil;
 
 public class test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		String s = BillingQuery.getOrderID("1607140522000187");
+		System.out.println(s);
+		// DbUtil.initCalculate();
 
-		DbUtil.initBuisness();
-		DbUtil.initCalculate();
-		DbUtil.initEstimate();
-
-		MqReceiver.getInstance().init();
+		// MqReceiver.getInstance().init();
 
 		String cdr = "2459|02|20131126143952|902|104|20131126142452|20131126143952|0000000010|                                        |"
 				+ "\n"

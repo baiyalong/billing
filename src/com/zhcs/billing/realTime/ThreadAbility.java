@@ -1,89 +1,109 @@
 package com.zhcs.billing.realTime;
 
 import java.lang.Runnable;
+import java.sql.Timestamp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.zhcs.billing.use.bean.RDetailRecordAbilityBean;
 import com.zhcs.billing.use.bean.RErrorRecordBean;
 import com.zhcs.billing.use.dao.BillingInsert;
+import com.zhcs.billing.use.dao.BillingQuery;
+import com.zhcs.billing.util.LoggerUtil;
 
 public class ThreadAbility implements Runnable {
 
-	private String msg = null;
+	private static LoggerUtil logUtil = LoggerUtil
+			.getLogger(ThreadAbility.class);
+	private static Logger log = LoggerFactory.getLogger(ThreadAbility.class);
+
+	private String msg = null;// 原始话单
 
 	public ThreadAbility(String msg) {
 		this.msg = msg;
+		bean = new RDetailRecordAbilityBean();
+		bean.setORIGINAL_RECORD(msg);
 	}
 
 	public void run() {
-		System.out
-				.println(msg + "  ThreadID：" + Thread.currentThread().getId());
 
-		if (!(this.GetData() && this.Billing() && this.Settlement() && this
-				.Persistence())) {
+		if (!(this.GetData() && this.Billing() && this.Persistence())) {
+			this.ErrorRecord("");
 			return;
 		}
 
 	}
 
-	private String containerID = null;// 容器ID
-	private int msgType = 0;// 话单类型　
-	// 10 短信
-	// 11 彩信
-	// 12 定位
-	// 13 GIS
-	private int price = 0;// 资费
-	private int amount = 0;// 批价金额
+	private RDetailRecordAbilityBean bean;
 
 	// 获取计费所需的相关数据，并进行数据检验
 	private boolean GetData() {
 		boolean res = false;
 		try {
 			// 从原始话单中提取容器ID和话单类型
-			containerID = Msg.containerID(msg);// 容器ID
-			msgType = Msg.msgType(msg);// 话单类型
-			if (!(msgType == 10 || msgType == 11 || msgType == 12 || msgType == 13)) {
-				this.ErrorRecord("原始话单异常");
-				return false;
-			}
+			bean.setCOUNTAINER_ID(Msg.containerID(msg));// 容器ID
+			bean.setMSG_TYPE(Msg.msgType(msg)); // 能力类型
+			bean.setORIGINAL_RECORD_TIME(Msg.recordTime(msg)); // 原始话单生成时间
+
 			// 从数据库中获取订购关系、用户信息、产品资费
+			// 租户ID 付费类型 产品资费
+			BillingQuery.rInfo(bean);
 
 			res = true;
 		} catch (Exception e) {
 			// TODO: handle exception
-			this.ErrorRecord("原始话单异常");
 			res = false;
 		}
 		return res;
 	}
 
-	// 计费 标准批价
-	private boolean Billing() {
-		// 由于当前话单表示一条记录，因此批价为标准资费x1
-		this.amount = this.price;
-		return true;
-	}
-
 	// 扣费
-	private boolean Settlement() {
-		// 优先扣除套餐(事务)
+	private boolean Billing() {
+		boolean res = true;
+		try {
+			// 优先扣除套餐
+			if (!BillingInsert.RPackage(bean)) {
+				// 扣账户余额
+				if (!BillingInsert.RBalance(bean)) {
+					// 欠费通知
+					// TODO
+					log.info("余额不足，欠费，通知业务管理平台。。。");
+					logUtil.info("余额不足，欠费，通知业务管理平台。。。");
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			res = false;
+		}
 
-		// 扣账户余额(事务)
-
-		// 欠费通知
-		boolean res = false;
 		return res;
 	}
 
 	// 详单入库
 	private boolean Persistence() {
-		boolean res = false;
+		boolean res = true;
+		try {
+			BillingInsert.RDetailRecordAbility(bean);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			res = false;
+		}
 		return res;
 	}
 
 	// 记录异常话单
 	private void ErrorRecord(String description) {
-		RErrorRecordBean bean = new RErrorRecordBean(
-				Msg.MsgType.Ability.value(), this.msg, description);
-		BillingInsert.RErrorRecord(bean);
+		try {
+			RErrorRecordBean bean = new RErrorRecordBean(
+					Msg.MsgType.Ability.value(), this.msg, description);
+			BillingInsert.RErrorRecord(bean);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
