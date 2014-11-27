@@ -8,6 +8,10 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zhcs.billing.use.bean.AccountCheckAllBean;
+import com.zhcs.billing.use.bean.AccountCheckBean;
+import com.zhcs.billing.use.bean.AccountInfoBean;
+import com.zhcs.billing.use.bean.PartnerSettlementRuleBean;
 import com.zhcs.billing.use.bean.RDetailRecordAbilityBean;
 import com.zhcs.billing.use.bean.RErrorRecordBean;
 import com.zhcs.billing.use.bean.TCulOrderDetailBean;
@@ -305,5 +309,47 @@ public class BillingInsert {
 		}
 
 		return res;
+	}
+
+	public static boolean PartnerSettlementRecords(
+			PartnerSettlementRuleBean bean, int amount) {
+		// TODO Auto-generated method stub
+		boolean res = false;
+		List params = new ArrayList();
+		BillingBaseDao dao = new BillingBaseDao();
+
+		String sql = "insert into PARTNER_SETTLEMENT_RECORDS (PARTNER_ID,SETTLEMENT_RULE_ID,SETTLEMENT_AMOUNT,SETTLEMENT_DATE) values (?,?,?,now());";
+		params.add(bean.getPARTNER_ID());
+		params.add(bean.getID());
+		params.add(amount);
+		try {
+			int rs = dao.doSaveOrUpdate(sql, params);
+			res = rs == 0 ? false : true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return res;
+	}
+
+	public static void AccountCheckAll(AccountCheckAllBean bean)
+			throws Exception {
+		// TODO Auto-generated method stub
+		String sql = "insert into ACCOUNT_CHECK_ALL (INCOME,OUTCOME,BALANCE,CHECK_DATE) values (?,?,?,now());";
+		List params = new ArrayList();
+		params.add(bean.getINCOME());
+		params.add(bean.getOUTCOME());
+		params.add(bean.getBALANCE());
+
+		int rs = new BillingBaseDao().doSaveOrUpdate(sql, params);
+		if (rs == 0) {
+		}
+
+	}
+
+	public static void AccountCheck(AccountCheckBean b) {
+		// TODO Auto-generated method stub
+
 	}
 }

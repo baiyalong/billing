@@ -9,7 +9,7 @@ import org.springframework.jms.JmsException;
 
 import com.zhcs.billing.threadPool.ThreadPool;
 
-public class MqReceiver {
+public class MqReceiver implements Runnable {
 	private static class SingletonHolder {
 		private static final MqReceiver INSTANCE = new MqReceiver();
 	}
@@ -26,8 +26,7 @@ public class MqReceiver {
 
 	public void init() {
 		this.ctx = new ClassPathXmlApplicationContext("file:"
-				+ System.getProperty("user.dir")
-				+ "/config/mq.xml");
+				+ System.getProperty("user.dir") + "/config/mq.xml");
 		while (true) {
 		}
 	}
@@ -47,6 +46,12 @@ public class MqReceiver {
 
 		}
 
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		this.init();
 	}
 
 }

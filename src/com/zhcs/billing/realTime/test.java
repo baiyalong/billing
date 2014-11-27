@@ -1,14 +1,34 @@
 package com.zhcs.billing.realTime;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import com.zhcs.billing.use.dao.BillingQuery;
+import com.zhcs.billing.util.CalendarUtil;
 import com.zhcs.billing.util.DbUtil;
 
 public class test {
 
 	public static void main(String[] args) {
+
+		// Calendar ca = Calendar.getInstance();
+		// int year = ca.get(Calendar.YEAR);// 获取年份
+		// int month = ca.get(Calendar.MONTH);// 获取月份
+		// int day = ca.get(Calendar.DATE);// 获取日
+		// String t0 = year + "-" + month + "-01";
+		// String t1 = year + "-" + (month + 1) + "-01";
+		//
+		// System.out.println(t0);
+		// System.out.println(t1);
+
+		System.out.println(CalendarUtil.lastMonth());
+		System.out.println(CalendarUtil.thisMonth());
+		System.out.println(CalendarUtil.yestoday());
+		System.out.println(CalendarUtil.today());
+
 		// TODO Auto-generated method stub
-		String s = BillingQuery.getOrderID("1607140522000187");
-		System.out.println(s);
+		// String s = BillingQuery.getOrderID("1607140522000187");
+		// System.out.println(s);
 		// DbUtil.initCalculate();
 
 		// MqReceiver.getInstance().init();

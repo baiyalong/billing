@@ -1,14 +1,19 @@
 package com.zhcs.billing.use.dao;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zhcs.billing.use.bean.AccountCheckAllBean;
+import com.zhcs.billing.use.bean.AccountCheckBean;
+import com.zhcs.billing.use.bean.AccountInfoBean;
 import com.zhcs.billing.use.bean.OrderDetailBean;
 import com.zhcs.billing.use.bean.OrderInfoBean;
+import com.zhcs.billing.use.bean.PartnerSettlementRuleBean;
 import com.zhcs.billing.use.bean.ProductItemBean;
 import com.zhcs.billing.use.bean.ProductResourceBean;
 import com.zhcs.billing.use.bean.RDetailRecordAbilityBean;
@@ -17,6 +22,7 @@ import com.zhcs.billing.use.bean.TCulOrderDetailBean;
 import com.zhcs.billing.use.bean.TScanningAddTotalBean;
 import com.zhcs.billing.util.BaseDao;
 import com.zhcs.billing.util.BillingBaseDao;
+import com.zhcs.billing.util.CalendarUtil;
 import com.zhcs.billing.util.LoggerUtil;
 
 /**
@@ -424,4 +430,140 @@ public class BillingQuery {
 		return res;
 	}
 
+	public static List<PartnerSettlementRuleBean> PartnerSettlementRule()
+			throws Exception {
+		// TODO Auto-generated method stub
+		String sql;
+		BillingBaseDao dao = new BillingBaseDao();
+
+		sql = "select * from PARTNER_SETTLEMENT_RULE where STATUS = 0;";
+		List<HashMap<String, Object>> list = dao.doSelect(sql);
+
+		List<PartnerSettlementRuleBean> beans = PartnerSettlementRuleBean
+				.changeToObject(list);
+
+		return beans;
+	}
+
+	public static int PartnerSettlementCount(PartnerSettlementRuleBean bean) {
+		// 获取时间间隔
+		int res = 0;
+
+		// TODO Auto-generated method stub
+		String sql = "select count(*) from R_DETAIL_RECORD_ABILITY where MSG_TYPE = ? and ORIGINAL_RECORD_TIME > ? and ORIGINAL_RECORD_TIME < ?;";
+		List params = new ArrayList();
+		params.add(bean.getABILITY_TYPE());
+		params.add(CalendarUtil.lastMonth());
+		params.add(CalendarUtil.thisMonth());
+
+		List<HashMap<String, Object>> li = new BillingBaseDao().doSelect(sql,
+				params);
+		if (li != null && !li.isEmpty()) {
+			res = Integer.parseInt((String) li.get(0).get("count(*)"));
+		}
+
+		return res;
+	}
+
+	public static int PartnerSettlementProfit(PartnerSettlementRuleBean bean) {
+		// TODO Auto-generated method stub
+		int res = 0;
+		// TODO
+		return res;
+	}
+
+	public static AccountCheckAllBean AccountCheckAll() {
+		// TODO Auto-generated method stub
+		AccountCheckAllBean bean = new AccountCheckAllBean();
+		String sql = "select sum(INCOME),sum(OUTCOME),sum(BALANCE) from ACCOUNT_CHECK where CHECK_DATE between ? and ?;";
+		List params = new ArrayList();
+		params.add(CalendarUtil.yestoday());
+		params.add(CalendarUtil.today());
+
+		List<HashMap<String, Object>> li = new BillingBaseDao().doSelect(sql,
+				params);
+		if (li != null && !li.isEmpty()) {
+			bean.setINCOME(Integer.parseInt((String) li.get(0).get(
+					"sum(INCOME)")));
+			bean.setOUTCOME(Integer.parseInt((String) li.get(0).get(
+					"sum(OUTCOME)")));
+			bean.setBALANCE(Integer.parseInt((String) li.get(0).get(
+					"sum(BALANCE)")));
+		}
+		return bean;
+	}
+
+	public static List<AccountCheckBean> AccountCheck() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static List<AccountInfoBean> AccountInfo() {
+		// TODO Auto-generated method stub
+		List<AccountInfoBean> res = null;
+		String sql = "select ACCOUNT_ID,CUSTOMER_ID from ACCOUNT_INFO";
+		List<HashMap<String, Object>> li = new BaseDao().doSelect(sql);
+		if (li != null && !li.isEmpty()) {
+			res = AccountInfoBean.changeToObject(li);
+		}
+		return res;
+	}
+
+	public static int AccountTransactionCount(AccountInfoBean bean) {
+		// TODO Auto-generated method stub
+		int res = 0;
+		String sql = "select count(*) from ACCOUNT_TRANSACTION where ACCOUNT_ID = ? and DEAL_TIME between ? and ?;";
+		List params = new ArrayList();
+		params.add(bean.getACCOUNT_ID());
+		params.add(CalendarUtil.yestoday());
+		params.add(CalendarUtil.today());
+		List<HashMap<String, Object>> li = new BaseDao().doSelect(sql, params);
+		if (li != null && !li.isEmpty()) {
+			res = Integer.parseInt((String) li.get(0).get("count(*)"));
+		}
+
+		return res;
+	}
+
+	public static void AccountCheck(AccountCheckBean b) {
+		// TODO Auto-generated method stub
+		BaseDao dao = new BaseDao();
+		List params = new ArrayList();
+		String sql;
+		List<HashMap<String, Object>> li;
+
+		// -- income
+		sql = "select sum(AMOUNT) from ACCOUNT_TRANSACTION where ACCOUNT_ID = ? and TRANSANCTION_TYPE = 1 and DEAL_TIME between ? and ?;";
+		params.clear();
+		params.add(b.getACCOUNT_ID());
+		params.add(CalendarUtil.yestoday());
+		params.add(CalendarUtil.today());
+		li = dao.doSelect(sql, params);
+		if (li != null && !li.isEmpty()) {
+			b.setINCOME(Integer.parseInt((String) li.get(0).get("sum(AMOUNT)")));
+		}
+
+		// -- outcome
+		sql = "select sum(AMOUNT) from ACCOUNT_TRANSACTION where ACCOUNT_ID = ? and TRANSANCTION_TYPE = 2 and DEAL_TIME between ? and ?;";
+		params.clear();
+		params.add(b.getACCOUNT_ID());
+		params.add(CalendarUtil.yestoday());
+		params.add(CalendarUtil.today());
+		li = dao.doSelect(sql, params);
+		if (li != null && !li.isEmpty()) {
+			b.setOUTCOME(Integer
+					.parseInt((String) li.get(0).get("sum(AMOUNT)")));
+		}
+
+		// -- balance
+		sql = "select BALANCE from ACCOUNT_TRANSACTION where ACCOUNT_ID = ? and DEAL_TIME between ? and ?  order by DEAL_TIME desc limit 1;";
+		params.clear();
+		params.add(b.getACCOUNT_ID());
+		params.add(CalendarUtil.yestoday());
+		params.add(CalendarUtil.today());
+		li = dao.doSelect(sql, params);
+		if (li != null && !li.isEmpty()) {
+			b.setBALANCE(Integer.parseInt((String) li.get(0).get("BALANCE")));
+		}
+	}
 }
