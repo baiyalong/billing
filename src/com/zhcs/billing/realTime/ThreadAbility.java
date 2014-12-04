@@ -29,10 +29,9 @@ public class ThreadAbility implements Runnable {
 	public void run() {
 
 		if (!(this.GetData() && this.Billing() && this.Persistence())) {
-			this.ErrorRecord("");
-			return;
+			Msg.ErrorRecord(new RErrorRecordBean(Msg.MsgType.Ability.value(),
+					this.msg, "实时计费-能力话单-异常"));
 		}
-
 	}
 
 	private RDetailRecordAbilityBean bean;
@@ -48,7 +47,7 @@ public class ThreadAbility implements Runnable {
 
 			// 从数据库中获取订购关系、用户信息、产品资费
 			// 租户ID 付费类型 产品资费
-			BillingQuery.rInfo(bean);
+			BillingQuery.rInfoAbility(bean);
 
 			res = true;
 		} catch (Exception e) {
@@ -92,18 +91,6 @@ public class ThreadAbility implements Runnable {
 			res = false;
 		}
 		return res;
-	}
-
-	// 记录异常话单
-	private void ErrorRecord(String description) {
-		try {
-			RErrorRecordBean bean = new RErrorRecordBean(
-					Msg.MsgType.Ability.value(), this.msg, description);
-			BillingInsert.RErrorRecord(bean);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }

@@ -344,6 +344,7 @@ public class BillingInsert {
 
 		int rs = new BillingBaseDao().doSaveOrUpdate(sql, params);
 		if (rs == 0) {
+			throw new Exception();
 		}
 
 	}
@@ -351,5 +352,18 @@ public class BillingInsert {
 	public static void AccountCheck(AccountCheckBean b) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public static void RDetailRecordApp(String msg) throws Exception {
+		// TODO Auto-generated method stub
+
+		String sql = "insert into R_DETAIL_RECORD_APP (APP_ID,ORIGINAL_RECORD_TIME,DETAIL_RECORD_TIME,ORIGINAL_RECORD) values (0,now(),now(),?);";
+		List params = new ArrayList();
+		params.add(msg);
+
+		int rs = new BillingBaseDao().doSaveOrUpdate(sql, params);
+		if (rs == 0) {
+			throw new Exception();
+		}
 	}
 }

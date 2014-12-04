@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.zhcs.billing.use.bean.RErrorRecordBean;
+import com.zhcs.billing.use.dao.BillingInsert;
+
 public class Msg {
 
 	private String msg = null;
@@ -56,7 +59,7 @@ public class Msg {
 
 	public enum MsgType {
 		// 利用构造函数传参
-		Ability(0), App(1);
+		Ability(0), App(1), DataFlow(2);
 
 		// 定义私有变量
 		private int nCode;
@@ -78,5 +81,15 @@ public class Msg {
 
 	public static Timestamp recordTime(String msg) {
 		return Timestamp.valueOf(msg.split("\\|")[1]);
+	}
+
+	// 记录异常话单
+	public static void ErrorRecord(RErrorRecordBean bean) {
+		try {
+			BillingInsert.RErrorRecord(bean);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

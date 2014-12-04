@@ -332,7 +332,7 @@ public class BillingQuery {
 		return root;
 	}
 
-	public static void rInfo(RDetailRecordAbilityBean bean) throws Exception {
+	public static void rInfoAbility(RDetailRecordAbilityBean bean) throws Exception {
 		// TODO Auto-generated method stub
 		BaseDao basedao = new BaseDao();
 		String sql = "";
