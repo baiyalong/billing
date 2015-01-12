@@ -3,19 +3,25 @@ package com.zhcs.billing.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @author LiuJie
  */
 public class EnvironmentUtils {
-	private static LoggerUtil log = LoggerUtil.getLogger(EnvironmentUtils.class);
+	private static LoggerUtil log = LoggerUtil
+			.getLogger(EnvironmentUtils.class);
 
 	/**
 	 * 得到当前机器的IP，如果获取失败返回null.
+	 * 
 	 * @return IP
 	 */
 	public static String getIP() {
@@ -23,7 +29,7 @@ public class EnvironmentUtils {
 		try {
 			InetAddress addr = InetAddress.getLocalHost();
 			IP = addr.getHostAddress().toString();
-			addr=null;
+			addr = null;
 		} catch (UnknownHostException e) {
 			log.debug("getIP出现错误：" + e.getMessage());
 		}
@@ -31,8 +37,36 @@ public class EnvironmentUtils {
 		return IP;
 	}
 
+	public static List<String> getLocalIPList() {
+		List<String> ipList = new ArrayList<String>();
+		try {
+			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
+					.getNetworkInterfaces();
+			NetworkInterface networkInterface;
+			Enumeration<InetAddress> inetAddresses;
+			InetAddress inetAddress;
+			String ip;
+			while (networkInterfaces.hasMoreElements()) {
+				networkInterface = networkInterfaces.nextElement();
+				inetAddresses = networkInterface.getInetAddresses();
+				while (inetAddresses.hasMoreElements()) {
+					inetAddress = inetAddresses.nextElement();
+					if (inetAddress != null
+							&& inetAddress instanceof Inet4Address) { // IPV4
+						ip = inetAddress.getHostAddress();
+						ipList.add(ip);
+					}
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+		return ipList;
+	}
+
 	/**
 	 * 得到当前机器的地址(机器名称),获取失败返回null.
+	 * 
 	 * @return address
 	 */
 	public static String getAddress() {
@@ -40,7 +74,7 @@ public class EnvironmentUtils {
 		try {
 			InetAddress addr = InetAddress.getLocalHost();
 			address = addr.getHostName().toString();
-			addr=null;
+			addr = null;
 		} catch (UnknownHostException e) {
 			log.debug("getAddress出现错误：" + e.getMessage());
 		}
@@ -50,6 +84,7 @@ public class EnvironmentUtils {
 
 	/**
 	 * 得到当前机器的mac地址，获取失败是返回null.
+	 * 
 	 * @return mac
 	 */
 	public static String getMacAddress() {
@@ -84,6 +119,7 @@ public class EnvironmentUtils {
 
 	/**
 	 * 获取当前机器的Mac地址，该方法要求JDK1.6以上版本。
+	 * 
 	 * @param host
 	 * @return mac
 	 */

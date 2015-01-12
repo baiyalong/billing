@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.zhcs.billing.use.bean.AccountCheckAllBean;
 import com.zhcs.billing.use.bean.AccountCheckBean;
 import com.zhcs.billing.use.bean.AccountInfoBean;
+import com.zhcs.billing.use.bean.EstOrderBean;
 import com.zhcs.billing.use.bean.OrderDetailBean;
 import com.zhcs.billing.use.bean.OrderInfoBean;
 import com.zhcs.billing.use.bean.PartnerSettlementRuleBean;
@@ -332,7 +333,8 @@ public class BillingQuery {
 		return root;
 	}
 
-	public static void rInfoAbility(RDetailRecordAbilityBean bean) throws Exception {
+	public static void rInfoAbility(RDetailRecordAbilityBean bean)
+			throws Exception {
 		// TODO Auto-generated method stub
 		BaseDao basedao = new BaseDao();
 		String sql = "";
@@ -565,5 +567,26 @@ public class BillingQuery {
 		if (li != null && !li.isEmpty()) {
 			b.setBALANCE(Integer.parseInt((String) li.get(0).get("BALANCE")));
 		}
+	}
+
+	public static List<EstOrderBean> GetOrderFromPackid(
+			List<EstOrderBean> estorders) {
+		// TODO Auto-generated method stub
+
+		String sql = "select order_id from ORDER_INFO where packid = ?;";
+		BaseDao dao = new BaseDao();
+		List params = new ArrayList();
+		List<HashMap<String, Object>> li;
+
+		for (EstOrderBean order : estorders) {
+			params.clear();
+			params.add(order.getPackid());
+			li = dao.doSelect(sql, params);
+			if (li != null && !li.isEmpty()) {
+				order.setOrderid((String) li.get(0).get("ORDER_ID"));
+			}
+		}
+
+		return estorders;
 	}
 }

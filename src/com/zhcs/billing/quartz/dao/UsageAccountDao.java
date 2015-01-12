@@ -30,14 +30,14 @@ public class UsageAccountDao implements IUsageAccountDao {
 	
 	@Override
 	public void SetData(UsageAccountBean usageAccountBean, int eachMachine,
-			int theMachineStart, String timeTip, List<EstOrderBean> estOrders) {
+			int theMachineStart, String collDate, List<EstOrderBean> estOrders) {
 		int n = 0;
 		String sql = VariableConfigManager.Account_SetDataSql;
 		for(int i=theMachineStart;i<(eachMachine+theMachineStart);i++){
 			List params=new ArrayList();
 			params.add(Common.createBillingID());
 			params.add(estOrders.get(i).getOrderid());
-			params.add(timeTip);
+			params.add(collDate);
 			params.add(usageAccountBean.getSCANNING_WAY());
 			params.add(usageAccountBean.getSERVERS_NO_STATE());
 			int num = 0;

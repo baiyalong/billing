@@ -2,6 +2,7 @@ package com.zhcs.billing.quartz.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,8 @@ import com.zhcs.billing.quartz.dao.UsageAccountDao;
 import com.zhcs.billing.threadPool.ThreadPool;
 import com.zhcs.billing.use.bean.EstOrderBean;
 import com.zhcs.billing.use.bean.UsageAccountBean;
+import com.zhcs.billing.use.dao.BillingQuery;
+import com.zhcs.billing.util.BillingBaseDao;
 import com.zhcs.billing.util.EnvironmentUtils;
 import com.zhcs.billing.util.LoggerUtil;
 import com.zhcs.billing.util.VariableConfigManager;
@@ -35,41 +38,49 @@ public class UsageAmountVMTreatment extends Task implements Job {
 	@Override
 	public void execute(HashMap map) {
 
-		Date date = new Date(new Date().getTime()
-				- VariableConfigManager.Delayed_VMTreatment);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeTip = sdf.format(date);
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -1);
+		Date date = cal.getTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String collDate = sdf.format(date);
 
 		try {
 			/*** 查看需要处理的订单数据 ***/
-			String ip = EnvironmentUtils.getIP(); // 当前机器IP
-			if (ip == null) {
+			List<String> ips = EnvironmentUtils.getLocalIPList(); // 当前机器IP
+			if (ips.isEmpty()) {
 				log.info("UsageAmountVMTreatment Class execute Method：获取IP失败！！");
 				logUtil.info("UsageAmountVMTreatment Class execute Method：获取IP失败！！");
 				return;
 			}
-			if (map.get("ServersNum") == null || map.get(ip) == null
-					|| map.get("ThreadNum") == null
+			if (map.get("ServersNum") == null || map.get("ThreadNum") == null
 					|| map.get("ThreadOneNum") == null
-					|| map.get("SleepTime") == null) {
+					|| map.get("SleepTime") == null || map.get("IP") == null
+					|| map.get("No") == null) {
 				log.info("UsageAmountVMTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段 参数据配置有误！！");
 				logUtil.info("UsageAmountVMTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段 参数据配置有误！！");
 				return;
 			}
+			if (!ips.contains(map.get("IP"))) {
+				log.info("UsageAmountVMTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段 IP配置有误！！");
+				logUtil.info("UsageAmountVMTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段IP配置有误！！");
+				return;
+			}
 
+			// -------------------------------有多少订单（容器）产生了使用量数据，需要计费
 			EstOrderBean estOrderBean = new EstOrderBean();
-			estOrderBean.setTimeTip(timeTip);
+			estOrderBean.setColltime(collDate);
 			estOrderBean.setSperiod(1440); // 采集周期为一天
 			List<EstOrderBean> estorders = HandleDataTotal(estOrderBean);
+			estorders = BillingQuery.GetOrderFromPackid(estorders);// /根据从计量获得的容器ID从业务管理平台取得订单ID
 
-			int treatmentNum = estorders.size();// 共有多少数据需要处理
+			int treatmentNum = estorders.size();// 共有多少数据（订单、容器）需要处理
 			log.info("按使用量每天扫描一次的共有" + treatmentNum + "条数据需要处理！");
 			logUtil.info("按使用量每天扫描一次的共有" + treatmentNum + "条数据需要处理！");
 			if (treatmentNum > 0) {
 				int serversNum = Integer.parseInt((String) map
 						.get("ServersNum")); // 多少台服务器
 				int eachMachine = 0; // 此台服务器处理多少数据
-				int serversNo = Integer.parseInt((String) map.get(ip)); // 服务器编号
+				int serversNo = Integer.parseInt((String) map.get("No")); // 服务器编号
 				int theMachineStart = 0; // 此服务器处理数据的开始点
 				int threadNum = Integer.parseInt((String) map.get("ThreadNum")); // 启动多少线程处理数据
 				int tTNum = 0; // 每条线程处理多少条数据
@@ -100,7 +111,7 @@ public class UsageAmountVMTreatment extends Task implements Job {
 				}
 
 				// 修改此服务器所需要处理的数据状态为本服务器编号 serversNo,此服务器的线程只处理此服务器需要处理的数据
-				SetData(eachMachine, theMachineStart, serversNo, timeTip,
+				SetData(eachMachine, theMachineStart, serversNo, collDate,
 						estorders);
 
 				/*** 本服务器每条线程处理多少数据 ***/
@@ -121,23 +132,28 @@ public class UsageAmountVMTreatment extends Task implements Job {
 						+ threadNum + " 条线程处理数据，每条线程一次处理 " + threadOneNum
 						+ " 条数据，线程启动间隔时间：" + sleepTime);
 
-				for (int i = 0; i < threadNum; i++) {
-					// 判断是否为最后一次，如果是则处理剩下的数据
-					if (i == (threadNum - 1)) {
-						tTNum = eachMachine - (tTNum * (threadNum - 1));
-					}
-
-					// UsageAmountVMThread ut = new
-					// UsageAmountVMThread(treatmentNum,tTNum,threadOneNum,serversNo);
-					// ut.start();
-					// Thread.sleep(sleepTime);
-
-					// ThreadPool
-					ThreadPool.getInstance().AddTask(
-							new UsageAmountVMThread(treatmentNum, tTNum,
-									threadOneNum, serversNo));
-
-				}
+				// for (int i = 0; i < threadNum; i++) {
+				// // 判断是否为最后一次，如果是则处理剩下的数据
+				// if (i == (threadNum - 1)) {
+				// tTNum = eachMachine - (tTNum * (threadNum - 1));
+				// }
+				//
+				// // UsageAmountVMThread ut = new
+				// //
+				// UsageAmountVMThread(treatmentNum,tTNum,threadOneNum,serversNo);
+				// // ut.start();
+				// // Thread.sleep(sleepTime);
+				//
+				// // ThreadPool
+				// ThreadPool.getInstance().AddTask(
+				// new UsageAmountVMThread(treatmentNum, tTNum,
+				// threadOneNum, serversNo));
+				//
+				// }
+				// -----------改为单线程处理--------------------------
+				ThreadPool.getInstance().AddTask(
+						new UsageAmountVMThread(treatmentNum, treatmentNum,
+								treatmentNum, serversNo));
 			} else {
 				log.info("UsageAmountVMTreatment Class execute Method：ORDER_INFO 表 无订单数据需要处理!");
 				logUtil.info("UsageAmountVMTreatment Class execute Method：ORDER_INFO 表 无订单数据需要处理!");
@@ -148,7 +164,7 @@ public class UsageAmountVMTreatment extends Task implements Job {
 			logUtil.error("UsageAmountVMTreatment Class execute Method !", e);
 			e.printStackTrace();
 		} finally {
-			//System.gc();
+			// System.gc();
 		}
 	}
 
@@ -161,13 +177,13 @@ public class UsageAmountVMTreatment extends Task implements Job {
 	 * @param orders
 	 */
 	private void SetData(int eachMachine, int theMachineStart, int serversNo,
-			String timeTip, List<EstOrderBean> estOrders) {
+			String collDate, List<EstOrderBean> estOrders) {
 		UsageAccountDao usageAccountDao = new UsageAccountDao();
 		UsageAccountBean usageAccountBean = new UsageAccountBean();
 		usageAccountBean.setSCANNING_WAY("1"); // "1":每天扫描一次
 		usageAccountBean.setSERVERS_NO_STATE(serversNo);
 		usageAccountDao.SetData(usageAccountBean, eachMachine, theMachineStart,
-				timeTip, estOrders);
+				collDate, estOrders);
 	}
 
 	/**
