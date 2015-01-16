@@ -1,5 +1,6 @@
 package com.zhcs.billing.realTime;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,7 +9,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.sf.json.JSONObject;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+
 import com.zhcs.billing.use.bean.RErrorRecordBean;
+import com.zhcs.billing.use.dao.BillingCumulative;
 import com.zhcs.billing.use.dao.BillingInsert;
 
 public class Msg {
@@ -48,7 +56,59 @@ public class Msg {
 
 	// 获取容器ID
 	public static String containerID(String msg) {
-		return msg.split("\\|")[3];
+		String ua = msg.split("\\|")[3];
+		int code = Msg.msgType(msg);
+		String Code = "";
+		switch (code) {
+		case 10:
+			Code = "SMS";
+			break;
+		case 11:
+			Code = "MMS";
+			break;
+		case 12:
+			Code = "LBS";
+			break;
+		case 13:
+			Code = "GIS";
+			break;
+		default:
+			break;
+		}
+		return Msg.getContainerID(ua, Code);
+	}
+
+	private static HttpClient httpclient = null;
+	private static PostMethod postMethod = null;
+	private static String Rurl = null;
+
+	// 从容器引擎获取容器ID
+	public static String getContainerID(String ua, String code) {
+		String res = null;
+		JSONObject jso = new JSONObject();
+		jso.put("userAccount", ua);
+		jso.put("abiCode", code);
+		String req = jso.toString();
+		getPostMethod().addRequestHeader("Content-Type", "application/json");
+
+		try {
+			StringRequestEntity requestEntity = new StringRequestEntity(req,
+					"application/json", "UTF-8");
+
+			getPostMethod().setRequestEntity(requestEntity);
+			getHttpclient().executeMethod(getPostMethod());
+			String resp = getPostMethod().getResponseBodyAsString();
+
+			JSONObject job = JSONObject.fromObject(resp);
+			String orderCode = job.getString("orderCode");
+			String containerId = job.getString("containerId");
+			res = containerId;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return res;
 	}
 
 	// 获取话单类型
@@ -104,4 +164,30 @@ public class Msg {
 			e.printStackTrace();
 		}
 	}
+
+	public static HttpClient getHttpclient() {
+		return httpclient == null ? new HttpClient() : httpclient;
+	}
+
+	/*
+	 * public static void setHttpclient(HttpClient httpclient) { Msg.httpclient
+	 * = httpclient; }
+	 */
+
+	public static PostMethod getPostMethod() {
+		return postMethod == null ? new PostMethod(getRurl()) : postMethod;
+	}
+
+	/*
+	 * public static void setPostMethod(PostMethod postMethod) { Msg.postMethod
+	 * = postMethod; }
+	 */
+
+	public static String getRurl() {
+		return Rurl == null ? BillingCumulative.readProperties("Rurl") : Rurl;
+	}
+
+	/*
+	 * public static void setRurl(String rurl) { Rurl = rurl; }
+	 */
 }

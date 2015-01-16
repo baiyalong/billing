@@ -28,6 +28,8 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import com.zhcs.billing.use.dao.BillingCumulative;
+
 public class Common {
 	private static LoggerUtil log = LoggerUtil.getLogger(Common.class);
 	// private static final int ID_LENGTH = 36;
@@ -36,10 +38,11 @@ public class Common {
 	private static final int timeNum = 17;
 	// private static final int randNum = 11;
 
-	static JaxWsDynamicClientFactory dcf = null;
+	public static JaxWsDynamicClientFactory dcf = null;
 	// JaxWsDynamicClientFactory
 	// .newInstance();
-	static Client client = null;
+	public static Client client = null;
+	public static String BillingUrl = null;
 
 	// dcf
 	// .createClient("http://172.17.0.15:9001/BillingWebService.asmx?wsdl");;
@@ -625,14 +628,27 @@ public class Common {
 		// JaxWsDynamicClientFactory dcf =
 		// JaxWsDynamicClientFactory.newInstance();
 
-		System.out.println("jsonjsonjsonjsonjsonjsonjson" + json);
+		System.out.println("jsonjsonjsonjsonjsonjsonjson:" + json);
 		Object[] res = null;
 		try {
-			res = client.invoke(method, json);
+			res = getClient().invoke(method, json);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return res;
 	}
 
+	private static Client getClient() {
+		// TODO Auto-generated method stub
+		if (dcf == null) {
+			dcf = JaxWsDynamicClientFactory.newInstance();
+		}
+		if (BillingUrl == null) {
+			BillingUrl = BillingCumulative.readProperties("accountUrl");
+		}
+		if (client == null) {
+			client = dcf.createClient(BillingUrl);
+		}
+		return client;
+	}
 }

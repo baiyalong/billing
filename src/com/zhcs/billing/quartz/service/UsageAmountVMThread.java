@@ -123,84 +123,123 @@ public class UsageAmountVMThread extends Thread {
 								String customerid = getCustomerIdByOrderId(orderInfoBean
 										.getORDER_ID()); // 跟据订单编号获得客户编号
 
-								// List<String> params = new
-								// ArrayList<String>();
-								// List<String> values = new ArrayList();
-								// params.add("TimeStamp"); // 时间戳
-								// params.add("BillingID"); // 接口之间的标识符
-								// params.add("CustomerID"); // 客户编号
-								// params.add("OrderID"); // 订单编号
-								// params.add("Amount"); // 扣费金额
-								// params.add("CDRType"); // 话单类型
-								// values.add(Common.getDateStr());
-								// values.add(Common.createBillingID());
-								// values.add(customerid != null ? customerid :
-								// "");
-								// values.add(orderInfoBean.getORDER_ID() !=
-								// null ? orderInfoBean
-								// .getORDER_ID() : "");
-								// values.add(amount);
-								// values.add("2");
-								//
-								// String req = Common.changeJSON(params,
-								// values);
-								// String json = req
-								// .substring(1, req.length() - 1);
+								List<String> params = new ArrayList<String>();
+								List<String> values = new ArrayList();
+								params.add("TimeStamp"); // 时间戳
+								params.add("BillingID"); // 接口之间的标识符
+								params.add("CustomerID"); // 客户编号
+								params.add("OrderID"); // 订单编号
+								params.add("Amount"); // 扣费金额
+								params.add("CDRType"); // 话单类型
+								values.add(Common.getDateStr());
+								values.add(Common.createBillingID());
+								values.add(customerid != null ? customerid : "");
+								values.add(orderInfoBean.getORDER_ID() != null ? orderInfoBean
+										.getORDER_ID() : "");
+								values.add(amount);
+								values.add("2");
+
+								String req = Common.changeJSON(params, values);
+								String json = req
+										.substring(1, req.length() - 1);
 								log.info("计费完毕,用户：" + customerid + " 本次消费金额："
 										+ amount);
 								logUtil.info("计费完毕,用户：" + customerid
 										+ " 本次消费金额：" + amount);
-								continue;
-								/*
-								 * // 调用业务管理平台账户扣费接口 Object[] objects = Common
-								 * .accountPayInerface( BillingCumulative
-								 * .readProperties("accountUrl"),
-								 * BillingCumulative
-								 * .readProperties("accountMethod"), json);
-								 * log.info("计费系统发送信息：" + json);
-								 * log.info("计费系统接受信息：" + objects[0]);
-								 * logUtil.info("计费系统发送信息：" + json);
-								 * logUtil.info("计费系统接受信息：" + objects[0]);
-								 * 
-								 * JSONObject jsonObject = JSONObject
-								 * .fromObject(objects[0]); String result =
-								 * jsonObject.get("Result") + "";
-								 * 
-								 * if ("true".equals(result)) {
-								 * log.info("订单编号为：" +
-								 * orderInfoBean.getORDER_ID() + "调用平台扣费成功！");
-								 * logUtil.info("订单编号为：" +
-								 * orderInfoBean.getORDER_ID() + "调用平台扣费成功！"); }
-								 * else { log.info("订单编号为：" +
-								 * orderInfoBean.getORDER_ID() + "调用平台扣费失败！");
-								 * logUtil.info("订单编号为：" +
-								 * orderInfoBean.getORDER_ID() + "调用平台扣费失败！"); }
-								 * /* 调用业务账户扣费接口结束，将结果记录到T_ACCOUNTPAY表里
-								 */
-								/*
-								 * AccountPayBean accountPayBean = new
-								 * AccountPayBean();
-								 * accountPayBean.setBILLING_ID(jsonObject
-								 * .get("TimeStamp") + "");
-								 * accountPayBean.setTIME_STAMP(jsonObject
-								 * .get("BillingID") + "");
-								 * accountPayBean.setCUSTOMER_ID(customerid);
-								 * accountPayBean.setORDER_ID(orderInfoBean
-								 * .getORDER_ID());
-								 * accountPayBean.setAMOUNT(orderInfoBean
-								 * .getReality());
-								 * accountPayBean.setCDR_TYPE(2); accountPayBean
-								 * .setRESULT((jsonObject.get("Result") + "")
-								 * .equals("true") ? true : false);
-								 * accountPayBean.setDESCRIPTION(jsonObject
-								 * .get("Description") + "");
-								 * insertAccountPay(accountPayBean);
-								 * 
-								 * // --------------开始垃圾回收内存占用-------------
-								 * params = null; values = null; objects = null;
-								 * jsonObject = null; accountPayBean = null; //
-								 * ---------------------------------------
-								 */
+								// continue;
+
+								// 调用业务管理平台账户扣费接口
+								Object[] objects = null;
+								JSONObject jsonObject = null;
+								AccountPayBean accountPayBean = null;
+								try {
+									objects = Common
+											.accountPayInerface(
+													BillingCumulative
+															.readProperties("accountUrl"),
+													BillingCumulative
+															.readProperties("accountMethod"),
+													json);
+									log.info("计费系统发送信息：" + json);
+									logUtil.info("计费系统发送信息：" + json);
+									if (objects != null) {
+										log.info("计费系统接受信息：" + objects[0]);
+										logUtil.info("计费系统接受信息：" + objects[0]);
+
+										jsonObject = JSONObject
+												.fromObject(objects[0]);
+										String result = jsonObject
+												.get("Result") + "";
+
+										if ("true".equals(result)) {
+											log.info("订单编号为："
+													+ orderInfoBean
+															.getORDER_ID()
+													+ "调用平台扣费成功！");
+											logUtil.info("订单编号为："
+													+ orderInfoBean
+															.getORDER_ID()
+													+ "调用平台扣费成功！");
+										} else {
+											log.info("订单编号为："
+													+ orderInfoBean
+															.getORDER_ID()
+													+ "调用平台扣费失败！");
+											logUtil.info("订单编号为："
+													+ orderInfoBean
+															.getORDER_ID()
+													+ "调用平台扣费失败！");
+										}
+
+										// 调用业务账户扣费接口结束，将结果记录到T_ACCOUNTPAY表里
+
+										accountPayBean = new AccountPayBean();
+										accountPayBean.setBILLING_ID(jsonObject
+												.get("TimeStamp") + "");
+										accountPayBean.setTIME_STAMP(jsonObject
+												.get("BillingID") + "");
+										accountPayBean
+												.setCUSTOMER_ID(customerid);
+										accountPayBean
+												.setORDER_ID(orderInfoBean
+														.getORDER_ID());
+										accountPayBean.setAMOUNT(orderInfoBean
+												.getReality());
+										accountPayBean.setCDR_TYPE(2);
+										accountPayBean.setRESULT((jsonObject
+												.get("Result") + "")
+												.equals("true") ? true : false);
+										accountPayBean
+												.setDESCRIPTION(jsonObject
+														.get("Description")
+														+ "");
+										insertAccountPay(accountPayBean);
+									} else {
+										log.info("订单编号为："
+												+ orderInfoBean.getORDER_ID()
+												+ "调用平台扣费失败！");
+										logUtil.info("订单编号为："
+												+ orderInfoBean.getORDER_ID()
+												+ "调用平台扣费失败！");
+									}
+								} catch (Exception e) {
+
+									log.info("订单编号为："
+											+ orderInfoBean.getORDER_ID()
+											+ "调用平台扣费异常！");
+									logUtil.info("订单编号为："
+											+ orderInfoBean.getORDER_ID()
+											+ "调用平台扣费异常！");
+									e.printStackTrace();
+								}
+
+								// --------------开始垃圾回收内存占用-------------
+								params = null;
+								values = null;
+								objects = null;
+								jsonObject = null;
+								accountPayBean = null; //
+								// ---------------------------------------
 
 							}
 						} else {

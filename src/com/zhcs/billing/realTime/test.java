@@ -1,5 +1,7 @@
 package com.zhcs.billing.realTime;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -13,8 +15,14 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 
+import net.sf.json.JSONObject;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.Connection;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 
 import com.zhcs.billing.use.dao.BillingQuery;
 import com.zhcs.billing.util.CalendarUtil;
@@ -23,46 +31,85 @@ import com.zhcs.billing.util.DbUtil;
 public class test {
 
 	public static void main(String[] args) {
-		String url = "tcp://124.160.193.83:21018";// "failover://(tcp://222.161.197.250:61616,tcp://222.161.197.250:61616)?initialReconnectDelay=100&rando mize=false"
-		String user = ActiveMQConnectionFactory.DEFAULT_USER;
-		String password = ActiveMQConnectionFactory.DEFAULT_PASSWORD;
-		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
-				user, password, url);
-		javax.jms.Connection connection;
+
+		String url = "http://localhost:8080/api/file/test";
+
+		HttpClient httpclient = new HttpClient();
+		PostMethod postMethod = new PostMethod(url);
+
+		JSONObject jso = new JSONObject();
+		jso.put("userAccount", "param1");
+		jso.put("abiCode", "param2");
+		String req = jso.toString();
+		postMethod.addRequestHeader("Content-Type", "application/json");
+		StringRequestEntity requestEntity = null;
 		try {
-			connection = connectionFactory.createConnection();
-			connection.setClientID("id1qw");
-			try {
-				connection.start();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			// Session
-			Session session = connection.createSession(false,
-					Session.AUTO_ACKNOWLEDGE);
-
-			Topic destination = session.createTopic("queueNode2");
-
-			TopicSubscriber Consumer = session.createDurableSubscriber(
-					destination, "id1qw");
-
-			Consumer.setMessageListener(new MessageListener() {
-
-				@Override
-				public void onMessage(Message msg) {
-					// TODO Auto-generated method stub
-					try {
-						TextMessage textMsg = (TextMessage) msg;
-						System.out.println(textMsg.getText());
-					} catch (JMSException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		} catch (JMSException e) {
-			e.printStackTrace();
+			requestEntity = new StringRequestEntity(req, "application/json",
+					"UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+		postMethod.setRequestEntity(requestEntity);
+
+		/*
+		 * postMethod. postMethod.addParameters(postData);
+		 */
+		String body = "";
+		for (int i = 0; i < 10; i++) {
+
+			try {
+				httpclient.executeMethod(postMethod);
+			} catch (HttpException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				body = postMethod.getResponseBodyAsString();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			postMethod.releaseConnection();
+
+			System.out.println(body);
+			JSONObject job = JSONObject.fromObject(body);
+			String orderCode = job.getString("orderCode");
+			String containerId = job.getString("containerId");
+			System.out.println(orderCode);
+			System.out.println(containerId);
+
+		}
+
+		/*
+		 * String url = "tcp://124.160.193.83:21018";//
+		 * "failover://(tcp://222.161.197.250:61616,tcp://222.161.197.250:61616)?initialReconnectDelay=100&rando mize=false"
+		 * String user = ActiveMQConnectionFactory.DEFAULT_USER; String password
+		 * = ActiveMQConnectionFactory.DEFAULT_PASSWORD;
+		 * ActiveMQConnectionFactory connectionFactory = new
+		 * ActiveMQConnectionFactory( user, password, url); javax.jms.Connection
+		 * connection; try { connection = connectionFactory.createConnection();
+		 * connection.setClientID("id1qw"); try { connection.start(); } catch
+		 * (Exception e1) { // TODO Auto-generated catch block
+		 * e1.printStackTrace(); } // Session Session session =
+		 * connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		 * 
+		 * Topic destination = session.createTopic("queueNode2");
+		 * 
+		 * TopicSubscriber Consumer = session.createDurableSubscriber(
+		 * destination, "id1qw");
+		 * 
+		 * Consumer.setMessageListener(new MessageListener() {
+		 * 
+		 * @Override public void onMessage(Message msg) { // TODO Auto-generated
+		 * method stub try { TextMessage textMsg = (TextMessage) msg;
+		 * System.out.println(textMsg.getText()); } catch (JMSException e) {
+		 * e.printStackTrace(); } } }); } catch (JMSException e) {
+		 * e.printStackTrace(); }
+		 */
 
 		// String url = "tcp://124.160.193.83:21018";
 		// String user = ActiveMQConnectionFactory.DEFAULT_USER;
