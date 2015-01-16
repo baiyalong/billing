@@ -121,17 +121,30 @@ public class UsageAmountVMTreatment extends Task implements Job {
 					tTNum = (eachMachine / threadNum);
 				}
 
-				log.info("共有 " + treatmentNum + " 条数据需要处理， " + serversNum
+				log.info("共有 "
+						+ treatmentNum
+						+ " 条数据需要处理， "
+						+ serversNum
+						// + " 台服务器，服务器编号为：" + serversNo + "此服务器处理 " +
+						// eachMachine
+						// + " 条数据，此服务器处理数据的开始点：" + theMachineStart + "，启动 "
+						// + threadNum + " 条线程处理数据，每条线程一次处理 " + threadOneNum
+						// + " 条数据，线程启动间隔时间：" + sleepTime);
 						+ " 台服务器，服务器编号为：" + serversNo + "此服务器处理 " + eachMachine
-						+ " 条数据，此服务器处理数据的开始点：" + theMachineStart + "，启动 "
-						+ threadNum + " 条线程处理数据，每条线程一次处理 " + threadOneNum
-						+ " 条数据，线程启动间隔时间：" + sleepTime);
-				logUtil.info("共有 " + treatmentNum + " 条数据需要处理， " + serversNum
+						+ " 条数据，此服务器处理数据的开始点：" + theMachineStart + "，启动 " + 1
+						+ " 条线程处理数据，每条线程一次处理 " + threadOneNum + " 条数据");
+				logUtil.info("共有 "
+						+ treatmentNum
+						+ " 条数据需要处理， "
+						+ serversNum
+						// + " 台服务器，服务器编号为：" + serversNo + "此服务器处理 " +
+						// eachMachine
+						// + " 条数据，此服务器处理数据的开始点：" + theMachineStart + "，启动 "
+						// + threadNum + " 条线程处理数据，每条线程一次处理 " + threadOneNum
+						// + " 条数据，线程启动间隔时间：" + sleepTime);
 						+ " 台服务器，服务器编号为：" + serversNo + "此服务器处理 " + eachMachine
-						+ " 条数据，此服务器处理数据的开始点：" + theMachineStart + "，启动 "
-						+ threadNum + " 条线程处理数据，每条线程一次处理 " + threadOneNum
-						+ " 条数据，线程启动间隔时间：" + sleepTime);
-
+						+ " 条数据，此服务器处理数据的开始点：" + theMachineStart + "，启动 " + 1
+						+ " 条线程处理数据，每条线程一次处理 " + threadOneNum + " 条数据");
 				// for (int i = 0; i < threadNum; i++) {
 				// // 判断是否为最后一次，如果是则处理剩下的数据
 				// if (i == (threadNum - 1)) {

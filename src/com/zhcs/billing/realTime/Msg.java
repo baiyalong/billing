@@ -1,6 +1,9 @@
 package com.zhcs.billing.realTime;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,7 +83,16 @@ public class Msg {
 	}
 
 	public static Timestamp recordTime(String msg) {
-		return Timestamp.valueOf(msg.split("\\|")[1]);
+		DateFormat ff = new SimpleDateFormat("yyyyMMddHHmmss");
+		DateFormat fff = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String str = msg.split("\\|")[1];
+		try {
+			return Timestamp.valueOf(fff.format(ff.parse(str)));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	// 记录异常话单

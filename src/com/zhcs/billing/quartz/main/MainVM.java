@@ -34,8 +34,8 @@ public class MainVM {
 
 		new MainVM().init();
 		Mouse.run(7); //1为TASK_ID对应的相应的定时任务
-		logUtil.info("===计费系统(按使用量的虚机资源扣费)正常启动！===");
-		log.info("===计费系统(按使用量的虚机资源扣费)正常启动！===");
+		logUtil.info("===计费系统(静态资源收费/天)正常启动！===");
+		log.info("===计费系统(静态资源收费/天)正常启动！===");
 		logUtil.info("billing start....");
 		log.info("billing start....");
 

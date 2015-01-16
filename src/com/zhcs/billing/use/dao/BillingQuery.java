@@ -333,7 +333,7 @@ public class BillingQuery {
 		return root;
 	}
 
-	public static void rInfoAbility(RDetailRecordAbilityBean bean)
+	public static boolean rInfoAbility(RDetailRecordAbilityBean bean)
 			throws Exception {
 		// TODO Auto-generated method stub
 		BaseDao basedao = new BaseDao();
@@ -349,6 +349,10 @@ public class BillingQuery {
 		if (list != null && !list.isEmpty()) {
 			bean.setORDER_ID((String) list.get(0).get("ORDER_ID"));
 			bean.setCUSTOMER_ID((String) list.get(0).get("CUSTOMER_ID"));
+		} else {
+			log.error("容器ID：" + bean.getCOUNTAINER_ID() + "没有找到对应的订单！");
+			logUtil.error("容器ID：" + bean.getCOUNTAINER_ID() + "没有找到对应的订单！");
+			return false;
 		}
 
 		// 根据订单获取产品编号.
@@ -359,6 +363,10 @@ public class BillingQuery {
 		if (list != null && !list.isEmpty()) {
 			bean.setPRODUCT_ID((String) list.get(0).get("PRODUCT_ID"));
 			bean.setSUBSCRIBER_ID((String) list.get(0).get("SUBSCRIBER_ID"));
+		} else {
+			log.error("订单ID：" + bean.getORDER_ID() + "没有找到对应的产品编号！");
+			logUtil.error("订单ID：" + bean.getORDER_ID() + "没有找到对应的产品编号！");
+			return false;
 		}
 
 		// // 根据产品获取所有纬度信息
@@ -369,7 +377,11 @@ public class BillingQuery {
 		list = basedao.doSelect(sql, params);
 		if (list != null && !list.isEmpty()) {
 			bean.setITEM_ID((String) list.get(0).get("ITEM_ID"));
-			bean.setPRICE(Integer.parseInt((String) list.get(0).get("PRICE")));
+			bean.setPRICE((Integer) list.get(0).get("PRICE"));
+		} else {
+			log.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的纬度信息！");
+			logUtil.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的纬度信息！");
+			return false;
 		}
 
 		// 根据产品编号、申购编号查询申购明细
@@ -382,8 +394,12 @@ public class BillingQuery {
 		if (list != null && !list.isEmpty()) {
 			bean.setSI_ID((String) list.get(0).get("SI_ID"));
 			bean.setPD_ID((String) list.get(0).get("PD_ID"));
-			bean.setREMAINING_AMOUNT(Integer.parseInt((String) list.get(0).get(
-					"REMAINING_AMOUNT")));
+			bean.setREMAINING_AMOUNT((Integer) list.get(0).get(
+					"REMAINING_AMOUNT"));
+		} else {
+			log.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的申购明细！");
+			logUtil.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的申购明细！");
+			return false;
 		}
 
 		// 是否订购套餐
@@ -404,6 +420,10 @@ public class BillingQuery {
 			bean.setACCOUNT_ID((String) list.get(0).get("ACCOUNT_ID"));
 			bean.setPROVINCE_CODE((String) list.get(0).get("PROVINCE_CODE"));
 			bean.setAREA_CODE((String) list.get(0).get("REMAINING_AMOUNT"));
+		} else {
+			log.error("没有找到套餐信息！");
+			logUtil.error("没有找到套餐信息！");
+			return false;
 		}
 
 		sql = "select BOOK_ID from ACCOUNT_BOOK where ACCOUNT_ID = ?;";
@@ -412,7 +432,12 @@ public class BillingQuery {
 		list = basedao.doSelect(sql, params);
 		if (list != null && !list.isEmpty()) {
 			bean.setBOOK_ID((String) list.get(0).get("BOOK_ID"));
+		} else {
+			log.error("没有找到账本信息！");
+			logUtil.error("没有找到账本信息！");
+			return false;
 		}
+		return true;
 
 	}
 
@@ -573,7 +598,7 @@ public class BillingQuery {
 			List<EstOrderBean> estorders) {
 		// TODO Auto-generated method stub
 
-		String sql = "select order_id from ORDER_INFO where packid = ?;";
+		String sql = "select order_id from ORDER_INFO where CONTAINER_ID = ?;";
 		BaseDao dao = new BaseDao();
 		List params = new ArrayList();
 		List<HashMap<String, Object>> li;

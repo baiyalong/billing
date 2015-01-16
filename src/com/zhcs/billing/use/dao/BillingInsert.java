@@ -60,8 +60,8 @@ public class BillingInsert {
 				throw new Exception();
 			}
 			res = true;
-			log.info("实时计费 异常话单记录：" + sql);
-			logUtil.info("实时计费 异常话单记录：" + sql);
+			log.info("实时计费 异常话单记录：" + bean.getMSG());
+			logUtil.info("实时计费 异常话单记录：" + bean.getMSG());
 		} catch (Exception e) {
 			log.error("实时计费 异常话单记录失败SQL:" + sql + "失败原因" + e.getMessage()
 					+ "SQL语句:" + sql);
@@ -121,7 +121,7 @@ public class BillingInsert {
 	public static String AddTScanningAddTotal(TScanningAddTotalBean bean) {
 
 		String result = "";
-		String sql = " IINSERT INTO T_SCANNING_ADD_TOTAL(ID,ORDER_ID,PRODUCT_ID,RESOURCE_ID, "
+		String sql = " INSERT INTO T_SCANNING_ADD_TOTAL(ID,ORDER_ID,PRODUCT_ID,RESOURCE_ID, "
 				+ " WD_NAME,WD_ID,CURRENT_ADD_TOTAL,SCANNING_WAY,START_TIME,END_TIME,CREATE_TIME, UPDATE_TIME) "
 				+ " values (?,?,?,?,?,?,?,?,?,?,?,?)";
 
@@ -157,8 +157,8 @@ public class BillingInsert {
 	public static boolean RDetailRecordAbility(RDetailRecordAbilityBean bean) {
 		boolean res = false;
 
-		String sql = "INSERT INTO R_DETAIL_RECORD_ABILITY(MSG_TYPE,USER_ID,CONTAINER_ID,BILLLING_AMOUNT,DISCOUNT_TYPE,DEDUCTION_AMOUNT,OPERATION_RESULT,PAYMENT_TYPE,ORIGINAL_RECORD_TIME,DETAIL_RECORD_TIME,ORIGINAL_RECORD) "
-				+ "VALUES (?,?,?,?,?,?,?,?,?,now(),?);";
+		String sql = "INSERT INTO R_DETAIL_RECORD_ABILITY(MSG_TYPE,CUSTOMER_ID,CONTAINER_ID,DEDUCTION_TYPE,DEDUCTION_AMOUNT,OPERATION_RESULT,PAYMENT_TYPE,ORIGINAL_RECORD_TIME,DETAIL_RECORD_TIME,ORIGINAL_RECORD) "
+				+ "VALUES (?,?,?,?,?,?,?,?,now(),?);";
 
 		List params = new ArrayList();
 		params.add(bean.getMSG_TYPE());
@@ -174,9 +174,10 @@ public class BillingInsert {
 		try {
 			new BillingBaseDao().doSaveOrUpdate(sql, params);
 			res = true;
-			log.info("实时计费 详单记录：" + sql);
+			log.info("实时计费 详单记录：" + sql + params.toString());
 			logUtil.info("实时计费 详单记录：" + sql);
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error("实时计费 详单记录失败SQL:" + sql + "失败原因" + e.getMessage()
 					+ "SQL语句:" + sql);
 			logUtil.error("实时计费 详单记录失败SQL:" + sql + "失败原因" + e.getMessage()
@@ -209,8 +210,8 @@ public class BillingInsert {
 				params.add(bean.getSI_ID());
 				li = dao.doSelect(sql, params);
 				if (li != null && !li.isEmpty()) {
-					bean.setREMAINING_AMOUNT(Integer.parseInt((String) li
-							.get(0).get("REMAINING_AMOUNT")));
+					bean.setREMAINING_AMOUNT((Integer) li.get(0).get(
+							"REMAINING_AMOUNT"));
 					if (bean.getREMAINING_AMOUNT() > 0) {
 						// 扣套餐
 						sql = "update SUBSCRIPTION_ITEM set REMAINING_AMOUNT = REMAINING_AMOUNT -1 where SI_ID=?; ";
@@ -223,9 +224,13 @@ public class BillingInsert {
 					} else {
 						bean.setDEDUCTION_TYPE(1);// 套餐已用完，扣余额
 					}
+				} else {
+					log.error("没有找到套餐余额信息！");
+					logUtil.error("没有找到套餐余额信息！");
 				}
 
 			} catch (Exception e) {
+				e.printStackTrace();
 			} finally {
 				lock_RPackage.unlock();
 			}

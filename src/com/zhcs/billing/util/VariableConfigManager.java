@@ -45,12 +45,17 @@ public class VariableConfigManager {
 	// "WHERE STARTTIME < ? <= ENDTIME AND SPERIOD = ? AND VALUE > 0 GROUP BY ORDERID ORDER BY ORDERID";
 
 	public static String getOrderNumSql = "SELECT packid,colltime,speriod FROM ("
-			+ "SELECT packid,colltime,speriod FROM CSERVER" + " UNION "
-			+ "SELECT packid,colltime,speriod FROM CNETWORK" + " UNION "
-			+ "SELECT packid,colltime,speriod CSECURITY" + " UNION "
-			+ "SELECT packid,colltime,speriod FROM  CSTORE" + " UNION "
-			+ "SELECT packid,colltime,speriod FROM CDB" + " UNION "
-			+ "SELECT packid,colltime,speriod CMIDSOFT) T "
+			+ "SELECT packid,colltime,speriod FROM CSERVER"
+			+ " UNION "
+			+ "SELECT packid,colltime,speriod FROM CNETWORK"
+			+ " UNION "
+			+ "SELECT packid,colltime,speriod FROM CSECURITY"
+			+ " UNION "
+			+ "SELECT packid,colltime,speriod FROM CSTORE"
+			+ " UNION "
+			+ "SELECT packid,colltime,speriod FROM CDB"
+			+ " UNION "
+			+ "SELECT packid,colltime,speriod FROM CMIDSOFT) T "
 			+ "WHERE colltime = ? AND SPERIOD = ?";
 
 	// com.zhcs.billing.use.dao.QueryDao

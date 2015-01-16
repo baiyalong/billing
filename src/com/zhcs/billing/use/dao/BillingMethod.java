@@ -93,8 +93,8 @@ public class BillingMethod {
 		}
 		subscriptionItemBeans = null;
 		// 获取累积量
-		BillingCumulative.getJson(orderInfoBean.getORDER_ID(), SCANNING_WAY,
-				timeInterval);// 订单,扫描方式,时间
+		// BillingCumulative.getJson(orderInfoBean.getORDER_ID(), SCANNING_WAY,
+		// timeInterval);// 订单,扫描方式,时间
 
 		// 根据订单号到计费子系统获取产品纬度累积量 订单、时间、扫描方式）
 		List<TScanningAddTotalBean> addTotalBeans = BillingQuery.getCumulants(

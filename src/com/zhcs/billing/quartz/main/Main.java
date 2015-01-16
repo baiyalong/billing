@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.zhcs.billing.quartz.service.Mouse;
 import com.zhcs.billing.realTime.MqReceiver;
+import com.zhcs.billing.realTime.ThreadMq;
 import com.zhcs.billing.threadPool.ThreadPool;
 import com.zhcs.billing.util.DbUtil;
 import com.zhcs.billing.util.LoggerUtil;
@@ -21,18 +22,16 @@ public class Main {
 		DbUtil.initCalculate();
 		DbUtil.initEstimate();
 
-		boolean res;
-		// 能力实时计费线程初始化
-		res = ThreadPool.getInstance().AddTask(MqReceiver.getInstance());
-		if (!res) {
-			log.error("能力实时计费线程初始化失败！");
-			logUtil.error("能力实时计费线程初始化失败！");
-		}
+		// 能力实时计费初始化
+		new ThreadMq("ability").init();
 
-		// 应用实时计费
-		// TODO
+		// 流量实时计费初始化
+		new ThreadMq("flow").init();
 
-		// 周期性计费
+		// 应用实时计费初始化
+		new ThreadMq("app").init();
+
+		// // 周期性计费
 		Mouse.run(1); // TASK_ID对应的相应的定时任务
 		Mouse.run(2); // TASK_ID对应的相应的定时任务
 		Mouse.run(3); // TASK_ID对应的相应的定时任务

@@ -14,7 +14,7 @@
 		<property name="targetConnectionFactory">
 			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
 				<!-- MQ地址 -->
-				<property name="brokerURL" value="tcp://10.0.209.172:61616" />
+				<property name="brokerURL" value="tcp://124.160.193.83:21018" />
 			</bean>
 		</property>
 	</bean>
@@ -22,7 +22,7 @@
 	<!-- 发送消息的目的地（一个主题） -->
 	<bean id="myDestination" class="org.apache.activemq.command.ActiveMQTopic">
 		<!-- 设置消息主题的名字 -->
-		<constructor-arg index="0" value="Test" />
+		<constructor-arg index="0" value="Test2" />
 	</bean>
 
 	<!-- 生产消息配置 （自己定义） -->
@@ -79,7 +79,7 @@
 <!-- 发送消息的目的地（一个主题） -->
 <bean id="myDestination1" class="org.apache.activemq.command.ActiveMQTopic">
 	<!-- 设置消息主题的名字 -->
-	<constructor-arg index="0" value="Test1" />
+	<constructor-arg index="0" value="TestFlow" />
 </bean>
 
 <!-- 生产消息配置 （自己定义） -->
@@ -136,7 +136,7 @@
 <!-- 发送消息的目的地（一个主题） -->
 <bean id="myDestination2" class="org.apache.activemq.command.ActiveMQTopic">
 	<!-- 设置消息主题的名字 -->
-	<constructor-arg index="0" value="Test2" />
+	<constructor-arg index="0" value="TestApp" />
 </bean>
 
 <!-- 生产消息配置 （自己定义） -->

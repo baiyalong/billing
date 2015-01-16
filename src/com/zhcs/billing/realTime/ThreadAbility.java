@@ -47,9 +47,8 @@ public class ThreadAbility implements Runnable {
 
 			// 从数据库中获取订购关系、用户信息、产品资费
 			// 租户ID 付费类型 产品资费
-			BillingQuery.rInfoAbility(bean);
+			res = BillingQuery.rInfoAbility(bean);
 
-			res = true;
 		} catch (Exception e) {
 			// TODO: handle exception
 			res = false;
@@ -66,7 +65,7 @@ public class ThreadAbility implements Runnable {
 				// 扣账户余额
 				if (!BillingInsert.RBalance(bean)) {
 					// 欠费通知
-					// TODO
+					// TODO-----------------------------------------------------------------
 					log.info("余额不足，欠费，通知业务管理平台。。。");
 					logUtil.info("余额不足，欠费，通知业务管理平台。。。");
 				}

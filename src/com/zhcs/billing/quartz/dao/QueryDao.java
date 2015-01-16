@@ -61,7 +61,7 @@ public class QueryDao implements IQueryDao {
 		List<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
 		String sql = VariableConfigManager.getOrderNumSql;
 		List params = new ArrayList();
-		params.add(estOrderBean.getTimeTip());
+		params.add(estOrderBean.getColltime());
 		params.add(estOrderBean.getSperiod());
 		list = GetMeteringBaseDao().doSelectOrders(sql, params);
 		params=null;

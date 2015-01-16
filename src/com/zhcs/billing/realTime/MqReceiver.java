@@ -52,12 +52,13 @@ public class MqReceiver implements Runnable {
 	// 流量
 	public void receive1(TextMessage message) throws JmsException,
 			JMSException, InterruptedException {
+		System.out.println(message.getText());
 	}
 
 	// 应用
 	public void receive2(TextMessage message) throws JmsException,
 			JMSException, InterruptedException {
-
+		System.out.println(message.getText());
 	}
 
 	@Override
