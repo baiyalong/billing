@@ -38,7 +38,12 @@ public class AccountCheckTreatment extends Task implements Job {
 				// -- 查询收支明细，核账
 				BillingQuery.AccountCheck(b);
 				// -- 记录
-				BillingInsert.AccountCheck(b);
+				try {
+					BillingInsert.AccountCheck(b);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		// 每天核账完成后，更新总账记录

@@ -354,8 +354,20 @@ public class BillingInsert {
 
 	}
 
-	public static void AccountCheck(AccountCheckBean b) {
+	public static void AccountCheck(AccountCheckBean b) throws Exception {
 		// TODO Auto-generated method stub
+		String sql = "insert into ACCOUNT_CHECK (CUSTOMER_ID,ACCOUNT_ID,INCOME,OUTCOME,BALANCE,CHECK_DATE) values (?,?,?,?,?,now());";
+		List params = new ArrayList();
+		params.add(b.getCUSTOMER_ID());
+		params.add(b.getACCOUNT_ID());
+		params.add(b.getINCOME());
+		params.add(b.getOUTCOME());
+		params.add(b.getBALANCE());
+
+		int rs = new BillingBaseDao().doSaveOrUpdate(sql, params);
+		if (rs == 0) {
+			throw new Exception();
+		}
 
 	}
 

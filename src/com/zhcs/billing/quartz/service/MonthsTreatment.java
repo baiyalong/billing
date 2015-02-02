@@ -32,18 +32,23 @@ public class MonthsTreatment extends Task implements Job {
 
 		try {
 			/*** 查看需要处理的订单数据 ***/
-			String ip = EnvironmentUtils.getIP(); // 当前机器IP
-			if (ip == null) {
+			List<String> ips = EnvironmentUtils.getLocalIPList(); // 当前机器IP
+			if (ips.isEmpty()) {
 				log.info("MonthsTreatment Class execute Method：获取IP失败！！");
 				logUtil.info("MonthsTreatment Class execute Method：获取IP失败！！");
 				return;
 			}
-			if (map.get("ServersNum") == null || map.get(ip) == null
-					|| map.get("ThreadNum") == null
+			if (map.get("ServersNum") == null || map.get("ThreadNum") == null
 					|| map.get("ThreadOneNum") == null
-					|| map.get("SleepTime") == null) {
-				log.info("MonthsTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段 参数据配置有误！！");
-				logUtil.info("MonthsTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段 参数据配置有误！！");
+					|| map.get("SleepTime") == null || map.get("IP") == null
+					|| map.get("No") == null) {
+				log.info("UsageAmountVMTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段 参数据配置有误！！");
+				logUtil.info("UsageAmountVMTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段 参数据配置有误！！");
+				return;
+			}
+			if (!ips.contains(map.get("IP"))) {
+				log.info("UsageAmountVMTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段 IP配置有误！！");
+				logUtil.info("UsageAmountVMTreatment Class execute Method：T_JOB_TASK 表  PARMS 字段IP配置有误！！");
 				return;
 			}
 			// 共有多少数据需要处理
@@ -55,7 +60,7 @@ public class MonthsTreatment extends Task implements Job {
 				int serversNum = Integer.parseInt((String) map
 						.get("ServersNum")); // 多少台服务器
 				int eachMachine = 0; // 此台服务器处理多少数据
-				int serversNo = Integer.parseInt((String) map.get(ip)); // 服务器编号
+				int serversNo = Integer.parseInt((String) map.get("No")); // 服务器编号
 				int theMachineStart = 0; // 此服务器处理数据的开始点
 				int threadNum = Integer.parseInt((String) map.get("ThreadNum")); // 启动多少线程处理数据
 				int tTNum = 0; // 每条线程处理多少条数据

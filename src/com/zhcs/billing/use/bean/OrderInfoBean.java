@@ -1,5 +1,6 @@
 package com.zhcs.billing.use.bean;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,13 +12,11 @@ import java.util.List;
  * @author hefa
  * 
  */
-public class OrderInfoBean implements java.io.Serializable{
+public class OrderInfoBean implements java.io.Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-
 
 	public OrderInfoBean() {
 
@@ -26,13 +25,14 @@ public class OrderInfoBean implements java.io.Serializable{
 	public OrderInfoBean(String oRDERID, String cUSTOMERID, String sERIALNO,
 			Integer aMOUNT, Date cREATETIME, String cREATORID,
 			Integer cREATORTYPE, String aUDITERID, String aUDITERTYPE,
-			Date aUDITTIME, Integer oRDERSTATUS, String sYNCFLAG, int pRODUCT_CATEGORY) {
+			Date aUDITTIME, Integer oRDERSTATUS, String sYNCFLAG,
+			int pRODUCT_CATEGORY) {
 		super();
 		ORDER_ID = oRDERID;
 		CUSTOMER_ID = cUSTOMERID;
 		SERIAL_NO = sERIALNO;
 		AMOUNT = aMOUNT;
-		cREATE_TIME = cREATETIME;
+		CREATE_TIME = cREATETIME;
 		CREATOR_ID = cREATORID;
 		CREATOR_TYPE = cREATORTYPE;
 		AUDITER_ID = aUDITERID;
@@ -42,17 +42,18 @@ public class OrderInfoBean implements java.io.Serializable{
 		SYNC_FLAG = sYNCFLAG;
 		PRODUCT_CATEGORY = pRODUCT_CATEGORY;
 	}
-	private static final Integer dict =1;//节点类型
-	
+
+	private static final Integer dict = 1;// 节点类型
+
 	public static Integer getDict() {
 		return dict;
 	}
-	
+
 	private String ORDER_ID;// 订单编号
 	private String CUSTOMER_ID;// 客户编号
 	private String SERIAL_NO;// 交易流水号
 	private Integer AMOUNT;// 订单总金额
-	private Date cREATE_TIME;// 创建时间
+	private Date CREATE_TIME;// 创建时间
 	private String CREATOR_ID;// 订单创建人
 	private Integer CREATOR_TYPE;// 创建人类型
 	private String AUDITER_ID;// 审批人
@@ -60,15 +61,33 @@ public class OrderInfoBean implements java.io.Serializable{
 	private Date AUDIT_TIME;// 审批时间
 	private Integer ORDER_STATUS;// 订单状态
 	private String SYNC_FLAG;// 同步标识
-	private int PRODUCT_CATEGORY;//产品大类
-	
-	private int MONEY;//标准
-	private int pattern;//资费模型
-	private int reality;//实际
-	
-	private List<OrderDetailBean> orderDetailBeans = new ArrayList<OrderDetailBean>();//订单详细表
-	
-	
+	private int PRODUCT_CATEGORY;// 产品大类
+
+	private int MONEY;// 标准
+	private int pattern;// 资费模型
+	private int reality;// 实际
+
+	private java.sql.Timestamp BILLING_TIME;// 最后一次结算时间
+	private String ACCOUNT_CODE;// 账本编号
+	private String CONTAINER_ID;// 容器ID
+
+	public String getACCOUNT_CODE() {
+		return ACCOUNT_CODE;
+	}
+
+	public void setACCOUNT_CODE(String ac) {
+		ACCOUNT_CODE = ac;
+	}
+
+	public java.sql.Timestamp getBILLING_TIME() {
+		return BILLING_TIME;
+	}
+
+	public void setBILLING_TIME(java.sql.Timestamp bt) {
+		BILLING_TIME = bt;
+	}
+
+	private List<OrderDetailBean> orderDetailBeans = new ArrayList<OrderDetailBean>();// 订单详细表
 
 	public List<OrderDetailBean> getOrderDetailBeans() {
 		return orderDetailBeans;
@@ -111,11 +130,11 @@ public class OrderInfoBean implements java.io.Serializable{
 	}
 
 	public Date getcREATE_TIME() {
-		return cREATE_TIME;
+		return CREATE_TIME;
 	}
 
 	public void setcREATE_TIME(Date cREATETIME) {
-		cREATE_TIME = cREATETIME;
+		CREATE_TIME = cREATETIME;
 	}
 
 	public String getCREATOR_ID() {
@@ -205,23 +224,53 @@ public class OrderInfoBean implements java.io.Serializable{
 	public void setPRODUCT_CATEGORY(int pRODUCT_CATEGORY) {
 		PRODUCT_CATEGORY = pRODUCT_CATEGORY;
 	}
-	
+
 	/**
 	 * 将返回的结果转换成OrderInfoBean集合
+	 * 
 	 * @param list
 	 * @return
 	 */
-	public List<OrderInfoBean> changeToObject(
+	public static List<OrderInfoBean> changeToObject(
 			List<HashMap<String, Object>> list) {
 		List<OrderInfoBean> l = new ArrayList<OrderInfoBean>();
 		for (HashMap<String, Object> order : list) {
 			OrderInfoBean orderInfoBean = new OrderInfoBean();
-			orderInfoBean.setORDER_ID(order.get("ORDER_ID")!=null?order.get("ORDER_ID").toString():null);
-			orderInfoBean.setCUSTOMER_ID(order.get("CUSTOMER_ID")!=null?order.get("CUSTOMER_ID").toString():null);
-			orderInfoBean.setORDER_STATUS(Integer.parseInt(order.get("ORDER_STATUS")!=null?order.get("ORDER_STATUS").toString():null));
-			orderInfoBean.setPRODUCT_CATEGORY(Integer.parseInt(order.get("PRODUCT_CATEGORY")!=null?order.get("PRODUCT_CATEGORY").toString():null));
+			orderInfoBean.setORDER_ID(order.get("ORDER_ID") != null ? order
+					.get("ORDER_ID").toString() : null);
+			orderInfoBean
+					.setCUSTOMER_ID(order.get("CUSTOMER_ID") != null ? order
+							.get("CUSTOMER_ID").toString() : null);
+			orderInfoBean.setORDER_STATUS(Integer.parseInt(order
+					.get("ORDER_STATUS") != null ? order.get("ORDER_STATUS")
+					.toString() : null));
+			orderInfoBean.setPRODUCT_CATEGORY(Integer.parseInt(order
+					.get("PRODUCT_CATEGORY") != null ? order.get(
+					"PRODUCT_CATEGORY").toString() : null));
+
+			orderInfoBean.setAMOUNT((Integer) order.get("AMOUNT"));
+			orderInfoBean.setBILLING_TIME((Timestamp) order.get("AMOUNT"));
+			orderInfoBean.setACCOUNT_CODE((String) order.get("ACCOUNT_CODE"));
+			orderInfoBean.setCONTAINER_ID((String) order.get("CONTAINER_ID"));
 			l.add(orderInfoBean);
 		}
 		return l;
 	}
+
+	public String getCONTAINER_ID() {
+		return CONTAINER_ID;
+	}
+
+	public void setCONTAINER_ID(String cONTAINER_ID) {
+		CONTAINER_ID = cONTAINER_ID;
+	}
+
+	public Date getCREATE_TIME() {
+		return CREATE_TIME;
+	}
+
+	public void setCREATE_TIME(Date cREATE_TIME) {
+		CREATE_TIME = cREATE_TIME;
+	}
+
 }
