@@ -22,21 +22,23 @@ public class Main {
 		DbUtil.initCalculate();
 		DbUtil.initEstimate();
 
-		// 能力实时计费初始化
-		new ThreadMq("ability").init();
+		/*
+		 * // 能力实时计费初始化 new ThreadMq("ability").init();
+		 */
 
-		// 流量实时计费初始化
-		new ThreadMq("flow").init();
-
-		// 应用实时计费初始化
-		new ThreadMq("app").init();
+		/*
+		 * // 流量实时计费初始化 new ThreadMq("flow").init();
+		 * 
+		 * // 应用实时计费初始化 new ThreadMq("app").init();
+		 */
 
 		// // 周期性计费
-		Mouse.run(1); // TASK_ID对应的相应的定时任务
-		Mouse.run(2); // TASK_ID对应的相应的定时任务
-		Mouse.run(3); // TASK_ID对应的相应的定时任务
-		Mouse.run(4); // TASK_ID对应的相应的定时任务
-		Mouse.run(5); // TASK_ID对应的相应的定时任务
+		/*
+		 * Mouse.run(1); // TASK_ID对应的相应的定时任务 Mouse.run(2); // TASK_ID对应的相应的定时任务
+		 * Mouse.run(3); // TASK_ID对应的相应的定时任务 Mouse.run(4); // TASK_ID对应的相应的定时任务
+		 * Mouse.run(5); // TASK_ID对应的相应的定时任务
+		 *//*Mouse.run(10); // TEST_SIMPLE
+*/		Mouse.run(12); // TEST_ACCOUNT CHECK
 		logUtil.info("===计费系统正常启动！===");
 		log.info("===计费系统正常启动！===");
 		logUtil.info("billing start....");

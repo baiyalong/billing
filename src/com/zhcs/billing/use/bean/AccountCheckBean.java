@@ -8,41 +8,72 @@ public class AccountCheckBean {
 	private int OUTCOME;
 	private int BALANCE;
 	private java.sql.Timestamp CHECK_DATE;
+
+	private Boolean RESULT;
+	private int BALANCE_Y;
+
 	public String getCUSTOMER_ID() {
 		return CUSTOMER_ID;
 	}
+
 	public void setCUSTOMER_ID(String cUSTOMER_ID) {
 		CUSTOMER_ID = cUSTOMER_ID;
 	}
+
 	public String getACCOUNT_ID() {
 		return ACCOUNT_ID;
 	}
+
 	public void setACCOUNT_ID(String aCCOUNT_ID) {
 		ACCOUNT_ID = aCCOUNT_ID;
 	}
+
 	public int getINCOME() {
 		return INCOME;
 	}
+
 	public void setINCOME(int iNCOME) {
 		INCOME = iNCOME;
 	}
+
 	public int getOUTCOME() {
 		return OUTCOME;
 	}
+
 	public void setOUTCOME(int oUTCOME) {
 		OUTCOME = oUTCOME;
 	}
+
 	public int getBALANCE() {
 		return BALANCE;
 	}
+
 	public void setBALANCE(int bALANCE) {
 		BALANCE = bALANCE;
 	}
+
 	public java.sql.Timestamp getCHECK_DATE() {
 		return CHECK_DATE;
 	}
+
 	public void setCHECK_DATE(java.sql.Timestamp cHECK_DATE) {
 		CHECK_DATE = cHECK_DATE;
 	}
-	
+
+	public Boolean getRESULT() {
+		return RESULT;
+	}
+
+	public void setRESULT(Boolean rESULT) {
+		RESULT = rESULT;
+	}
+
+	public int getBALANCE_Y() {
+		return BALANCE_Y;
+	}
+
+	public void setBALANCE_Y(int bALANCE_Y) {
+		BALANCE_Y = bALANCE_Y;
+	}
+
 }

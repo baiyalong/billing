@@ -71,6 +71,13 @@ public class OrderInfoBean implements java.io.Serializable {
 	private String ACCOUNT_CODE;// ÕË±¾±àºÅ
 	private String CONTAINER_ID;// ÈÝÆ÷ID
 
+	private String BOOK_ID;
+	private String PROVINCE_CODE;
+	private String AREA_CODE;
+	private String ACCOUNT_ID;
+	private long PRICE;
+	private long BALANCE;
+
 	public String getACCOUNT_CODE() {
 		return ACCOUNT_CODE;
 	}
@@ -249,7 +256,8 @@ public class OrderInfoBean implements java.io.Serializable {
 					"PRODUCT_CATEGORY").toString() : null));
 
 			orderInfoBean.setAMOUNT((Integer) order.get("AMOUNT"));
-			orderInfoBean.setBILLING_TIME((Timestamp) order.get("AMOUNT"));
+			orderInfoBean
+					.setBILLING_TIME((Timestamp) order.get("BILLING_TIME"));
 			orderInfoBean.setACCOUNT_CODE((String) order.get("ACCOUNT_CODE"));
 			orderInfoBean.setCONTAINER_ID((String) order.get("CONTAINER_ID"));
 			l.add(orderInfoBean);
@@ -271,6 +279,54 @@ public class OrderInfoBean implements java.io.Serializable {
 
 	public void setCREATE_TIME(Date cREATE_TIME) {
 		CREATE_TIME = cREATE_TIME;
+	}
+
+	public String getBOOK_ID() {
+		return BOOK_ID;
+	}
+
+	public void setBOOK_ID(String bOOK_ID) {
+		BOOK_ID = bOOK_ID;
+	}
+
+	public String getPROVINCE_CODE() {
+		return PROVINCE_CODE;
+	}
+
+	public void setPROVINCE_CODE(String pROVINCE_CODE) {
+		PROVINCE_CODE = pROVINCE_CODE;
+	}
+
+	public String getAREA_CODE() {
+		return AREA_CODE;
+	}
+
+	public void setAREA_CODE(String aREA_CODE) {
+		AREA_CODE = aREA_CODE;
+	}
+
+	public String getACCOUNT_ID() {
+		return ACCOUNT_ID;
+	}
+
+	public void setACCOUNT_ID(String aCCOUNT_ID) {
+		ACCOUNT_ID = aCCOUNT_ID;
+	}
+
+	public long getPRICE() {
+		return PRICE;
+	}
+
+	public void setPRICE(long pRICE) {
+		PRICE = pRICE;
+	}
+
+	public long getBALANCE() {
+		return BALANCE;
+	}
+
+	public void setBALANCE(long bALANCE) {
+		BALANCE = bALANCE;
 	}
 
 }

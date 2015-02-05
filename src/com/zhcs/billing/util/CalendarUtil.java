@@ -20,6 +20,14 @@ public class CalendarUtil {
 		return yesteday;
 	}
 
+	public static String yyestoday() {
+		Calendar calendar = Calendar.getInstance();// 此时打印它获取的是系统当前时间
+		calendar.add(Calendar.DATE, -2); // 得到前一天
+		String yesteday = new SimpleDateFormat("yyyy-MM-dd").format(calendar
+				.getTime());
+		return yesteday;
+	}
+
 	public static String thisMonth() {
 		Calendar calendar = Calendar.getInstance();// 此时打印它获取的是系统当前时间
 		int year = calendar.get(Calendar.YEAR);

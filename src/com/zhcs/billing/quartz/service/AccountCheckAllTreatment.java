@@ -23,8 +23,16 @@ public class AccountCheckAllTreatment extends Task implements Job {
 	@Override
 	public void execute(HashMap map) {
 		// TODO Auto-generated method stub
-
+		// ≤È—Ø
 		AccountCheckAllBean bean = BillingQuery.AccountCheckAll();
+		// ∫À’À
+		if (bean.getBALANCE_Y() + bean.getINCOME() - bean.getOUTCOME() == bean
+				.getBALANCE()) {
+			bean.setRESULT(true);
+		} else {
+			bean.setRESULT(false);
+		}
+		// º«¬º
 		try {
 			BillingInsert.AccountCheckAll(bean);
 		} catch (Exception e) {
@@ -32,5 +40,4 @@ public class AccountCheckAllTreatment extends Task implements Job {
 			e.printStackTrace();
 		}
 	}
-
 }

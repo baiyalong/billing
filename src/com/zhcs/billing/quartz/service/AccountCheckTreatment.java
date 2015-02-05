@@ -35,8 +35,16 @@ public class AccountCheckTreatment extends Task implements Job {
 				AccountCheckBean b = new AccountCheckBean();
 				b.setACCOUNT_ID(bean.getACCOUNT_ID());
 				b.setCUSTOMER_ID(bean.getCUSTOMER_ID());
-				// -- 查询收支明细，核账
-				BillingQuery.AccountCheck(b);
+				// -- 查询收支明细
+				b = BillingQuery.AccountCheck(b);
+				// 核账
+				if (b.getBALANCE_Y() + b.getINCOME() - b.getOUTCOME() == b
+						.getBALANCE()) {
+					b.setRESULT(true);
+				} else {
+					b.setRESULT(false);
+				}
+
 				// -- 记录
 				try {
 					BillingInsert.AccountCheck(b);

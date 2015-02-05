@@ -276,9 +276,9 @@ public class BillingInsert {
 
 				// 2。添加账本收支记录
 				String sq2 = "insert into ACCOUNT_TRANSACTION "
-						+ "(TRANSACTION_ID,BOOK_ID,PROVINCE_CODE,AREA_CODE,CUSTOMER_ID,ACCOUNT_ID,SERIAL_NO,TRANSACTION_TYPE,INOUT_FLAG,AMOUNT,BALANCE,LOCK_AMOUNT,DEAL_TIME,DESCRIPTION,TRAN_STATUS)"
+						+ "(TRANSACTION_ID,BOOK_ID,PROVINCE_CODE,AREA_CODE,CUSTOMER_ID,ACCOUNT_ID,SERIAL_NO,TRANSACTION_TYPE,INOUT_FLAG,AMOUNT,BALANCE,LOCK_AMOUNT,DEAL_TIME,DESCRIPTION)"
 						+ "values "
-						+ "(?,?,?,?,?,?,?,2,4,?,?,0,now(),'RAbility',0);";
+						+ "(?,?,?,?,?,?,?,2,4,?,?,0,now(),'RAbility');";
 				List param2 = new ArrayList();
 				param2.add(UUID.randomUUID().toString());
 				param2.add(bean.getBOOK_ID());
@@ -288,13 +288,14 @@ public class BillingInsert {
 				param2.add(bean.getACCOUNT_ID());
 				param2.add(serialNo);
 				param2.add(bean.getPRICE());
-				param2.add(rest);
+				param2.add(rest - bean.getPRICE());
 				sql.add(sq2);
 				params.add(param2);
 
 				// 3.账本扣费
 				String sq3 = "update ACCOUNT_BOOK set BALANCE = BALANCE - ?,CREDIT_AMOUNT = CREDIT_AMOUNT + ? where BOOK_ID = ?;";
 				List param3 = new ArrayList();
+				param3.add(bean.getPRICE());
 				param3.add(bean.getPRICE());
 				param3.add(bean.getBOOK_ID());
 				sql.add(sq3);
@@ -341,11 +342,12 @@ public class BillingInsert {
 	public static void AccountCheckAll(AccountCheckAllBean bean)
 			throws Exception {
 		// TODO Auto-generated method stub
-		String sql = "insert into ACCOUNT_CHECK_ALL (INCOME,OUTCOME,BALANCE,CHECK_DATE) values (?,?,?,now());";
+		String sql = "insert into ACCOUNT_CHECK_ALL (INCOME,OUTCOME,BALANCE,CHECK_DATE,RESULT) values (?,?,?,now(),?);";
 		List params = new ArrayList();
 		params.add(bean.getINCOME());
 		params.add(bean.getOUTCOME());
 		params.add(bean.getBALANCE());
+		params.add(bean.getRESULT());
 
 		int rs = new BillingBaseDao().doSaveOrUpdate(sql, params);
 		if (rs == 0) {
@@ -356,13 +358,14 @@ public class BillingInsert {
 
 	public static void AccountCheck(AccountCheckBean b) throws Exception {
 		// TODO Auto-generated method stub
-		String sql = "insert into ACCOUNT_CHECK (CUSTOMER_ID,ACCOUNT_ID,INCOME,OUTCOME,BALANCE,CHECK_DATE) values (?,?,?,?,?,now());";
+		String sql = "insert into ACCOUNT_CHECK (CUSTOMER_ID,ACCOUNT_ID,INCOME,OUTCOME,BALANCE,CHECK_DATE,RESULT) values (?,?,?,?,?,now(),?);";
 		List params = new ArrayList();
 		params.add(b.getCUSTOMER_ID());
 		params.add(b.getACCOUNT_ID());
 		params.add(b.getINCOME());
 		params.add(b.getOUTCOME());
 		params.add(b.getBALANCE());
+		params.add(b.getRESULT());
 
 		int rs = new BillingBaseDao().doSaveOrUpdate(sql, params);
 		if (rs == 0) {

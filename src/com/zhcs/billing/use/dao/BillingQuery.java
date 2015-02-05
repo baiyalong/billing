@@ -510,13 +510,27 @@ public class BillingQuery {
 		List<HashMap<String, Object>> li = new BillingBaseDao().doSelect(sql,
 				params);
 		if (li != null && !li.isEmpty()) {
-			bean.setINCOME(Integer.parseInt((String) li.get(0).get(
-					"sum(INCOME)")));
+			bean.setINCOME(Integer.parseInt(String.valueOf(li.get(0).get(
+					"sum(INCOME)"))));
 			bean.setOUTCOME(Integer.parseInt((String) li.get(0).get(
 					"sum(OUTCOME)")));
 			bean.setBALANCE(Integer.parseInt((String) li.get(0).get(
 					"sum(BALANCE)")));
 		}
+
+		sql = "select * from ACCOUNT_CHECK_ALL where CHECK_DATE between ? and ?;";
+		params = new ArrayList();
+		params.add(CalendarUtil.yyestoday());
+		params.add(CalendarUtil.yestoday());
+
+		li = new BillingBaseDao().doSelect(sql, params);
+		if (li != null && !li.isEmpty()) {
+			bean.setBALANCE_Y(Integer.parseInt((String) li.get(0)
+					.get("BALANCE")));
+		} else {
+			bean.setBALANCE_Y(0);
+		}
+
 		return bean;
 	}
 
@@ -546,13 +560,13 @@ public class BillingQuery {
 		params.add(CalendarUtil.today());
 		List<HashMap<String, Object>> li = new BaseDao().doSelect(sql, params);
 		if (li != null && !li.isEmpty()) {
-			res = Integer.parseInt((String) li.get(0).get("count(*)"));
+			res = new Integer(String.valueOf(li.get(0).get("count(*)")));
 		}
 
 		return res;
 	}
 
-	public static void AccountCheck(AccountCheckBean b) {
+	public static AccountCheckBean AccountCheck(AccountCheckBean b) {
 		// TODO Auto-generated method stub
 		BaseDao dao = new BaseDao();
 		List params = new ArrayList();
@@ -592,6 +606,21 @@ public class BillingQuery {
 		if (li != null && !li.isEmpty()) {
 			b.setBALANCE(Integer.parseInt((String) li.get(0).get("BALANCE")));
 		}
+
+		// -- balance yesterday
+		sql = "select BALANCE from ACCOUNT_TRANSACTION where ACCOUNT_ID = ? and DEAL_TIME between ? and ?  order by DEAL_TIME desc limit 1;";
+		params.clear();
+		params.add(b.getACCOUNT_ID());
+		params.add(CalendarUtil.yyestoday());
+		params.add(CalendarUtil.yestoday());
+		li = dao.doSelect(sql, params);
+		if (li != null && !li.isEmpty()) {
+			b.setBALANCE_Y(Integer.parseInt((String) li.get(0).get("BALANCE")));
+		} else {
+			b.setBALANCE_Y(0);
+		}
+
+		return b;
 	}
 
 	public static List<EstOrderBean> GetOrderFromPackid(

@@ -317,14 +317,15 @@ public class BaseDao {
 		int num = 0;
 		if (sql != null && params != null && !sql.isEmpty()
 				&& !params.isEmpty() && sql.size() == params.size()) {
+			this.con = this.connection();
 			try {
 				con.setAutoCommit(false);
 				for (int j = 0; j < sql.size(); j++) {
 					String sq = sql.get(j);
 					List param = params.get(j);
-					
+
 					pstm = getPstm(sq);
-					if (param!= null) {
+					if (param != null) {
 						for (int i = 0; i < param.size(); i++) {
 							pstm.setObject(i + 1, param.get(i));
 						}

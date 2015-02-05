@@ -7,6 +7,9 @@ public class AccountCheckAllBean {
 	private int BALANCE;
 	private java.sql.Timestamp CHECK_DATE;
 
+	private Boolean RESULT;
+	private int BALANCE_Y;
+
 	public int getINCOME() {
 		return INCOME;
 	}
@@ -37,6 +40,22 @@ public class AccountCheckAllBean {
 
 	public void setBALANCE(int bALANCE) {
 		BALANCE = bALANCE;
+	}
+
+	public Boolean getRESULT() {
+		return RESULT;
+	}
+
+	public void setRESULT(Boolean rESULT) {
+		RESULT = rESULT;
+	}
+
+	public int getBALANCE_Y() {
+		return BALANCE_Y;
+	}
+
+	public void setBALANCE_Y(int bALANCE_Y) {
+		BALANCE_Y = bALANCE_Y;
 	}
 
 }
