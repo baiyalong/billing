@@ -32,8 +32,9 @@ public class CalendarUtil {
 		Calendar calendar = Calendar.getInstance();// 此时打印它获取的是系统当前时间
 		int year = calendar.get(Calendar.YEAR);
 		int month = calendar.get(Calendar.MONTH) + 1; // 输出前一月的时候要记得加1
-
-		return year + "-" + month + "-01";
+		String mm = month < 10 ? '0' + String.valueOf(month) : String
+				.valueOf(month);
+		return year + "-" + mm + "-01";
 	}
 
 	public static String lastMonth() {
@@ -41,7 +42,8 @@ public class CalendarUtil {
 		calendar.add(Calendar.MONTH, -1); // 得到前一个月
 		int year = calendar.get(Calendar.YEAR);
 		int month = calendar.get(Calendar.MONTH) + 1; // 输出前一月的时候要记得加1
-
-		return year + "-" + month + "-01";
+		String mm = month < 10 ? '0' + String.valueOf(month) : String
+				.valueOf(month);
+		return year + "-" + mm + "-01";
 	}
 }

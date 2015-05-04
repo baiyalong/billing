@@ -1,5 +1,6 @@
 package com.zhcs.billing.quartz.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +13,10 @@ import com.zhcs.billing.use.bean.AccountCheckBean;
 import com.zhcs.billing.use.bean.AccountInfoBean;
 import com.zhcs.billing.use.dao.BillingInsert;
 import com.zhcs.billing.use.dao.BillingQuery;
+import com.zhcs.billing.util.BaseDao;
+import com.zhcs.billing.util.BillingBaseDao;
 import com.zhcs.billing.util.LoggerUtil;
+import com.zhcs.billing.util.CalendarUtil;
 
 public class AccountCheckTreatment extends Task implements Job {
 
@@ -56,6 +60,15 @@ public class AccountCheckTreatment extends Task implements Job {
 				// -- recon 更新月账单
 				try {
 
+					if (// this.isMonthOpen() &&
+					!this.existRecon(b.getACCOUNT_ID())) {
+						// 月初 插入新账单
+						this.newRecon(b);
+					}
+
+					// 更新账单
+					this.updateRecon(b);
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -80,6 +93,82 @@ public class AccountCheckTreatment extends Task implements Job {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void updateRecon(AccountCheckBean b) { // 更新月账单
+		// TODO Auto-generated method stub
+		// update ACCOUNT_BOOK set BALANCE = BALANCE - ?,CREDIT_AMOUNT =
+		// CREDIT_AMOUNT + ? where BOOK_ID = ?;
+		String sql = "update ACCOUNT_RECON set"
+				+ "DEBIT_AMOUNT = DEBIT_AMOUNT + ?,CREDIT_AMOUNT = CREDIT_AMOUNT + ?,CLOSING_BALANCE = ?"
+				+ "where ACCOUNT_ID = ? and BILL_MONTH = ?;";
+		List params = new ArrayList();
+		params.add(b.getINCOME());
+		params.add(b.getOUTCOME());
+		params.add(b.getBALANCE());
+
+		params.add(b.getACCOUNT_ID());
+		params.add(this.isMonthOpen() ? CalendarUtil.lastMonth()
+				.replace("-", "").substring(0, 6) : CalendarUtil.thisMonth()
+				.replace("-", "").substring(0, 6)); // 月份
+
+		int rs;
+		try {
+			rs = new BaseDao().doSaveOrUpdate(sql, params);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private void newRecon(AccountCheckBean b) { // 插入新账单
+		// TODO Auto-generated method stub
+		String sql = "insert into ACCOUNT_RECON "
+				+ "(BILL_ID,ACCOUNT_ID,CUSTOMER_ID,BILL_MONTH,OPENNING_BALANCE,DEBIT_AMOUNT,CREDIT_AMOUNT,CLOSING_BALANCE,CREATE_TIME) "
+				+ "values " + "(?,?,?,?,?,?,?,?,now());";
+		List params = new ArrayList();
+		params.add(java.util.UUID.randomUUID().toString());
+		params.add(b.getACCOUNT_ID());
+		params.add(b.getCUSTOMER_ID());
+		params.add(CalendarUtil.thisMonth().replace("-", "").substring(0, 6));
+		params.add(b.getBALANCE());
+		params.add(0);
+		params.add(0);
+		params.add(b.getBALANCE());
+
+		int rs;
+		try {
+			rs = new BaseDao().doSaveOrUpdate(sql, params);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private boolean existRecon(String accountID) { // 本月账单已存在
+		// TODO Auto-generated method stub
+		int res = 0;
+		String sql = "select count(*) from ACCOUNT_RECON where ACCOUNT_ID = ? and BILL_MONTH = ?;";
+		List params = new ArrayList();
+		params.add(accountID);
+		params.add(CalendarUtil.thisMonth().replace("-", "").substring(0, 6)); // 月份
+
+		List<HashMap<String, Object>> li = new BaseDao().doSelect(sql, params);
+		if (li != null && !li.isEmpty()) {
+			res = new Integer(String.valueOf(li.get(0).get("count(*)")));
+		}
+
+		return res > 0;
+	}
+
+	private boolean isMonthOpen() { // 今天是月初
+		// TODO Auto-generated method stub
+		String today = CalendarUtil.today();
+		String thisMonth = CalendarUtil.thisMonth();
+
+		return today.equals(thisMonth);
+
 	}
 
 }
