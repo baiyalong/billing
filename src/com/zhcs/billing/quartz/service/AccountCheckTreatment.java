@@ -52,8 +52,15 @@ public class AccountCheckTreatment extends Task implements Job {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				
+
+				// -- recon 更新月账单
+				try {
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
 		}
 		// 每天核账完成后，更新总账记录

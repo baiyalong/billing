@@ -292,7 +292,7 @@ public class BillingInsert {
 				String sq2 = "insert into ACCOUNT_TRANSACTION "
 						+ "(TRANSACTION_ID,BOOK_ID,PROVINCE_CODE,AREA_CODE,CUSTOMER_ID,ACCOUNT_ID,SERIAL_NO,TRANSACTION_TYPE,INOUT_FLAG,AMOUNT,BALANCE,LOCK_AMOUNT,DEAL_TIME,DESCRIPTION)"
 						+ "values "
-						+ "(?,?,?,?,?,?,?,2,4,?,?,0,now(),'RAbility');";
+						+ "(?,?,?,?,?,?,?,4,-1,?,?,0,now(),'RAbility');";
 				List param2 = new ArrayList();
 				param2.add(UUID.randomUUID().toString());
 				param2.add(bean.getBOOK_ID());
