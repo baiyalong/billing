@@ -259,7 +259,9 @@ public class OrderInfoBean implements java.io.Serializable {
 			orderInfoBean
 					.setBILLING_TIME((Timestamp) order.get("BILLING_TIME"));
 			orderInfoBean.setACCOUNT_CODE((String) order.get("ACCOUNT_CODE"));
-			orderInfoBean.setCONTAINER_ID((String) order.get("CONTAINER_ID"));
+			orderInfoBean
+					.setCONTAINER_ID(order.get("CONTAINER_ID") == null ? ""
+							: (String) order.get("CONTAINER_ID"));
 			l.add(orderInfoBean);
 		}
 		return l;

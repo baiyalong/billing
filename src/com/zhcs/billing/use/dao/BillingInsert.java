@@ -198,42 +198,54 @@ public class BillingInsert {
 		List params = new ArrayList();
 		List<HashMap<String, Object>> li;
 		String sql = "";
-		// 是否订购套餐
-		if (bean.getDEDUCTION_TYPE() == 0) {
-			res = false;
-		} else {
-			// 查套餐余额并扣1，需要同步
-			lock_RPackage.lock();
-			try {
-				// 查询余额
-				sql = "select REMAINING_AMOUNT from SUBSCRIPTION_ITEM where SI_ID=?;";
-				params.add(bean.getSI_ID());
-				li = dao.doSelect(sql, params);
-				if (li != null && !li.isEmpty()) {
-					bean.setREMAINING_AMOUNT((Integer) li.get(0).get(
-							"REMAINING_AMOUNT"));
-					if (bean.getREMAINING_AMOUNT() > 0) {
-						// 扣套餐
-						sql = "update SUBSCRIPTION_ITEM set REMAINING_AMOUNT = REMAINING_AMOUNT -1 where SI_ID=?; ";
-						int rs = dao.doSaveOrUpdate(sql, params);
-						if (rs == 0) {
-							throw new Exception();
-						}
-						res = true;
-						bean.setDEDUCTION_TYPE(2);// 套餐未用完，扣套餐
-					} else {
-						bean.setDEDUCTION_TYPE(1);// 套餐已用完，扣余额
+
+		// 查套餐余额并扣1，需要同步
+		lock_RPackage.lock();
+		try {
+			// 查询余额
+			// sql =
+			// "select REMAINING_AMOUNT from SUBSCRIPTION_ITEM where SI_ID=?;";
+			sql = "select * from ORDER_AMOUNT where ORDER_ID = ? and ITEM_CODE = ? ;";
+			params.add(bean.getORDER_ID());
+			params.add(bean.getITEM_CODE());
+
+			li = dao.doSelect(sql, params);
+			if (li == null || li.isEmpty()) {
+				// 0， 没有套餐，没有优惠，扣余额；
+				// 1， 有套餐，套餐已用完，扣余额；
+				// 2， 有套餐，套餐未用完，扣套餐
+
+				log.error("没有找到套餐余额信息！");
+				logUtil.error("没有找到套餐余额信息！");
+
+			} else {
+
+				bean.setREMAINING_AMOUNT((Integer) li.get(0).get(
+						"REMAINING_AMOUNT"));
+				bean.setPRICE((Integer) li.get(0).get("PRICE"));
+				if (bean.getREMAINING_AMOUNT() > 0) {
+					// 扣套餐
+					// sql =
+					// "update SUBSCRIPTION_ITEM set REMAINING_AMOUNT = REMAINING_AMOUNT -1 where SI_ID=?; ";
+					sql = "update ORDER_AMOUNT set REMAINING_AMOUNT = REMAINING_AMOUNT -1 , USED_AMOUNT = USED_AMOUNT + 1 where ORDER_ID = ? and ITEM_CODE = ? ;";
+					int rs = dao.doSaveOrUpdate(sql, params);
+					if (rs == 0) {
+						throw new Exception();
 					}
+					res = true;
+					bean.setDEDUCTION_TYPE(2);// 套餐未用完，扣套餐
 				} else {
-					log.error("没有找到套餐余额信息！");
-					logUtil.error("没有找到套餐余额信息！");
+					int amount = (Integer) li.get(0).get("AMOUNT");
+
+					bean.setDEDUCTION_TYPE(amount == 0 ? 0 : 1);// 套餐已用完，扣余额
 				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				lock_RPackage.unlock();
 			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			lock_RPackage.unlock();
 		}
 
 		return res;
@@ -255,13 +267,15 @@ public class BillingInsert {
 		// 查余额并扣费，需要同步
 		lock_RBalance.lock();
 		try {
+
 			// 查余额
 			String sq = "select BALANCE from  ACCOUNT_BOOK where BOOK_ID = ?;";
 			List param = new ArrayList();
 			param.add(bean.getBOOK_ID());
 			li = dao.doSelect(sq, param);
 			if (li != null && !li.isEmpty()) {
-				rest = Integer.parseInt((String) li.get(0).get("BALANCE"));
+				rest = li.get(0).get("BALANCE") == null ? 0 : ((Number) li.get(
+						0).get("BALANCE")).intValue();
 				bean.setOPERATION_RESULT(rest > bean.getPRICE() ? 0 : 1);// 0 正常
 																			// 1
 																			// 欠费
@@ -310,6 +324,7 @@ public class BillingInsert {
 
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			lock_RBalance.unlock();
 		}
@@ -318,7 +333,7 @@ public class BillingInsert {
 	}
 
 	public static boolean PartnerSettlementRecords(
-			PartnerSettlementRuleBean bean, int amount) {
+			PartnerSettlementRuleBean bean, long amount) {
 		// TODO Auto-generated method stub
 		boolean res = false;
 		List params = new ArrayList();

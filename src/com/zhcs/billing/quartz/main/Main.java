@@ -16,15 +16,15 @@ public class Main {
 	private static Logger log = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) {
+
 		// TODO Auto-generated method stub
 		// 数据库连接初始化
 		DbUtil.initBuisness();
 		DbUtil.initCalculate();
 		DbUtil.initEstimate();
 
-		/*
-		 * // 能力实时计费初始化 new ThreadMq("ability").init();
-		 */
+		// 能力实时计费初始化
+		new ThreadMq("ability").init();
 
 		/*
 		 * // 流量实时计费初始化 new ThreadMq("flow").init();
@@ -37,8 +37,10 @@ public class Main {
 		 * Mouse.run(1); // TASK_ID对应的相应的定时任务 Mouse.run(2); // TASK_ID对应的相应的定时任务
 		 * Mouse.run(3); // TASK_ID对应的相应的定时任务 Mouse.run(4); // TASK_ID对应的相应的定时任务
 		 * Mouse.run(5); // TASK_ID对应的相应的定时任务
-		 *//*Mouse.run(10); // TEST_SIMPLE
-*/		Mouse.run(12); // TEST_ACCOUNT CHECK
+		 */// Mouse.run(10); // TEST_SIMPLE
+			// Mouse.run(12); // TEST_ACCOUNT CHECK_DATE
+		// Mouse.run(13); // TASK_PARTNER_SETTLEMENT
+		// Mouse.run(11); // TASK_ACCOUNT_CHECK
 		logUtil.info("===计费系统正常启动！===");
 		log.info("===计费系统正常启动！===");
 		logUtil.info("billing start....");

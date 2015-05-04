@@ -1,5 +1,6 @@
 package com.zhcs.billing.use.bean;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,23 +77,26 @@ public class PartnerSettlementRuleBean {
 		List<PartnerSettlementRuleBean> beans = new ArrayList<PartnerSettlementRuleBean>();
 		for (HashMap<String, Object> hashMap : list) {
 			PartnerSettlementRuleBean bean = new PartnerSettlementRuleBean();
-			bean.setID(hashMap.get("ABILITY_TYPE") != null ? new java.math.BigInteger(
-					hashMap.get("ABILITY_TYPE").toString()) : null);
-			bean.setABILITY_TYPE(hashMap.get("ABILITY_TYPE") != null ? Integer
-					.parseInt(hashMap.get("ABILITY_TYPE").toString()) : null);
+			bean.setID((BigInteger) (hashMap.get("ID") != null ? new java.math.BigInteger(
+					hashMap.get("ID").toString()) : 0));
+
+			bean.setABILITY_TYPE((Integer) (hashMap.get("ABILITY_TYPE") != null ? hashMap
+					.get("ABILITY_TYPE") : 0));
+
 			bean.setAPP_ID(hashMap.get("APP_ID") != null ? hashMap
 					.get("APP_ID").toString() : null);
+
 			bean.setEFFECTIVE_DATE(hashMap.get("EFFECTIVE_DATE") != null ? java.sql.Timestamp
 					.valueOf(hashMap.get("EFFECTIVE_DATE").toString()) : null);
 			bean.setPARTNER_ID(hashMap.get("PARTNER_ID") != null ? hashMap.get(
 					"PARTNER_ID").toString() : null);
 			bean.setSETTLEMENT_RULE(hashMap.get("SETTLEMENT_RULE") != null ? Integer
-					.parseInt(hashMap.get("SETTLEMENT_RULE").toString()) : null);
+					.parseInt(hashMap.get("SETTLEMENT_RULE").toString()) : 0);
 			bean.setSETTLEMENT_RULE_PARAM(hashMap.get("SETTLEMENT_RULE_PARAM") != null ? Integer
 					.parseInt(hashMap.get("SETTLEMENT_RULE_PARAM").toString())
-					: null);
+					: 0);
 			bean.setSTATUS(hashMap.get("STATUS") != null ? Integer
-					.parseInt(hashMap.get("STATUS").toString()) : null);
+					.parseInt(hashMap.get("STATUS").toString()) : 0);
 			beans.add(bean);
 		}
 		return beans;

@@ -1,5 +1,7 @@
 package com.zhcs.billing.quartz.main;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -22,9 +24,13 @@ public class test {
 	private static Logger log = LoggerFactory.getLogger(test.class);
 
 	public static void main(String[] args) {
-
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");// 设置日期格式
+		// new Date()为获取当前系统时间
+		String now = df.format(new Date());
+		System.out.println(now);
+		return;
 		// 数据库连接初始化
-		DbUtil.initBuisness();
+/*		DbUtil.initBuisness();
 		DbUtil.initCalculate();
 		DbUtil.initEstimate();
 
@@ -35,7 +41,7 @@ public class test {
 		new ThreadMq("flow").init();
 
 		// 应用实时计费初始化
-		new ThreadMq("app").init();
+		new ThreadMq("app").init();*/
 
 	}
 }

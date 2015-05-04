@@ -70,6 +70,7 @@ public class DbUtil {
 			log.info("===KDSWBILLING BoneCP init success===");
 		} catch (Exception e) {
 			log.error("===BoneCP init failed===", e);
+			e.printStackTrace();
 		}
 	}
 

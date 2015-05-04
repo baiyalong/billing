@@ -52,10 +52,21 @@ public class AccountCheckTreatment extends Task implements Job {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				
 			}
 		}
 		// 每天核账完成后，更新总账记录
+		// 查询
 		AccountCheckAllBean bean = BillingQuery.AccountCheckAll();
+		// 核账
+		if (bean.getBALANCE_Y() + bean.getINCOME() - bean.getOUTCOME() == bean
+				.getBALANCE()) {
+			bean.setRESULT(true);
+		} else {
+			bean.setRESULT(false);
+		}
+		// 记录
 		try {
 			BillingInsert.AccountCheckAll(bean);
 		} catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.zhcs.billing.use.dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -354,64 +355,45 @@ public class BillingQuery {
 			logUtil.error("容器ID：" + bean.getCOUNTAINER_ID() + "没有找到对应的订单！");
 			return false;
 		}
-
-		// 根据订单获取产品编号.
-		sql = SqlString.getProductNumber;
-		params.clear();
-		params.add(bean.getORDER_ID());
-		list = basedao.doSelect(sql, params);
-		if (list != null && !list.isEmpty()) {
-			bean.setPRODUCT_ID((String) list.get(0).get("PRODUCT_ID"));
-			bean.setSUBSCRIBER_ID((String) list.get(0).get("SUBSCRIBER_ID"));
-		} else {
-			log.error("订单ID：" + bean.getORDER_ID() + "没有找到对应的产品编号！");
-			logUtil.error("订单ID：" + bean.getORDER_ID() + "没有找到对应的产品编号！");
-			return false;
-		}
-
-		// // 根据产品获取所有纬度信息
-		sql = SqlString.getProductItem + " AND ITEM_CODE = ?;";
-		params.clear();
-		params.add(bean.getPRODUCT_ID());
-		params.add(BillingQuery.rMsgType(bean.getMSG_TYPE()));
-		list = basedao.doSelect(sql, params);
-		if (list != null && !list.isEmpty()) {
-			bean.setITEM_ID((String) list.get(0).get("ITEM_ID"));
-			bean.setPRICE((Integer) list.get(0).get("PRICE"));
-		} else {
-			log.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的纬度信息！");
-			logUtil.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的纬度信息！");
-			return false;
-		}
-
-		// 根据产品编号、申购编号查询申购明细
-		sql = SqlString.getSubscriptionItem + " AND ITEM_ID = ?";
-		params.clear();
-		params.add(bean.getSUBSCRIBER_ID());
-		params.add(bean.getPRODUCT_ID());
-		params.add(bean.getITEM_ID());
-		list = basedao.doSelect(sql, params);
-		if (list != null && !list.isEmpty()) {
-			bean.setSI_ID((String) list.get(0).get("SI_ID"));
-			bean.setPD_ID((String) list.get(0).get("PD_ID"));
-			bean.setREMAINING_AMOUNT((Integer) list.get(0).get(
-					"REMAINING_AMOUNT"));
-		} else {
-			log.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的申购明细！");
-			logUtil.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的申购明细！");
-			return false;
-		}
-
-		// 是否订购套餐
-		// 0， 没有套餐，没有优惠，扣余额；
-		// 1， 有套餐，套餐已用完，扣余额；
-		// 2， 有套餐，套餐未用完，扣套餐
-		bean.setDEDUCTION_TYPE(bean.getPD_ID() == null ? 0 : (bean
-				.getREMAINING_AMOUNT() > 0 ? 2 : 1));
-
+		/*
+		 * // 根据订单获取产品编号. sql = SqlString.getProductNumber; params.clear();
+		 * params.add(bean.getORDER_ID()); list = basedao.doSelect(sql, params);
+		 * if (list != null && !list.isEmpty()) { bean.setPRODUCT_ID((String)
+		 * list.get(0).get("PRODUCT_ID")); bean.setSUBSCRIBER_ID((String)
+		 * list.get(0).get("SUBSCRIBER_ID")); } else { log.error("订单ID：" +
+		 * bean.getORDER_ID() + "没有找到对应的产品编号！"); logUtil.error("订单ID：" +
+		 * bean.getORDER_ID() + "没有找到对应的产品编号！"); return false; }
+		 * 
+		 * // // 根据产品获取所有纬度信息 sql = SqlString.getProductItem +
+		 * " AND ITEM_CODE = ?;"; params.clear();
+		 * params.add(bean.getPRODUCT_ID());
+		 * params.add(BillingQuery.rMsgType(bean.getMSG_TYPE())); list =
+		 * basedao.doSelect(sql, params); if (list != null && !list.isEmpty()) {
+		 * bean.setITEM_ID((String) list.get(0).get("ITEM_ID"));
+		 * bean.setPRICE((Integer) list.get(0).get("PRICE")); } else {
+		 * log.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的纬度信息！");
+		 * logUtil.error("产品ID：" + bean.getPRODUCT_ID() + "没有找到对应的纬度信息！");
+		 * return false; }
+		 * 
+		 * // 根据产品编号、申购编号查询申购明细 sql = SqlString.getSubscriptionItem +
+		 * " AND ITEM_ID = ?"; params.clear();
+		 * params.add(bean.getSUBSCRIBER_ID());
+		 * params.add(bean.getPRODUCT_ID()); params.add(bean.getITEM_ID()); list
+		 * = basedao.doSelect(sql, params); if (list != null && !list.isEmpty())
+		 * { bean.setSI_ID((String) list.get(0).get("SI_ID"));
+		 * bean.setPD_ID((String) list.get(0).get("PD_ID"));
+		 * bean.setREMAINING_AMOUNT((Integer) list.get(0).get(
+		 * "REMAINING_AMOUNT")); } else { log.error("产品ID：" +
+		 * bean.getPRODUCT_ID() + "没有找到对应的申购明细！"); logUtil.error("产品ID：" +
+		 * bean.getPRODUCT_ID() + "没有找到对应的申购明细！"); return false; }
+		 * 
+		 * // 是否订购套餐 // 0， 没有套餐，没有优惠，扣余额； // 1， 有套餐，套餐已用完，扣余额； // 2，
+		 * 有套餐，套餐未用完，扣套餐 bean.setDEDUCTION_TYPE(bean.getPD_ID() == null ? 0 :
+		 * (bean .getREMAINING_AMOUNT() > 0 ? 2 : 1));
+		 */
 		// 结算部分 :付费类型 预付费/后付费 账户ID 账本ID 省份编码 地区编码
-		bean.setPAYMENT_TYPE(1); // ！暂定 默认后付费
-		sql = "select ACCOUNT_ID,PROVINCE_CODE,AREA_CODE from ACCOUNT_INFO where CUSTOMER_ID = ? and ACCOUNT_TYPE = ?;";
+		bean.setPAYMENT_TYPE(0); // ！暂定 默认预付费
+		sql = "select ACCOUNT_ID,PROVINCE_CODE,AREA_CODE from ACCOUNT_INFO where AP_ID = ? and ACCOUNT_TYPE = ?;";
 		params.clear();
 		params.add(bean.getCUSTOMER_ID());
 		params.add(bean.getPAYMENT_TYPE() + 1);// 0、1 -> 1、2
@@ -419,7 +401,7 @@ public class BillingQuery {
 		if (list != null && !list.isEmpty()) {
 			bean.setACCOUNT_ID((String) list.get(0).get("ACCOUNT_ID"));
 			bean.setPROVINCE_CODE((String) list.get(0).get("PROVINCE_CODE"));
-			bean.setAREA_CODE((String) list.get(0).get("REMAINING_AMOUNT"));
+			bean.setAREA_CODE((String) list.get(0).get("AREA_CODE"));
 		} else {
 			log.error("没有找到套餐信息！");
 			logUtil.error("没有找到套餐信息！");
@@ -463,7 +445,7 @@ public class BillingQuery {
 		String sql;
 		BillingBaseDao dao = new BillingBaseDao();
 
-		sql = "select * from PARTNER_SETTLEMENT_RULE where STATUS = 0;";
+		sql = "select * from PARTNER_SETTLEMENT_RULE where STATUS = 0 and EFFECTIVE_DATE < now();";
 		List<HashMap<String, Object>> list = dao.doSelect(sql);
 
 		List<PartnerSettlementRuleBean> beans = PartnerSettlementRuleBean
@@ -486,7 +468,7 @@ public class BillingQuery {
 		List<HashMap<String, Object>> li = new BillingBaseDao().doSelect(sql,
 				params);
 		if (li != null && !li.isEmpty()) {
-			res = Integer.parseInt((String) li.get(0).get("count(*)"));
+			res = ((Number) li.get(0).get("count(*)")).intValue();
 		}
 
 		return res;
@@ -502,20 +484,21 @@ public class BillingQuery {
 	public static AccountCheckAllBean AccountCheckAll() {
 		// TODO Auto-generated method stub
 		AccountCheckAllBean bean = new AccountCheckAllBean();
-		String sql = "select sum(INCOME),sum(OUTCOME),sum(BALANCE) from ACCOUNT_CHECK where CHECK_DATE between ? and ?;";
+		String sql = "select sum(INCOME),sum(OUTCOME),sum(BALANCE) from ACCOUNT_CHECK where CHECK_DATE > ? ;";
 		List params = new ArrayList();
-		params.add(CalendarUtil.yestoday());
-		params.add(CalendarUtil.today());
+		/*
+		 * params.add(CalendarUtil.yestoday());
+		 */params.add(CalendarUtil.today());
 
 		List<HashMap<String, Object>> li = new BillingBaseDao().doSelect(sql,
 				params);
 		if (li != null && !li.isEmpty()) {
-			bean.setINCOME(Integer.parseInt(String.valueOf(li.get(0).get(
-					"sum(INCOME)"))));
-			bean.setOUTCOME(Integer.parseInt((String) li.get(0).get(
-					"sum(OUTCOME)")));
-			bean.setBALANCE(Integer.parseInt((String) li.get(0).get(
-					"sum(BALANCE)")));
+			bean.setINCOME(li.get(0).get("sum(INCOME)") == null ? 0
+					: ((BigDecimal) (li.get(0).get("sum(INCOME)"))).intValue());
+			bean.setOUTCOME(li.get(0).get("sum(OUTCOME)") == null ? 0
+					: ((BigDecimal) li.get(0).get("sum(OUTCOME)")).intValue());
+			bean.setBALANCE(li.get(0).get("sum(BALANCE)") == null ? 0
+					: ((BigDecimal) li.get(0).get("sum(BALANCE)")).intValue());
 		}
 
 		sql = "select * from ACCOUNT_CHECK_ALL where CHECK_DATE between ? and ?;";
@@ -574,26 +557,27 @@ public class BillingQuery {
 		List<HashMap<String, Object>> li;
 
 		// -- income
-		sql = "select sum(AMOUNT) from ACCOUNT_TRANSACTION where ACCOUNT_ID = ? and TRANSANCTION_TYPE = 1 and DEAL_TIME between ? and ?;";
+		sql = "select sum(AMOUNT) from ACCOUNT_TRANSACTION where ACCOUNT_ID = ? and TRANSACTION_TYPE = 1 and DEAL_TIME between ? and ?;";
 		params.clear();
 		params.add(b.getACCOUNT_ID());
 		params.add(CalendarUtil.yestoday());
 		params.add(CalendarUtil.today());
 		li = dao.doSelect(sql, params);
 		if (li != null && !li.isEmpty()) {
-			b.setINCOME(Integer.parseInt((String) li.get(0).get("sum(AMOUNT)")));
+			b.setINCOME((li.get(0).get("sum(AMOUNT)") == null ? 0
+					: ((BigDecimal) li.get(0).get("sum(AMOUNT)")).intValue()));
 		}
 
 		// -- outcome
-		sql = "select sum(AMOUNT) from ACCOUNT_TRANSACTION where ACCOUNT_ID = ? and TRANSANCTION_TYPE = 2 and DEAL_TIME between ? and ?;";
+		sql = "select sum(AMOUNT) from ACCOUNT_TRANSACTION where ACCOUNT_ID = ? and TRANSACTION_TYPE = 2 and DEAL_TIME between ? and ?;";
 		params.clear();
 		params.add(b.getACCOUNT_ID());
 		params.add(CalendarUtil.yestoday());
 		params.add(CalendarUtil.today());
 		li = dao.doSelect(sql, params);
 		if (li != null && !li.isEmpty()) {
-			b.setOUTCOME(Integer
-					.parseInt((String) li.get(0).get("sum(AMOUNT)")));
+			b.setOUTCOME(li.get(0).get("sum(AMOUNT)") == null ? 0
+					: ((BigDecimal) li.get(0).get("sum(AMOUNT)")).intValue());
 		}
 
 		// -- balance
@@ -604,7 +588,8 @@ public class BillingQuery {
 		params.add(CalendarUtil.today());
 		li = dao.doSelect(sql, params);
 		if (li != null && !li.isEmpty()) {
-			b.setBALANCE(Integer.parseInt((String) li.get(0).get("BALANCE")));
+			b.setBALANCE((Integer) ((Integer) li.get(0).get("BALANCE") == null ? 0
+					: li.get(0).get("BALANCE")));
 		}
 
 		// -- balance yesterday
@@ -615,7 +600,8 @@ public class BillingQuery {
 		params.add(CalendarUtil.yestoday());
 		li = dao.doSelect(sql, params);
 		if (li != null && !li.isEmpty()) {
-			b.setBALANCE_Y(Integer.parseInt((String) li.get(0).get("BALANCE")));
+			b.setBALANCE_Y(li.get(0).get("BALANCE") == null ? 0 : (Integer) li
+					.get(0).get("BALANCE"));
 		} else {
 			b.setBALANCE_Y(0);
 		}

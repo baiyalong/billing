@@ -12,6 +12,7 @@ import java.util.List;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 
@@ -89,15 +90,20 @@ public class Msg {
 		jso.put("userAccount", ua);
 		jso.put("abiCode", code);
 		String req = jso.toString();
-		getPostMethod().addRequestHeader("Content-Type", "application/json");
+
+		PostMethod postMethod = new PostMethod(getRurl());// getPostMethod();
+		HttpClient httpclient = new HttpClient();// getHttpclient();
+		postMethod.getParams().setParameter("http.protocol.cookie-policy",
+				CookiePolicy.IGNORE_COOKIES);
+		postMethod.setRequestHeader("Content-Type", "application/json");
 
 		try {
 			StringRequestEntity requestEntity = new StringRequestEntity(req,
 					"application/json", "UTF-8");
 
-			getPostMethod().setRequestEntity(requestEntity);
-			getHttpclient().executeMethod(getPostMethod());
-			String resp = getPostMethod().getResponseBodyAsString();
+			postMethod.setRequestEntity(requestEntity);
+			httpclient.executeMethod(postMethod);
+			String resp = postMethod.getResponseBodyAsString();
 
 			JSONObject job = JSONObject.fromObject(resp);
 			String orderCode = job.getString("orderCode");
@@ -106,6 +112,9 @@ public class Msg {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			postMethod.releaseConnection();
+			httpclient.getHttpConnectionManager().closeIdleConnections(0);
 		}
 
 		return res;
@@ -166,7 +175,7 @@ public class Msg {
 	}
 
 	public static HttpClient getHttpclient() {
-		return httpclient == null ? new HttpClient() : httpclient;
+		return httpclient == null ? httpclient = new HttpClient() : httpclient;
 	}
 
 	/*
@@ -175,7 +184,8 @@ public class Msg {
 	 */
 
 	public static PostMethod getPostMethod() {
-		return postMethod == null ? new PostMethod(getRurl()) : postMethod;
+		return postMethod == null ? postMethod = new PostMethod(getRurl())
+				: postMethod;
 	}
 
 	/*
@@ -184,7 +194,31 @@ public class Msg {
 	 */
 
 	public static String getRurl() {
-		return Rurl == null ? BillingCumulative.readProperties("Rurl") : Rurl;
+		return Rurl == null ? Rurl = BillingCumulative.readProperties("Rurl")
+				: Rurl;
+	}
+
+	public static String itemCode(int msg_TYPE) {
+		// TODO Auto-generated method stub
+		String Code = "";
+		switch (msg_TYPE) {
+		case 10:
+			Code = "WD-SMS-T";
+			break;
+		case 11:
+			Code = "WD-MMS-T";
+			break;
+		case 12:
+			Code = "WD-LBS-T";
+			break;
+		case 13:
+			Code = "WD-GIS-T";
+			break;
+		default:
+			break;
+		}
+
+		return Code;
 	}
 
 	/*

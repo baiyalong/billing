@@ -2,20 +2,26 @@ package com.zhcs.billing.realTime;
 
 import java.lang.Runnable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import net.sf.json.JSONObject;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zhcs.billing.use.bean.OrderInfoBean;
 import com.zhcs.billing.use.bean.RDetailRecordAbilityBean;
 import com.zhcs.billing.use.bean.RErrorRecordBean;
 import com.zhcs.billing.use.dao.BillingCumulative;
 import com.zhcs.billing.use.dao.BillingInsert;
 import com.zhcs.billing.use.dao.BillingQuery;
+import com.zhcs.billing.util.BaseDao;
 import com.zhcs.billing.util.LoggerUtil;
 
 public class ThreadAbility implements Runnable {
@@ -53,6 +59,7 @@ public class ThreadAbility implements Runnable {
 			// 从原始话单中提取容器ID和话单类型
 			bean.setCOUNTAINER_ID(Msg.containerID(msg));// 容器ID
 			bean.setMSG_TYPE(Msg.msgType(msg)); // 能力类型
+			bean.setITEM_CODE(Msg.itemCode(bean.getMSG_TYPE())); // 纬度类型 短彩等
 			bean.setORIGINAL_RECORD_TIME(Msg.recordTime(msg)); // 原始话单生成时间
 
 			// 从数据库中获取订购关系、用户信息、产品资费
@@ -73,39 +80,74 @@ public class ThreadAbility implements Runnable {
 			// 优先扣除套餐
 			if (!BillingInsert.RPackage(bean)) {
 				// 扣账户余额
-				if (!BillingInsert.RBalance(bean)) {
+				BillingInsert.RBalance(bean);
+
+				// 查阅
+				String accountID = bean.getACCOUNT_ID();
+				int balance = this.getBalance(accountID);
+				if (balance < 0) {
 					// 欠费通知
 					// -----------------------------------------------------------------
-					String accountID = bean.getACCOUNT_ID();
-					int balance = bean.getREMAINING_AMOUNT();
+
 					JSONObject jso = new JSONObject();
 					jso.put("accountID", accountID);
 					jso.put("balance", balance);
 					String req = jso.toString();
-					getPostMethod().addRequestHeader("Content-Type",
+
+					PostMethod postMethod = new PostMethod(getNoticeUrl());// getPostMethod();
+					HttpClient httpclient = new HttpClient();// getHttpclient();
+					postMethod.getParams().setParameter(
+							"http.protocol.cookie-policy",
+							CookiePolicy.IGNORE_COOKIES);
+
+					postMethod.setRequestHeader("Content-Type",
 							"application/json");
 
 					try {
 						StringRequestEntity requestEntity = new StringRequestEntity(
 								req, "application/json", "UTF-8");
 
-						getPostMethod().setRequestEntity(requestEntity);
-						getHttpclient().executeMethod(getPostMethod());
+						postMethod.setRequestEntity(requestEntity);
+						httpclient.executeMethod(postMethod);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+					} finally {
+						postMethod.releaseConnection();
+						httpclient.getHttpConnectionManager()
+								.closeIdleConnections(0);
 					}
 
 					log.info("余额不足，欠费，通知业务管理平台。。。");
 					logUtil.info("余额不足，欠费，通知业务管理平台。。。");
 				}
 			}
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			res = false;
 		}
 
+		return res;
+	}
+
+	private int getBalance(String id) {
+		int res = 0;
+		try {
+			BaseDao dao = new BaseDao();
+			String sql = "select BALANCE from ACCOUNT_BOOK where ACCOUNT_ID=?;";
+			List params = new ArrayList();
+			params.add(id);
+			List<HashMap<String, Object>> list = dao.doSelect(sql, params);
+			if (list != null && !list.isEmpty()) {
+				res = (Integer) list.get(0).get("BALANCE");
+			}
+		} catch (Exception e) {
+			log.error(bean.getORDER_ID() + "  SimpleTreatment--查余额异常！");
+			logUtil.error(bean.getORDER_ID() + "  SimpleTreatment--查余额异常！");
+			e.printStackTrace();
+		}
 		return res;
 	}
 
@@ -123,7 +165,7 @@ public class ThreadAbility implements Runnable {
 	}
 
 	public static HttpClient getHttpclient() {
-		return httpclient == null ? new HttpClient() : httpclient;
+		return httpclient == null ? httpclient = new HttpClient() : httpclient;
 	}
 
 	/*
@@ -132,7 +174,8 @@ public class ThreadAbility implements Runnable {
 	 */
 
 	public static PostMethod getPostMethod() {
-		return postMethod == null ? new PostMethod(getNoticeUrl()) : postMethod;
+		return postMethod == null ? postMethod = new PostMethod(getNoticeUrl())
+				: postMethod;
 	}
 
 	/*
@@ -141,7 +184,7 @@ public class ThreadAbility implements Runnable {
 	 */
 
 	public static String getNoticeUrl() {
-		return NoticeUrl == null ? BillingCumulative
+		return NoticeUrl == null ? NoticeUrl = BillingCumulative
 				.readProperties("NoticeUrl") : NoticeUrl;
 	}
 

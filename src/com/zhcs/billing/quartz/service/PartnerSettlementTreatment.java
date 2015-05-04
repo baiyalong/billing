@@ -38,6 +38,8 @@ public class PartnerSettlementTreatment extends Task implements Job {
 		// 3.按比例分成 - 需扫描上月收益
 		if (li != null && !li.isEmpty()) {
 			for (PartnerSettlementRuleBean bean : li) {
+				if(settled(bean)){continue;}
+				
 				switch (bean.getSETTLEMENT_RULE()) {
 				case 1:
 					BillingInsert.PartnerSettlementRecords(bean,
@@ -60,6 +62,14 @@ public class PartnerSettlementTreatment extends Task implements Job {
 			}
 		}
 
+	}
+
+	private boolean settled(PartnerSettlementRuleBean bean) {
+		// TODO Auto-generated method stub
+		boolean res = false;
+		
+		
+		return res;
 	}
 
 }
