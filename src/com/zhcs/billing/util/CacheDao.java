@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import net.sf.ehcache.Cache;
 
-
 public class CacheDao<T> {
-	 private static	LoggerUtil log=LoggerUtil.getLogger(CacheDao.class);
+	private static LoggerUtil log = LoggerUtil.getLogger(CacheDao.class);
+
 	/**
 	 * 从缓存中获取对象列表
+	 * 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<T> getFormChache(String name){
+	public List<T> getFormChache(String name) {
 		if (name == null) {
 			return null;
 		}

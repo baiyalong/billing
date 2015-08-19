@@ -120,12 +120,11 @@ public class UsageAccountSTreatment extends Task implements Job {
 					// UsageAccountSThread(treatmentNum,tTNum,threadOneNum,serversNo);
 					// ust.start();
 					// Thread.sleep(sleepTime);
-					
+
 					// ThreadPool
 					ThreadPool.getInstance().AddTask(
 							new UsageAccountSThread(treatmentNum, tTNum,
 									threadOneNum, serversNo));
-					
 
 				}
 			} else {
@@ -138,7 +137,7 @@ public class UsageAccountSTreatment extends Task implements Job {
 			logUtil.error("UsageAccountSTreatment Class execute Method !", e);
 			e.printStackTrace();
 		} finally {
-			//System.gc();
+			// System.gc();
 		}
 	}
 

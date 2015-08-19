@@ -33,13 +33,12 @@ public class MainS {
 	public static void main(String[] args) throws Exception {
 
 		new MainVM().init();
-		Mouse.run(5); //2为TASK_ID对应的相应的定时任务
+		Mouse.run(5); // 2为TASK_ID对应的相应的定时任务
 		logUtil.info("===计费系统(按使用量的能力服务资源扣费)正常启动！===");
 		log.info("===计费系统(按使用量的能力服务资源扣费)正常启动！===");
 		logUtil.info("billing start....");
 		log.info("billing start....");
 
 	}
-
 
 }

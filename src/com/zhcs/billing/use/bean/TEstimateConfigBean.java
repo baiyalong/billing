@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class TEstimateConfigBean implements java.io.Serializable{
+public class TEstimateConfigBean implements java.io.Serializable {
 	/**
 	 * 
 	 */
@@ -13,7 +13,7 @@ public class TEstimateConfigBean implements java.io.Serializable{
 
 	public TEstimateConfigBean() {
 	}
-	
+
 	private String CONFIG_ID;// 主键id
 	private String SEL_TABLE_NAME;// 查询表名称
 	private String SEL_TABLE_ORDERNO_BUS;// 查询表订单编号(业务)
@@ -30,7 +30,7 @@ public class TEstimateConfigBean implements java.io.Serializable{
 	private String SEL_START_TIME;// 开始时间
 	private String SEL_END_TIME;// 结束时间
 	private String REMARK;// 备注
-	private Date SEL_TIME;//传入的时间点
+	private Date SEL_TIME;// 传入的时间点
 
 	public TEstimateConfigBean(String cONFIGID, String sELTABLENAME,
 			String sELTABLEORDERNOBUS, String sELTABLEORDERNOEST,
@@ -200,22 +200,38 @@ public class TEstimateConfigBean implements java.io.Serializable{
 		List<TEstimateConfigBean> beans = new ArrayList<TEstimateConfigBean>();
 		for (HashMap<String, Object> hashMap : list) {
 			TEstimateConfigBean bean = new TEstimateConfigBean();
-			bean.setCONFIG_ID(hashMap.get("CONFIG_ID")!=null?hashMap.get("CONFIG_ID").toString():null);
-			bean.setSEL_TABLE_NAME(hashMap.get("SEL_TABLE_NAME")!=null?hashMap.get("SEL_TABLE_NAME").toString():null);
-			bean.setSEL_TABLE_ORDERNO_BUS(hashMap.get("SEL_TABLE_ORDERNO_BUS")!=null?hashMap.get("SEL_TABLE_ORDERNO_BUS").toString():null);
-			bean.setSEL_TABLE_ORDERNO_EST(hashMap.get("SEL_TABLE_ORDERNO_EST")!=null?hashMap.get("SEL_TABLE_ORDERNO_EST").toString():null);
-			bean.setSEL_PRODUCT_NO_BUS(hashMap.get("SEL_PRODUCT_NO_BUS")!=null?hashMap.get("SEL_PRODUCT_NO_BUS").toString():null);
-			bean.setSEL_PRODUCT_NO_EST(hashMap.get("SEL_PRODUCT_NO_EST")!=null?hashMap.get("SEL_PRODUCT_NO_EST").toString():null);
-			bean.setSEL_BUSWD_NO(hashMap.get("SEL_BUSWD_NO")!=null?hashMap.get("SEL_BUSWD_NO").toString():null);
-			bean.setSEL_ESTWD_VALUE(hashMap.get("SEL_ESTWD_VALUE")!=null?hashMap.get("SEL_ESTWD_VALUE").toString():null);
-			bean.setSEL_TABLE_RENO_BUS(hashMap.get("SEL_TABLE_RENO_BUS")!=null?hashMap.get("SEL_TABLE_RENO_BUS").toString():null);
-			bean.setSEL_TABLE_RENO_EST(hashMap.get("SEL_TABLE_RENO_EST")!=null?hashMap.get("SEL_TABLE_RENO_EST").toString():null);
-			bean.setSEL_ESTWD_NO(hashMap.get("SEL_ESTWD_NO")!=null?hashMap.get("SEL_ESTWD_NO").toString():null);
-			bean.setSEL_WDENG_NAME(hashMap.get("SEL_WDENG_NAME") != null ? hashMap.get("SEL_WDENG_NAME").toString(): null);
-			bean.setSEL_WHERE(hashMap.get("SEL_WHERE")!=null?hashMap.get("SEL_WHERE").toString():null);
-			bean.setSEL_START_TIME(hashMap.get("SEL_START_TIME")!=null?hashMap.get("SEL_START_TIME").toString():null);
-			bean.setSEL_END_TIME(hashMap.get("SEL_END_TIME")!=null?hashMap.get("SEL_END_TIME").toString():null);
-			bean.setREMARK(hashMap.get("REMARK")!=null?hashMap.get("REMARK").toString():null);
+			bean.setCONFIG_ID(hashMap.get("CONFIG_ID") != null ? hashMap.get(
+					"CONFIG_ID").toString() : null);
+			bean.setSEL_TABLE_NAME(hashMap.get("SEL_TABLE_NAME") != null ? hashMap
+					.get("SEL_TABLE_NAME").toString() : null);
+			bean.setSEL_TABLE_ORDERNO_BUS(hashMap.get("SEL_TABLE_ORDERNO_BUS") != null ? hashMap
+					.get("SEL_TABLE_ORDERNO_BUS").toString() : null);
+			bean.setSEL_TABLE_ORDERNO_EST(hashMap.get("SEL_TABLE_ORDERNO_EST") != null ? hashMap
+					.get("SEL_TABLE_ORDERNO_EST").toString() : null);
+			bean.setSEL_PRODUCT_NO_BUS(hashMap.get("SEL_PRODUCT_NO_BUS") != null ? hashMap
+					.get("SEL_PRODUCT_NO_BUS").toString() : null);
+			bean.setSEL_PRODUCT_NO_EST(hashMap.get("SEL_PRODUCT_NO_EST") != null ? hashMap
+					.get("SEL_PRODUCT_NO_EST").toString() : null);
+			bean.setSEL_BUSWD_NO(hashMap.get("SEL_BUSWD_NO") != null ? hashMap
+					.get("SEL_BUSWD_NO").toString() : null);
+			bean.setSEL_ESTWD_VALUE(hashMap.get("SEL_ESTWD_VALUE") != null ? hashMap
+					.get("SEL_ESTWD_VALUE").toString() : null);
+			bean.setSEL_TABLE_RENO_BUS(hashMap.get("SEL_TABLE_RENO_BUS") != null ? hashMap
+					.get("SEL_TABLE_RENO_BUS").toString() : null);
+			bean.setSEL_TABLE_RENO_EST(hashMap.get("SEL_TABLE_RENO_EST") != null ? hashMap
+					.get("SEL_TABLE_RENO_EST").toString() : null);
+			bean.setSEL_ESTWD_NO(hashMap.get("SEL_ESTWD_NO") != null ? hashMap
+					.get("SEL_ESTWD_NO").toString() : null);
+			bean.setSEL_WDENG_NAME(hashMap.get("SEL_WDENG_NAME") != null ? hashMap
+					.get("SEL_WDENG_NAME").toString() : null);
+			bean.setSEL_WHERE(hashMap.get("SEL_WHERE") != null ? hashMap.get(
+					"SEL_WHERE").toString() : null);
+			bean.setSEL_START_TIME(hashMap.get("SEL_START_TIME") != null ? hashMap
+					.get("SEL_START_TIME").toString() : null);
+			bean.setSEL_END_TIME(hashMap.get("SEL_END_TIME") != null ? hashMap
+					.get("SEL_END_TIME").toString() : null);
+			bean.setREMARK(hashMap.get("REMARK") != null ? hashMap
+					.get("REMARK").toString() : null);
 			beans.add(bean);
 		}
 		return beans;

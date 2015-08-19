@@ -64,5 +64,5 @@ public interface IUsageMonthsDao {
 	 * @param usageMonthsBean
 	 */
 	// void insertUsageMonths(UsageMonthsBean usageMonthsBean);
-	
+
 }

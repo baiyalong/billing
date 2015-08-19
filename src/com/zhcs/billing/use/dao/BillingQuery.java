@@ -508,8 +508,7 @@ public class BillingQuery {
 
 		li = new BillingBaseDao().doSelect(sql, params);
 		if (li != null && !li.isEmpty()) {
-			bean.setBALANCE_Y(Integer.parseInt((String) li.get(0)
-					.get("BALANCE")));
+			bean.setBALANCE_Y((Integer) li.get(0).get("BALANCE"));
 		} else {
 			bean.setBALANCE_Y(0);
 		}

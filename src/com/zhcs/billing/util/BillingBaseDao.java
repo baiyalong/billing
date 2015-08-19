@@ -28,7 +28,6 @@ public class BillingBaseDao {
 	private PreparedStatement pstm;
 	private PreparedStatement pstm2;
 
-
 	public Connection connection() {
 		try {
 			if (con == null || con.isClosed()) {
@@ -131,7 +130,7 @@ public class BillingBaseDao {
 	 * @return List 无条件查询 其他类调用过程如下： BaseDao bd=new BaseDao(); List list =
 	 *         bd.doSelect(sql);
 	 */
-	public List<HashMap<String, Object>> doSelect(String sql) throws Exception{
+	public List<HashMap<String, Object>> doSelect(String sql) throws Exception {
 		if (sql == null) {
 			sql = "";
 		}
@@ -149,29 +148,18 @@ public class BillingBaseDao {
 		closed();
 		return list;
 	}
-/*	public List<HashMap<String, Object>> doSelect(String sql){
-		if (sql == null) {
-			sql = "";
-		}
-		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
-		try {
-			stm = getStm();
-			rs = stm.executeQuery(sql);
-			while (rs.next()) {
-				HashMap<String, Object> temp = new HashMap<String, Object>();
-				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-					temp.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
-				}
-				list.add(temp);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closed();
-		}
-		return list;
-	}
-*/
+
+	/*
+	 * public List<HashMap<String, Object>> doSelect(String sql){ if (sql ==
+	 * null) { sql = ""; } List<HashMap<String, Object>> list = new
+	 * ArrayList<HashMap<String, Object>>(); try { stm = getStm(); rs =
+	 * stm.executeQuery(sql); while (rs.next()) { HashMap<String, Object> temp =
+	 * new HashMap<String, Object>(); for (int i = 1; i <=
+	 * rs.getMetaData().getColumnCount(); i++) {
+	 * temp.put(rs.getMetaData().getColumnName(i), rs.getObject(i)); }
+	 * list.add(temp); } } catch (Exception e) { e.printStackTrace(); } finally
+	 * { closed(); } return list; }
+	 */
 	public List<JobTaskBean> doExecuteQuery(String sql) {
 		List<JobTaskBean> jtkList = new ArrayList<JobTaskBean>();
 		if (sql == null) {
@@ -203,16 +191,13 @@ public class BillingBaseDao {
 
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @param  params 
-	 * @return List
-	 * 带条件查询
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * List list = bd.doSelect(sql,params);
+	 * @param sql
+	 * @param params
+	 * @return List 带条件查询 其他类调用过程如下： BaseDao bd=new BaseDao(); List list =
+	 *         bd.doSelect(sql,params);
 	 */
-	public List<HashMap<String, Object>> doSelect(String sql,List params) {
-		if (sql == null){
+	public List<HashMap<String, Object>> doSelect(String sql, List params) {
+		if (sql == null) {
 			sql = "";
 		}
 		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
@@ -229,17 +214,17 @@ public class BillingBaseDao {
 			}
 			rs = pstm.executeQuery();
 			Integer metaDataCount = rs.getMetaData().getColumnCount();
-//			log.info("BaseDao doSelect metaDataCount===="+metaDataCount);
+			// log.info("BaseDao doSelect metaDataCount===="+metaDataCount);
 			while (rs.next()) {
 				HashMap<String, Object> temp = new HashMap<String, Object>();
 				for (int i = 1; i <= metaDataCount; i++) {
-//					log.info("BaseDao doSelect getColumnName===="+rs.getMetaData().getColumnName(i)
-//							+"getObject ==="+rs.getObject(i));
-					temp.put(rs.getMetaData().getColumnName(i),rs.getObject(i));
+					// log.info("BaseDao doSelect getColumnName===="+rs.getMetaData().getColumnName(i)
+					// +"getObject ==="+rs.getObject(i));
+					temp.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
 				}
 				list.add(temp);
 			}
-		} catch (Exception e) { 
+		} catch (Exception e) {
 			list = null;
 			e.printStackTrace();
 		} finally {
@@ -247,6 +232,7 @@ public class BillingBaseDao {
 		}
 		return list;
 	}
+
 	/**
 	 * @author LiuJie
 	 * @param sql
@@ -275,9 +261,9 @@ public class BillingBaseDao {
 			while (rs.next()) {
 				HashMap<String, Object> temp = new HashMap<String, Object>();
 				for (int i = 1; i <= metaDataCount; i++) {
-//					log.info("BillingBaseDao doSelect getColumnName===="
-//							+ rs.getMetaData().getColumnName(i)
-//							+ "getObject ===" + rs.getObject(i));
+					// log.info("BillingBaseDao doSelect getColumnName===="
+					// + rs.getMetaData().getColumnName(i)
+					// + "getObject ===" + rs.getObject(i));
 					temp.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
 				}
 				list.add(temp);
@@ -286,7 +272,7 @@ public class BillingBaseDao {
 			list = null;
 			e.printStackTrace();
 		} finally {
-//			closed();
+			// closed();
 		}
 		return list;
 	}
@@ -321,7 +307,7 @@ public class BillingBaseDao {
 		return num;
 	}
 
-	public boolean createTab(String sql){
+	public boolean createTab(String sql) {
 		boolean b = false;
 		try {
 			con = connection();
@@ -334,6 +320,7 @@ public class BillingBaseDao {
 		}
 		return b;
 	}
+
 	/**
 	 * @author LiuJie
 	 * @param sql
@@ -344,19 +331,19 @@ public class BillingBaseDao {
 	 *         xx; } return xx;
 	 * @throws SQLException
 	 */
-	public  int doSaveOrUpdate(String sql, List params) throws Exception {
+	public int doSaveOrUpdate(String sql, List params) throws Exception {
 		int num = 0;
 		if (sql == null) {
 			sql = "";
 		}
 		try {
 			pstm = getPstm(sql);
-//			log.info("BillingBaseDao doSaveOrUpdate pstm====" + pstm);
-//			log.info("BillingBaseDao doSaveOrUpdate con====" + con
-//					+ "con.isColose:===" + con.isClosed());
-//			if (con.isClosed()) {
-//				con.notify();
-//			}
+			// log.info("BillingBaseDao doSaveOrUpdate pstm====" + pstm);
+			// log.info("BillingBaseDao doSaveOrUpdate con====" + con
+			// + "con.isColose:===" + con.isClosed());
+			// if (con.isClosed()) {
+			// con.notify();
+			// }
 			con.setAutoCommit(false);
 			if (params != null) {
 				for (int i = 0; i < params.size(); i++) {
@@ -463,8 +450,8 @@ public class BillingBaseDao {
 			pstm.executeUpdate();
 			rs = pstm.getGeneratedKeys();
 			if (rs.next()) {
-				 num = String.valueOf(rs.getInt(1));
-//				num = rs.getString("Id");
+				num = String.valueOf(rs.getInt(1));
+				// num = rs.getString("Id");
 			}
 			con.commit();
 		} catch (SQLException e) {
@@ -585,15 +572,19 @@ public class BillingBaseDao {
 			}
 		}
 	}
+
 	/**
-	 * 创建表  （表名+当前时间）
+	 * 创建表 （表名+当前时间）
 	 */
-	public static boolean createTable(){
-		String dateStr=Common.getDateStr();
-		String date=dateStr.substring(0, dateStr.length()-2);
+	public static boolean createTable() {
+		String dateStr = Common.getDateStr();
+		String date = dateStr.substring(0, dateStr.length() - 2);
 		boolean b = false;
 		try {
-			b = new BillingBaseDao().createTab("create table T_USAGE_EVENTS_"+date+"(ID varchar(200) primary key,BILLCYCLE_ID varchar(200),REQ_TIME datetime,CUSTOMER_ID varchar(200),BILLING_ID varchar(200),PRUDUCT_ID varchar(200),REALOCKSTAT int,ACCOUNT decimal,FEE_TYPE boolean,SCHEDULEDSCANNINGSTATE varchar(200))");
+			b = new BillingBaseDao()
+					.createTab("create table T_USAGE_EVENTS_"
+							+ date
+							+ "(ID varchar(200) primary key,BILLCYCLE_ID varchar(200),REQ_TIME datetime,CUSTOMER_ID varchar(200),BILLING_ID varchar(200),PRUDUCT_ID varchar(200),REALOCKSTAT int,ACCOUNT decimal,FEE_TYPE boolean,SCHEDULEDSCANNINGSTATE varchar(200))");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			log.error(e.getMessage());

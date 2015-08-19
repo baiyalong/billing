@@ -20,7 +20,7 @@ public class MainUnlock {
 		DbUtil.initCalculate();
 		DbUtil.initEstimate();
 	}
-	
+
 	/**
 	 * 计费子系统启动
 	 * 
@@ -33,7 +33,7 @@ public class MainUnlock {
 	public static void main(String[] args) throws Exception {
 
 		new MainVM().init();
-		Mouse.run(4); //4为TASK_ID对应的相应的定时任务
+		Mouse.run(4); // 4为TASK_ID对应的相应的定时任务
 		logUtil.info("===计费系统(月租费用按天扣费)正常启动！===");
 		log.info("===计费系统(月租费用按天扣费)正常启动！===");
 		logUtil.info("billing start....");

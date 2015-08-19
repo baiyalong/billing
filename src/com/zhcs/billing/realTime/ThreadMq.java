@@ -116,7 +116,7 @@ public class ThreadMq implements Runnable {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
-								} else {
+								} else 
 
 									/*
 									 * try { Thread.sleep(10); } catch
@@ -124,8 +124,9 @@ public class ThreadMq implements Runnable {
 									 * 
 									 * e.printStackTrace(); }
 									 */
+									break;
 
-								}
+								
 							}
 
 						} catch (JMSException e) {

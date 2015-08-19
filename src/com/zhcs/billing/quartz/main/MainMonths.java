@@ -31,15 +31,14 @@ public class MainMonths {
 	 * @throws ClassNotFoundException
 	 */
 	public static void main(String[] args) throws Exception {
-		//System.out.println(System.getProperty("java.endorsed.dirs")); 
+		// System.out.println(System.getProperty("java.endorsed.dirs"));
 		new MainVM().init();
-		Mouse.run(6); //3为TASK_ID对应的相应的定时任务
+		Mouse.run(6); // 3为TASK_ID对应的相应的定时任务
 		logUtil.info("===计费系统(月租费用按天扣费)正常启动！===");
 		log.info("===计费系统(月租费用按天扣费)正常启动！===");
 		logUtil.info("billing start....");
 		log.info("billing start....");
 
 	}
-
 
 }

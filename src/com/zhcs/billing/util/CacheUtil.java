@@ -8,9 +8,12 @@ import net.sf.ehcache.Element;
 
 public class CacheUtil {
 
-	private static CacheManager singletonManager = CacheManager.create(System.getProperty("BILLING_HOME") + "/config/ehcache.xml");
+	private static CacheManager singletonManager = CacheManager.create(System
+			.getProperty("BILLING_HOME") + "/config/ehcache.xml");
+
 	/**
-	 * 获取为cacheName的缓存  如果不存在创建缓存 
+	 * 获取为cacheName的缓存 如果不存在创建缓存
+	 * 
 	 * @param cacheName
 	 * @return
 	 */
@@ -31,12 +34,14 @@ public class CacheUtil {
 		}
 		return cache;
 	}
+
 	/**
-	 * 判断chcheName缓存是否存在  若存在返回cache 否则返回null
+	 * 判断chcheName缓存是否存在 若存在返回cache 否则返回null
+	 * 
 	 * @param cacheName
 	 * @return
 	 */
-	public static Cache checkCache(String cacheName){
+	public static Cache checkCache(String cacheName) {
 		Cache cache = null;
 		if ((cacheName == null) || (cacheName.equals(""))) {
 			return null;
@@ -50,34 +55,39 @@ public class CacheUtil {
 		}
 		return cache;
 	}
-	
+
 	/**
-	 * 放入缓存  对象需要实现重写toString方法，返回值为id
-	 * @param name   缓存的名字
-	 * @param list   对象列表
+	 * 放入缓存 对象需要实现重写toString方法，返回值为id
+	 * 
+	 * @param name
+	 *            缓存的名字
+	 * @param list
+	 *            对象列表
 	 */
 	@SuppressWarnings("unchecked")
-	public static void putInCache(String name,List list){
+	public static void putInCache(String name, List list) {
 		Cache cache = getCache(name);
-        for(Object bean:list){
-        	Element element = new Element(bean.toString(), bean);        	
-        	cache.put(element);
-        }
+		for (Object bean : list) {
+			Element element = new Element(bean.toString(), bean);
+			cache.put(element);
+		}
 	}
-	
+
 	/**
 	 * 单个对象放入缓存
+	 * 
 	 * @param name
 	 * @param bean
 	 */
-	public static void putInCache(String name,Object bean){
+	public static void putInCache(String name, Object bean) {
 		Cache cache = getCache(name);
-		Element element = new Element(bean.toString(), bean);        	
-    	cache.put(element);
+		Element element = new Element(bean.toString(), bean);
+		cache.put(element);
 	}
-	
+
 	/**
 	 * 删除 cacheName 缓存
+	 * 
 	 * @param cacheName
 	 */
 	public static void closeCache(String cacheName) {
@@ -88,11 +98,11 @@ public class CacheUtil {
 			singletonManager.removeCache(cacheName);
 		}
 	}
-	
+
 	/**
 	 * 删除 所有缓存
 	 */
-	public static void clearAll(){
+	public static void clearAll() {
 		if (singletonManager != null) {
 			singletonManager.clearAll();
 		}

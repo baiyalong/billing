@@ -33,7 +33,7 @@ public class MainVM {
 	public static void main(String[] args) throws Exception {
 
 		new MainVM().init();
-		Mouse.run(7); //1为TASK_ID对应的相应的定时任务
+		Mouse.run(7); // 1为TASK_ID对应的相应的定时任务
 		logUtil.info("===计费系统(静态资源收费/天)正常启动！===");
 		log.info("===计费系统(静态资源收费/天)正常启动！===");
 		logUtil.info("billing start....");

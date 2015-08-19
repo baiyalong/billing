@@ -69,6 +69,7 @@ public class ThreadAbility implements Runnable {
 		} catch (Exception e) {
 			// TODO: handle exception
 			res = false;
+			e.printStackTrace();
 		}
 		return res;
 	}

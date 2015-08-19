@@ -190,7 +190,7 @@ public class RDetailRecordDataFlowBean {
 		REMAINING_AMOUNT = rEMAINING_AMOUNT;
 	}
 
-	private int MSG_TYPE;// 
+	private int MSG_TYPE;//
 	private String CUSTOMER_ID;// 用户ID -订单表 >订购
 
 	private String COUNTAINER_ID;// 容器ID 从原始话单获取 订单表 详单记录表

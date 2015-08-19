@@ -6,7 +6,7 @@ package com.zhcs.billing.use.bean;
  * @author hefa
  * 
  */
-public class PriceRuleBean implements java.io.Serializable{
+public class PriceRuleBean implements java.io.Serializable {
 	/**
 	 * 
 	 */
@@ -32,8 +32,6 @@ public class PriceRuleBean implements java.io.Serializable{
 		DESCRIPTION = dESCRIPTION;
 	}
 
-
-
 	private String RULE_ID;// 规则编号
 	private String RULE_NAME;// 规则名称
 	private String RULE_CODE;// 规则编码
@@ -41,7 +39,7 @@ public class PriceRuleBean implements java.io.Serializable{
 	private String NODE_CODE;// 节点编码
 	private int NODE_TYPE;// 节点类型
 	private int BILLING_WAY;// 计费方式
-	private int VERSION;//版本
+	private int VERSION;// 版本
 	private Integer RULE_STATUS;// 状态
 	private String DESCRIPTION;// 描述
 
@@ -124,5 +122,5 @@ public class PriceRuleBean implements java.io.Serializable{
 	public void setVERSION(int vERSION) {
 		VERSION = vERSION;
 	}
-	
+
 }

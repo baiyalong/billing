@@ -100,8 +100,8 @@ public class AccountCheckTreatment extends Task implements Job {
 		// update ACCOUNT_BOOK set BALANCE = BALANCE - ?,CREDIT_AMOUNT =
 		// CREDIT_AMOUNT + ? where BOOK_ID = ?;
 		String sql = "update ACCOUNT_RECON set"
-				+ "DEBIT_AMOUNT = DEBIT_AMOUNT + ?,CREDIT_AMOUNT = CREDIT_AMOUNT + ?,CLOSING_BALANCE = ?"
-				+ "where ACCOUNT_ID = ? and BILL_MONTH = ?;";
+				+ " DEBIT_AMOUNT = DEBIT_AMOUNT + ?,CREDIT_AMOUNT = CREDIT_AMOUNT + ?,CLOSING_BALANCE = ?"
+				+ " where ACCOUNT_ID = ? and BILL_MONTH = ?;";
 		List params = new ArrayList();
 		params.add(b.getINCOME());
 		params.add(b.getOUTCOME());

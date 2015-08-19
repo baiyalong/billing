@@ -55,7 +55,7 @@ public class PriceModelAndDiscountCulDao {
 		 */
 
 		List<HashMap<String, Object>> list = getBaseDao().doSelect(sql, params);
-		if (list!= null && list.size() > 0) {
+		if (list != null && list.size() > 0) {
 			boolean flat = true;
 			while (flat) {
 				for (int i = 0; i < list.size(); i++) {
@@ -64,21 +64,26 @@ public class PriceModelAndDiscountCulDao {
 
 					// 计费方式为 0 - 包时段 取固定值
 					if ("1".equals(billingWay)) {
-						amount = Double.parseDouble(map1.get("FIXED_VALUE") + "");
+						amount = Double.parseDouble(map1.get("FIXED_VALUE")
+								+ "");
 						flat = false;
 					}
 					// 计费方式为 2 - 固定费率、4 - 阶梯式
 					if ("2".equals(billingWay) || "4".equals(billingWay)) {
 						// 取得该费率编号的费率模型是否包含空间最小值(最小值为Y/N 则最大值为 N/Y)
-						String INCLUDE_MIN_X = (String) map1.get("INCLUDE_MIN_X");
-						String INCLUDE_MAX_X = (String) map1.get("INCLUDE_MAX_X");
+						String INCLUDE_MIN_X = (String) map1
+								.get("INCLUDE_MIN_X");
+						String INCLUDE_MAX_X = (String) map1
+								.get("INCLUDE_MAX_X");
 
 						double MIN_X = 0;
-						if (!map1.get("MIN_X").equals("")&& map1.get("MIN_X") != null) {
+						if (!map1.get("MIN_X").equals("")
+								&& map1.get("MIN_X") != null) {
 							MIN_X = Double.parseDouble(map1.get("MIN_X") + "");// 区间最小值
 						}
 						double MAX_X = 0;
-						if (!map1.get("MAX_X").equals("")&& map1.get("MAX_X") != null) {
+						if (!map1.get("MAX_X").equals("")
+								&& map1.get("MAX_X") != null) {
 							MAX_X = Double.parseDouble(map1.get("MAX_X") + "");// 区间最大值
 						}
 						// 含空间最小值
@@ -113,33 +118,46 @@ public class PriceModelAndDiscountCulDao {
 						if (list.size() == 1) {
 							Map map2 = list.get(0);
 							double FIXED_VALUE = 0;// 费用值
-							if (!map2.get("FIXED_VALUE").equals("") && map2.get("FIXED_VALUE") != null) {
-								FIXED_VALUE = Double.parseDouble(map2.get("FIXED_VALUE") + "");
+							if (!map2.get("FIXED_VALUE").equals("")
+									&& map2.get("FIXED_VALUE") != null) {
+								FIXED_VALUE = Double.parseDouble(map2
+										.get("FIXED_VALUE") + "");
 								FIXED_VALUE = 0;
 							}
 							double INIT_VALUE = 0;// 起始值
-							if (!map2.get("INIT_VALUE").equals("") && map2.get("INIT_VALUE") != null) {
-								INIT_VALUE = Double.parseDouble(map2.get("INIT_VALUE") + "");
+							if (!map2.get("INIT_VALUE").equals("")
+									&& map2.get("INIT_VALUE") != null) {
+								INIT_VALUE = Double.parseDouble(map2
+										.get("INIT_VALUE") + "");
 							}
 							double MIN_X1 = 0;// 确定区间后的最小区间值
-							if (!map2.get("MIN_X").equals("") && map2.get("MIN_X") != null) {
-								MIN_X1 = Double.parseDouble(map2.get("MIN_X")+ "");
+							if (!map2.get("MIN_X").equals("")
+									&& map2.get("MIN_X") != null) {
+								MIN_X1 = Double.parseDouble(map2.get("MIN_X")
+										+ "");
 							}
 							// 固定费率 = 增量值 * 步长
 							double INCREMENT_VALUE = 0;// 增量值
-							if (!map2.get("INCREMENT_VALUE").equals("") && map2.get("INCREMENT_VALUE") != null) {
-								INCREMENT_VALUE = Double.parseDouble(map2.get("INCREMENT_VALUE") + "");
+							if (!map2.get("INCREMENT_VALUE").equals("")
+									&& map2.get("INCREMENT_VALUE") != null) {
+								INCREMENT_VALUE = Double.parseDouble(map2
+										.get("INCREMENT_VALUE") + "");
 							}
 							double STEP_SIZE = 0;// 步长
-							if (!map2.get("STEP_SIZE").equals("") && map2.get("STEP_SIZE") != null) {
-								STEP_SIZE = Double.parseDouble(map2.get("STEP_SIZE") + "");
+							if (!map2.get("STEP_SIZE").equals("")
+									&& map2.get("STEP_SIZE") != null) {
+								STEP_SIZE = Double.parseDouble(map2
+										.get("STEP_SIZE") + "");
 								if (STEP_SIZE == 0) {
 									STEP_SIZE = 1;
 								}
 							}
 							// 通用公式: 最终的费用 = 固定费 + 起始值 + ( 使用值 - 区间最小值 ) / 固定费率
-							amount = FIXED_VALUE + INIT_VALUE+ (usevalue - MIN_X1) * (INCREMENT_VALUE / STEP_SIZE);
-							if (!"PR-PT".equals(map2.get("RULE_CODE").toString())) {//非普通计费规则
+							amount = FIXED_VALUE + INIT_VALUE
+									+ (usevalue - MIN_X1)
+									* (INCREMENT_VALUE / STEP_SIZE);
+							if (!"PR-PT".equals(map2.get("RULE_CODE")
+									.toString())) {// 非普通计费规则
 								amount = 0;
 							}
 							flat = false;
@@ -149,7 +167,8 @@ public class PriceModelAndDiscountCulDao {
 				}
 			}
 		} else {// 没有对应的资费模型
-			amount = BillingMethod.mul(usevalue, Double.parseDouble(PRICE + ""));
+			amount = BillingMethod
+					.mul(usevalue, Double.parseDouble(PRICE + ""));
 		}
 		return amount;
 	}
@@ -174,14 +193,15 @@ public class PriceModelAndDiscountCulDao {
 		params.add(PRODUCT_ID);
 		List<HashMap<String, Object>> list = getBaseDao().doSelect(sql, params);
 
-		if (list!= null&&list.size() > 0) {
+		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				Map map = list.get(i);
 				// //规则编码
 				// String BILLING_WAY = map.get("BILLING_WAY")+"";
 				// 折扣率
 				double RATE_VALUE = 0;
-				if (!"".equals(map.get("RATE_VALUE"))&& map.get("RATE_VALUE") != null) {
+				if (!"".equals(map.get("RATE_VALUE"))
+						&& map.get("RATE_VALUE") != null) {
 					RATE_VALUE = Double.parseDouble(map.get("RATE_VALUE") + "");
 				}
 				// 起始金额
@@ -198,10 +218,13 @@ public class PriceModelAndDiscountCulDao {
 				// }
 				// 优惠金额
 				double DISCOUNT_VALUE = 0;
-				if (!"".equals(map.get("DISCOUNT_VALUE"))&& map.get("DISCOUNT_VALUE") != null) {
-					DISCOUNT_VALUE = Double.parseDouble(map.get("DISCOUNT_VALUE") + "");
+				if (!"".equals(map.get("DISCOUNT_VALUE"))
+						&& map.get("DISCOUNT_VALUE") != null) {
+					DISCOUNT_VALUE = Double.parseDouble(map
+							.get("DISCOUNT_VALUE") + "");
 				}
-				discountAmount = BillingMethod.sub(amount, DISCOUNT_VALUE) * RATE_VALUE * 0.01;
+				discountAmount = BillingMethod.sub(amount, DISCOUNT_VALUE)
+						* RATE_VALUE * 0.01;
 			}
 		} else {
 			discountAmount = amount;

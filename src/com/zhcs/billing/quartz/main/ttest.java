@@ -30,9 +30,32 @@ public class ttest {
 		 * long tt = (today.getTime() - yesteday.getTime())/1000/(24*3600);
 		 */
 
-		Timestamp tt = Timestamp.valueOf(CalendarUtil.today()+" 00:00:00");
+		// Timestamp tt = Timestamp.valueOf(CalendarUtil.today() + " 00:00:00");
 
-		System.out.println(tt);
+		// System.out.println(tt);
+		if (!(a() && b() && c())) {
+			err();
+		}
+	}
+
+	public static boolean a() {
+		System.out.println("a");
+		return false;
+	}
+
+	public static boolean b() {
+		System.out.println("b");
+		return false;
+	}
+
+	public static boolean c() {
+		System.out.println("c");
+		return true;
+	}
+
+	public static boolean err() {
+		System.out.println("err");
+		return true;
 	}
 
 }

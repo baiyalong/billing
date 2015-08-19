@@ -10,7 +10,7 @@ import java.util.List;
  * @author hefa
  * 
  */
-public class PriceModelBean implements java.io.Serializable{
+public class PriceModelBean implements java.io.Serializable {
 	/**
 	 * 
 	 */
@@ -19,7 +19,7 @@ public class PriceModelBean implements java.io.Serializable{
 	public PriceModelBean() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public PriceModelBean(String mODEL_ID, String rULE_ID, String pRODUCT_ID,
 			String rESOURCE_ID, String rESOURCE_CODE, String iTEM_ID,
 			String iTEM_CODE, Integer mIN_X, Integer mAX_X,
@@ -49,12 +49,10 @@ public class PriceModelBean implements java.io.Serializable{
 		MODEL_STATUS = mODEL_STATUS;
 	}
 
-
-
 	private String MODEL_ID;// 资费模型编号
 	private String RULE_ID;// 规则编号
-	private String PRODUCT_ID;//产品编号
-	private String RESOURCE_ID;//资源编号
+	private String PRODUCT_ID;// 产品编号
+	private String RESOURCE_ID;// 资源编号
 	private String RESOURCE_CODE;// 资源编码
 	private String ITEM_ID;// 维度编号
 	private String ITEM_CODE;// 纬度编码
@@ -86,7 +84,7 @@ public class PriceModelBean implements java.io.Serializable{
 	public void setRULE_ID(String rULEID) {
 		RULE_ID = rULEID;
 	}
-	
+
 	public String getPRODUCT_ID() {
 		return PRODUCT_ID;
 	}
@@ -99,11 +97,9 @@ public class PriceModelBean implements java.io.Serializable{
 		return RESOURCE_ID;
 	}
 
-
 	public void setRESOURCE_ID(String rESOURCE_ID) {
 		RESOURCE_ID = rESOURCE_ID;
 	}
-
 
 	public String getITEM_ID() {
 		return ITEM_ID;
@@ -230,29 +226,48 @@ public class PriceModelBean implements java.io.Serializable{
 		List<PriceModelBean> beans = new ArrayList<PriceModelBean>();
 		for (HashMap<String, Object> hashMap : list) {
 			PriceModelBean bean = new PriceModelBean();
-			bean.setBILLING_WAY(hashMap.get("BILLING_WAY") != null ? Integer.parseInt(hashMap.get("BILLING_WAY").toString()): null);
-			bean.setFIXED_VALUE(hashMap.get("FIXED_VALUE") != null ? Integer.parseInt(hashMap.get("FIXED_VALUE").toString()): null);
-			bean.setINCLUDE_MAX_X(hashMap.get("INCLUDE_MAX_X") != null ? hashMap.get("INCLUDE_MAX_X").toString(): null);
-			bean.setINCLUDE_MIN_X(hashMap.get("INCLUDE_MIN_X") != null ? hashMap.get("INCLUDE_MIN_X").toString(): null);
-			bean.setINCREMENT_VALUE(hashMap.get("INCREMENT_VALUE") != null ? Integer.parseInt(hashMap.get("INCREMENT_VALUE").toString()): null);
-			bean.setINIT_VALUE(hashMap.get("INIT_VALUE") != null ? Integer.parseInt(hashMap.get("INIT_VALUE").toString()): null);
-			bean.setITEM_ID(hashMap.get("ITEM_ID") != null ? hashMap.get("ITEM_ID").toString(): null);
-			bean.setITEM_CODE(hashMap.get("ITEM_CODE") != null ? hashMap.get("ITEM_CODE").toString(): null);
-			bean.setMAX_X(hashMap.get("MAX_X") != null ? Integer.parseInt(hashMap.get("MAX_X").toString()): null);
-			bean.setMIN_X(hashMap.get("MIN_X") != null ? Integer.parseInt(hashMap.get("MIN_X").toString()): null);
-			bean.setMODEL_ID(hashMap.get("MODEL_ID") != null ? hashMap.get("MODEL_ID").toString(): null);
-			bean.setMODEL_STATUS(hashMap.get("MODEL_STATUS") != null ? Integer.parseInt(hashMap.get("MODEL_STATUS").toString()): null);
-			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get("PRODUCT_ID").toString(): null);
-			bean.setRESOURCE_ID(hashMap.get("RESOURCE_ID") != null ? hashMap.get("RESOURCE_ID").toString(): null);
-			bean.setRESOURCE_CODE(hashMap.get("RESOURCE_CODE") != null ? hashMap.get("RESOURCE_CODE").toString(): null);
-			bean.setRULE_ID(hashMap.get("RULE_ID") != null ? hashMap.get("RULE_ID").toString(): null);
-			bean.setSTEP_SIZE(hashMap.get("STEP_SIZE") != null ? Integer.parseInt(hashMap.get("STEP_SIZE").toString()): null);
-			bean.setUNIT_CODE(hashMap.get("UNIT_CODE") != null ? hashMap.get("UNIT_CODE").toString(): null);
-			bean.setUNIT_NAME(hashMap.get("UNIT_NAME") != null ? hashMap.get("UNIT_NAME").toString(): null);
-			
+			bean.setBILLING_WAY(hashMap.get("BILLING_WAY") != null ? Integer
+					.parseInt(hashMap.get("BILLING_WAY").toString()) : null);
+			bean.setFIXED_VALUE(hashMap.get("FIXED_VALUE") != null ? Integer
+					.parseInt(hashMap.get("FIXED_VALUE").toString()) : null);
+			bean.setINCLUDE_MAX_X(hashMap.get("INCLUDE_MAX_X") != null ? hashMap
+					.get("INCLUDE_MAX_X").toString() : null);
+			bean.setINCLUDE_MIN_X(hashMap.get("INCLUDE_MIN_X") != null ? hashMap
+					.get("INCLUDE_MIN_X").toString() : null);
+			bean.setINCREMENT_VALUE(hashMap.get("INCREMENT_VALUE") != null ? Integer
+					.parseInt(hashMap.get("INCREMENT_VALUE").toString()) : null);
+			bean.setINIT_VALUE(hashMap.get("INIT_VALUE") != null ? Integer
+					.parseInt(hashMap.get("INIT_VALUE").toString()) : null);
+			bean.setITEM_ID(hashMap.get("ITEM_ID") != null ? hashMap.get(
+					"ITEM_ID").toString() : null);
+			bean.setITEM_CODE(hashMap.get("ITEM_CODE") != null ? hashMap.get(
+					"ITEM_CODE").toString() : null);
+			bean.setMAX_X(hashMap.get("MAX_X") != null ? Integer
+					.parseInt(hashMap.get("MAX_X").toString()) : null);
+			bean.setMIN_X(hashMap.get("MIN_X") != null ? Integer
+					.parseInt(hashMap.get("MIN_X").toString()) : null);
+			bean.setMODEL_ID(hashMap.get("MODEL_ID") != null ? hashMap.get(
+					"MODEL_ID").toString() : null);
+			bean.setMODEL_STATUS(hashMap.get("MODEL_STATUS") != null ? Integer
+					.parseInt(hashMap.get("MODEL_STATUS").toString()) : null);
+			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get(
+					"PRODUCT_ID").toString() : null);
+			bean.setRESOURCE_ID(hashMap.get("RESOURCE_ID") != null ? hashMap
+					.get("RESOURCE_ID").toString() : null);
+			bean.setRESOURCE_CODE(hashMap.get("RESOURCE_CODE") != null ? hashMap
+					.get("RESOURCE_CODE").toString() : null);
+			bean.setRULE_ID(hashMap.get("RULE_ID") != null ? hashMap.get(
+					"RULE_ID").toString() : null);
+			bean.setSTEP_SIZE(hashMap.get("STEP_SIZE") != null ? Integer
+					.parseInt(hashMap.get("STEP_SIZE").toString()) : null);
+			bean.setUNIT_CODE(hashMap.get("UNIT_CODE") != null ? hashMap.get(
+					"UNIT_CODE").toString() : null);
+			bean.setUNIT_NAME(hashMap.get("UNIT_NAME") != null ? hashMap.get(
+					"UNIT_NAME").toString() : null);
+
 			beans.add(bean);
 		}
 		return beans;
 	}
-	
+
 }

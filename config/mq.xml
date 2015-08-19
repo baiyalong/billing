@@ -14,7 +14,7 @@
 		<property name="targetConnectionFactory">
 			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
 				<!-- MQ地址 -->
-				<property name="brokerURL" value="tcp://124.160.193.83:21018" />
+				<property name="brokerURL" value="tcp://172.17.0.42:61616" />
 			</bean>
 		</property>
 	</bean>
@@ -22,7 +22,7 @@
 	<!-- 发送消息的目的地（一个主题） -->
 	<bean id="myDestination" class="org.apache.activemq.command.ActiveMQTopic">
 		<!-- 设置消息主题的名字 -->
-		<constructor-arg index="0" value="Test2" />
+		<constructor-arg index="0" value="MSG_JN_1" />
 	</bean>
 
 	<!-- 生产消息配置 （自己定义） -->
@@ -50,8 +50,8 @@
 		<property name="subscriptionDurable" value="true" />
 		<!-- <property name="receiveTimeout" value="10000"/> -->
 		<!-- 接收者ID -->
-		<property name="clientId" value="client_" />
-		<property name="durableSubscriptionName" value="client_" />
+		<property name="clientId" value="jifei_jn_1" />
+		<property name="durableSubscriptionName" value="jifei_jn_1" />
 		<property name="destination" ref="myDestination" />
 		<property name="messageListener" ref="myTopicListener" />
 	</bean>

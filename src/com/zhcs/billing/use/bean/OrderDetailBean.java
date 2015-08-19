@@ -49,7 +49,6 @@ public class OrderDetailBean implements java.io.Serializable {
 	private double MONEY;// 一次批价
 	private double pattern;// 二次批价
 
-
 	public double getMONEY() {
 		return MONEY;
 	}
@@ -65,7 +64,6 @@ public class OrderDetailBean implements java.io.Serializable {
 	public void setPattern(double pattern) {
 		this.pattern = pattern;
 	}
-
 
 	public String getDETAIL_ID() {
 		return DETAIL_ID;
@@ -112,11 +110,16 @@ public class OrderDetailBean implements java.io.Serializable {
 		List<OrderDetailBean> beans = new ArrayList<OrderDetailBean>();
 		for (HashMap<String, Object> hashMap : list) {
 			OrderDetailBean bean = new OrderDetailBean();
-			bean.setDETAIL_ID(hashMap.get("DETAIL_ID") != null ? hashMap.get("DETAIL_ID").toString() : null);
-			bean.setORDER_ID(hashMap.get("ORDER_ID") != null ? hashMap.get("ORDER_ID").toString() : null);
-			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get("PRODUCT_ID").toString() : null);
-			bean.setSUBSCRIBER_ID(hashMap.get("SUBSCRIBER_ID") != null ? hashMap.get("SUBSCRIBER_ID").toString(): null);
-			bean.setSUMARY(hashMap.get("SUMARY") != null ? Integer.parseInt(hashMap.get("SUMARY").toString()) : null);
+			bean.setDETAIL_ID(hashMap.get("DETAIL_ID") != null ? hashMap.get(
+					"DETAIL_ID").toString() : null);
+			bean.setORDER_ID(hashMap.get("ORDER_ID") != null ? hashMap.get(
+					"ORDER_ID").toString() : null);
+			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get(
+					"PRODUCT_ID").toString() : null);
+			bean.setSUBSCRIBER_ID(hashMap.get("SUBSCRIBER_ID") != null ? hashMap
+					.get("SUBSCRIBER_ID").toString() : null);
+			bean.setSUMARY(hashMap.get("SUMARY") != null ? Integer
+					.parseInt(hashMap.get("SUMARY").toString()) : null);
 			beans.add(bean);
 		}
 		return beans;

@@ -10,10 +10,10 @@ import com.zhcs.billing.threadPool.ThreadPool;
 import com.zhcs.billing.util.DbUtil;
 import com.zhcs.billing.util.LoggerUtil;
 
-public class Main {
+public class MainR {
 
-	private static LoggerUtil logUtil = LoggerUtil.getLogger(Main.class);
-	private static Logger log = LoggerFactory.getLogger(Main.class);
+	private static LoggerUtil logUtil = LoggerUtil.getLogger(MainR.class);
+	private static Logger log = LoggerFactory.getLogger(MainR.class);
 
 	public static void main(String[] args) {
 
@@ -24,7 +24,7 @@ public class Main {
 		DbUtil.initEstimate();
 
 		// 能力实时计费初始化
-		//new ThreadMq("ability").init();
+		new ThreadMq("ability").init();
 
 		/*
 		 * // 流量实时计费初始化 new ThreadMq("flow").init();
@@ -42,10 +42,11 @@ public class Main {
 		// Mouse.run(13); // TASK_PARTNER_SETTLEMENT
 		// Mouse.run(11); // TASK_ACCOUNT_CHECK
 
-		Mouse.run(8); // TASK_ENGINE 任务引擎
-		Mouse.run(9); // TASK_SIMPLE 简单包月费用每天计费结算
-		Mouse.run(11); // TASK_ACCOUNT_CHECK 每天核账及总账
-		Mouse.run(13); // TASK_PARTNER_SETTLEMENT 合作伙伴按月结算
+		/*
+		 * Mouse.run(8); // TASK_ENGINE 任务引擎 Mouse.run(9); // TASK_SIMPLE
+		 * 简单包月费用每天计费结算 Mouse.run(11); // TASK_ACCOUNT_CHECK 每天核账及总账
+		 * Mouse.run(13); // TASK_PARTNER_SETTLEMENT 合作伙伴按月结算
+		 */
 
 		logUtil.info("===计费系统正常启动！===");
 		log.info("===计费系统正常启动！===");

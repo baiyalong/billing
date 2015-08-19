@@ -9,10 +9,11 @@ import com.zhcs.billing.util.Common;
 
 /**
  * 容器类产品扫描累积量表
+ * 
  * @author hefa
  *
  */
-public class TScanningAddTotalBean implements java.io.Serializable{
+public class TScanningAddTotalBean implements java.io.Serializable {
 
 	/**
 	 * 
@@ -24,18 +25,19 @@ public class TScanningAddTotalBean implements java.io.Serializable{
 	private String RESOURCE_ID;// 资源编号
 	private String WD_NAME;// 维度名称
 	private String WD_NO;// 维度编码
-	private int WD_ADD_TOTAL;//维度累积量
+	private int WD_ADD_TOTAL;// 维度累积量
 	private int CURRENT_ADD_TOTAL;// 维度此次使用量
-	private String TIME_SPERIOD;//时间间隔
+	private String TIME_SPERIOD;// 时间间隔
 	private Date START_TIME;// 开始时间
 	private Date END_TIME;// 结束时间
 	private Date CREATE_TIME;// 创建日期
 	private Date UPDATE_TIME;// 更新日期
 	private String SCANNING_WAY;// 扫描方式
+
 	public TScanningAddTotalBean() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public TScanningAddTotalBean(String iD, String oRDER_ID, String pRODUCT_ID,
 			String rESOURCE_ID, String wD_NAME, String wD_NO, int wD_ADD_TOTAL,
 			int cURRENT_ADD_TOTAL, String tIME_SPERIOD, Date sTART_TIME,
@@ -175,23 +177,38 @@ public class TScanningAddTotalBean implements java.io.Serializable{
 		List<TScanningAddTotalBean> beans = new ArrayList<TScanningAddTotalBean>();
 		for (HashMap<String, Object> hashMap : list) {
 			TScanningAddTotalBean bean = new TScanningAddTotalBean();
-			bean.setID(hashMap.get("ID") != null ? hashMap.get("ID").toString() : null);
-			bean.setORDER_ID(hashMap.get("ORDER_ID") != null ? hashMap.get("ORDER_ID").toString() : null);
-			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get("PRODUCT_ID").toString() : null);
-			bean.setRESOURCE_ID(hashMap.get("RESOURCE_ID") != null ? hashMap.get("RESOURCE_ID").toString() : null);
-			bean.setWD_NAME(hashMap.get("WD_NAME") != null ? hashMap.get("WD_NAME").toString() : null);
-			bean.setWD_NO(hashMap.get("WD_NO") != null ? hashMap.get("WD_NO").toString() : null);
-			bean.setWD_ADD_TOTAL(hashMap.get("WD_ADD_TOTAL") != null ? Integer.parseInt(hashMap.get("WD_ADD_TOTAL").toString()) : null);
-			bean.setCURRENT_ADD_TOTAL(hashMap.get("CURRENT_ADD_TOTAL") != null ? Integer.parseInt(hashMap.get("CURRENT_ADD_TOTAL").toString()) : null);
-			bean.setTIME_SPERIOD(hashMap.get("TIME_SPERIOD") != null ? hashMap.get("TIME_SPERIOD").toString() : null);
-			bean.setSCANNING_WAY(hashMap.get("SCANNING_WAY") != null ? hashMap.get("SCANNING_WAY").toString() : null);
-			bean.setSTART_TIME(hashMap.get("START_TIME") != null ? Common.StrToDate(hashMap.get("START_TIME").toString()) : null);
-			bean.setEND_TIME(hashMap.get("END_TIME") != null ? Common.StrToDate(hashMap.get("END_TIME").toString()) : null);
-			bean.setCREATE_TIME(hashMap.get("CREATE_TIME") != null ? Common.StrToDate(hashMap.get("CREATE_TIME").toString()) : null);
-			bean.setUPDATE_TIME(hashMap.get("UPDATE_TIME") != null ? Common.StrToDate(hashMap.get("UPDATE_TIME").toString()) : null);
+			bean.setID(hashMap.get("ID") != null ? hashMap.get("ID").toString()
+					: null);
+			bean.setORDER_ID(hashMap.get("ORDER_ID") != null ? hashMap.get(
+					"ORDER_ID").toString() : null);
+			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get(
+					"PRODUCT_ID").toString() : null);
+			bean.setRESOURCE_ID(hashMap.get("RESOURCE_ID") != null ? hashMap
+					.get("RESOURCE_ID").toString() : null);
+			bean.setWD_NAME(hashMap.get("WD_NAME") != null ? hashMap.get(
+					"WD_NAME").toString() : null);
+			bean.setWD_NO(hashMap.get("WD_NO") != null ? hashMap.get("WD_NO")
+					.toString() : null);
+			bean.setWD_ADD_TOTAL(hashMap.get("WD_ADD_TOTAL") != null ? Integer
+					.parseInt(hashMap.get("WD_ADD_TOTAL").toString()) : null);
+			bean.setCURRENT_ADD_TOTAL(hashMap.get("CURRENT_ADD_TOTAL") != null ? Integer
+					.parseInt(hashMap.get("CURRENT_ADD_TOTAL").toString())
+					: null);
+			bean.setTIME_SPERIOD(hashMap.get("TIME_SPERIOD") != null ? hashMap
+					.get("TIME_SPERIOD").toString() : null);
+			bean.setSCANNING_WAY(hashMap.get("SCANNING_WAY") != null ? hashMap
+					.get("SCANNING_WAY").toString() : null);
+			bean.setSTART_TIME(hashMap.get("START_TIME") != null ? Common
+					.StrToDate(hashMap.get("START_TIME").toString()) : null);
+			bean.setEND_TIME(hashMap.get("END_TIME") != null ? Common
+					.StrToDate(hashMap.get("END_TIME").toString()) : null);
+			bean.setCREATE_TIME(hashMap.get("CREATE_TIME") != null ? Common
+					.StrToDate(hashMap.get("CREATE_TIME").toString()) : null);
+			bean.setUPDATE_TIME(hashMap.get("UPDATE_TIME") != null ? Common
+					.StrToDate(hashMap.get("UPDATE_TIME").toString()) : null);
 			beans.add(bean);
 		}
-		
+
 		return beans;
 	}
 

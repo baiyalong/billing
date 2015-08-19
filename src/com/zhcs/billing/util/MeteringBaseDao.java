@@ -10,26 +10,26 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MeteringBaseDao {
-	private static	LoggerUtil log=LoggerUtil.getLogger(MeteringBaseDao.class);
+	private static LoggerUtil log = LoggerUtil.getLogger(MeteringBaseDao.class);
 	private Connection con;
 	private ResultSet rs;
 	private Statement stm;
 	private PreparedStatement pstm;
-	
+
 	public Connection connection() {
 		try {
-			//if (con == null || con.isClosed()) {
-				con = DbUtil.getEstimateConnection();
-			//}
+			// if (con == null || con.isClosed()) {
+			con = DbUtil.getEstimateConnection();
+			// }
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return con;
 	}
+
 	/**
-	 * @author LiuJie
-	 * 获取Statement
+	 * @author LiuJie 获取Statement
 	 */
 	public Statement getStm() {
 		try {
@@ -40,29 +40,27 @@ public class MeteringBaseDao {
 		}
 		return stm;
 	}
-	
+
 	/**
-	 * @author LiuJie
-	 * 获取 PreparedStatement
+	 * @author LiuJie 获取 PreparedStatement
 	 */
 	public PreparedStatement getPstm(String sql) {
 		try {
-			 con = connection();
-	         pstm = con.prepareStatement(sql);
+			con = connection();
+			pstm = con.prepareStatement(sql);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
 		return pstm;
 	}
-	
+
 	/**
-	 * @author LiuJie
-	 * 获取 PreparedStatement
+	 * @author LiuJie 获取 PreparedStatement
 	 */
 	public PreparedStatement getPstmt(String sql) {
 		try {
-			 con = connection();
-	         pstm = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+			con = connection();
+			pstm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
@@ -71,19 +69,13 @@ public class MeteringBaseDao {
 
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @return ResultSet
-	 * 查询数据库，返回结果 
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao(); 
-	 * ResultSet rs=bd.getrs(sql); 
-	 * while(rs.next())
-	 * { 
-	 * 		int s1 = rs.getInt(1); 
-	 * }
+	 * @param sql
+	 * @return ResultSet 查询数据库，返回结果 其他类调用过程如下： BaseDao bd=new BaseDao();
+	 *         ResultSet rs=bd.getrs(sql); while(rs.next()) { int s1 =
+	 *         rs.getInt(1); }
 	 */
 	public ResultSet getrs(String sql) {
-		if (sql == null){
+		if (sql == null) {
 			sql = "";
 		}
 		try {
@@ -99,22 +91,14 @@ public class MeteringBaseDao {
 
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @return ResultSet
-	 * 查询数据库，返回结果
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * ResultSet rs=bd.getRs(sql); 
-	 * while(rs.next())
-	 * { 
-	 * 		int s1 = rs.getInt(1); 
-	 * 		int s2 = rs.getInt(2); 
-	 * 		int s3 = rs.getInt(3); 
-	 * }
-	 * @throws SQLException 
+	 * @param sql
+	 * @return ResultSet 查询数据库，返回结果 其他类调用过程如下： BaseDao bd=new BaseDao();
+	 *         ResultSet rs=bd.getRs(sql); while(rs.next()) { int s1 =
+	 *         rs.getInt(1); int s2 = rs.getInt(2); int s3 = rs.getInt(3); }
+	 * @throws SQLException
 	 */
 	public ResultSet getRs(String sql) throws SQLException {
-		if (sql == null){
+		if (sql == null) {
 			sql = "";
 		}
 		try {
@@ -127,17 +111,15 @@ public class MeteringBaseDao {
 		}
 		return rs;
 	}
+
 	/**
 	 * @author LiuJie
-	 * @param  sql    
-	 * @return List
-	 * 无条件查询
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * List list = bd.doSelect(sql);
+	 * @param sql
+	 * @return List 无条件查询 其他类调用过程如下： BaseDao bd=new BaseDao(); List list =
+	 *         bd.doSelect(sql);
 	 */
 	public List<HashMap<String, Object>> doSelect(String sql) {
-		if (sql == null){
+		if (sql == null) {
 			sql = "";
 		}
 		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
@@ -147,7 +129,7 @@ public class MeteringBaseDao {
 			while (rs.next()) {
 				HashMap<String, Object> temp = new HashMap<String, Object>();
 				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-					temp.put(rs.getMetaData().getColumnName(i),rs.getObject(i));
+					temp.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
 				}
 				list.add(temp);
 			}
@@ -158,18 +140,16 @@ public class MeteringBaseDao {
 		}
 		return list;
 	}
+
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @param  params 
-	 * @return List
-	 * 带条件查询
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * List list = bd.doSelect(sql,params);
+	 * @param sql
+	 * @param params
+	 * @return List 带条件查询 其他类调用过程如下： BaseDao bd=new BaseDao(); List list =
+	 *         bd.doSelect(sql,params);
 	 */
-	public List<HashMap<String, Object>> doSelect(String sql,List params) {
-		if (sql == null){
+	public List<HashMap<String, Object>> doSelect(String sql, List params) {
+		if (sql == null) {
 			sql = "";
 		}
 		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
@@ -186,17 +166,17 @@ public class MeteringBaseDao {
 			}
 			rs = pstm.executeQuery();
 			int metaDataCount = rs.getMetaData().getColumnCount();
-			log.info("BaseDao doSelect metaDataCount===="+metaDataCount);
+			log.info("BaseDao doSelect metaDataCount====" + metaDataCount);
 			while (rs.next()) {
 				HashMap<String, Object> temp = new HashMap<String, Object>();
 				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-//					log.info("BaseDao doSelect getColumnName===="+rs.getMetaData().getColumnName(i)
-//							+"getObject ==="+rs.getObject(i));
-					temp.put(rs.getMetaData().getColumnName(i),rs.getObject(i));
+					// log.info("BaseDao doSelect getColumnName===="+rs.getMetaData().getColumnName(i)
+					// +"getObject ==="+rs.getObject(i));
+					temp.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
 				}
 				list.add(temp);
 			}
-		} catch (Exception e) { 
+		} catch (Exception e) {
 			list = null;
 			e.printStackTrace();
 		} finally {
@@ -204,15 +184,16 @@ public class MeteringBaseDao {
 		}
 		return list;
 	}
-	public List<HashMap<String, Object>> doSelectOrders(String sql,List params) {
-		if (sql == null){
+
+	public List<HashMap<String, Object>> doSelectOrders(String sql, List params) {
+		if (sql == null) {
 			sql = "";
 		}
 		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 		try {
-			 con = DbUtil.getEstimateConnection();
-	         pstm = con.prepareStatement(sql);
-			/*pstm = getPstm(sql);*/
+			con = DbUtil.getEstimateConnection();
+			pstm = con.prepareStatement(sql);
+			/* pstm = getPstm(sql); */
 			if (params != null) {
 				for (int i = 0; i < params.size(); i++) {
 					pstm.setObject(i + 1, params.get(i));
@@ -224,17 +205,17 @@ public class MeteringBaseDao {
 			}
 			rs = pstm.executeQuery();
 			int metaDataCount = rs.getMetaData().getColumnCount();
-			log.info("BaseDao doSelect metaDataCount===="+metaDataCount);
+			log.info("BaseDao doSelect metaDataCount====" + metaDataCount);
 			while (rs.next()) {
 				HashMap<String, Object> temp = new HashMap<String, Object>();
 				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-//					log.info("BaseDao doSelect getColumnName===="+rs.getMetaData().getColumnName(i)
-//							+"getObject ==="+rs.getObject(i));
-					temp.put(rs.getMetaData().getColumnName(i),rs.getObject(i));
+					// log.info("BaseDao doSelect getColumnName===="+rs.getMetaData().getColumnName(i)
+					// +"getObject ==="+rs.getObject(i));
+					temp.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
 				}
 				list.add(temp);
 			}
-		} catch (Exception e) { 
+		} catch (Exception e) {
 			list = null;
 			e.printStackTrace();
 		} finally {
@@ -242,24 +223,19 @@ public class MeteringBaseDao {
 		}
 		return list;
 	}
+
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @return int
-	 * 无条件对数据库进行添加或更新操作。适合SQL的insert语句和update语句 
-	 * 返回一个int值，表示添加或更新的记录数。若返回为0,表示添加或更新失败 ！
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * int i=bd.saveOrUpdate(sql); 
-	 * if(i==0){ 
-	 * 		return xx;
-	 * } 
-	 *      return xx;
-	 * @throws SQLException 
+	 * @param sql
+	 * @return int 无条件对数据库进行添加或更新操作。适合SQL的insert语句和update语句
+	 *         返回一个int值，表示添加或更新的记录数。若返回为0,表示添加或更新失败 ！ 其他类调用过程如下： BaseDao bd=new
+	 *         BaseDao(); int i=bd.saveOrUpdate(sql); if(i==0){ return xx; }
+	 *         return xx;
+	 * @throws SQLException
 	 */
 	public int doSaveOrUpdate(String sql) throws SQLException {
 		int num = 0;
-		if (sql == null){
+		if (sql == null) {
 			sql = "";
 		}
 		try {
@@ -272,31 +248,25 @@ public class MeteringBaseDao {
 			e.printStackTrace();
 			num = 0;
 		} finally {
-			con.setAutoCommit(true); 
+			con.setAutoCommit(true);
 			closed();
 		}
 		return num;
 	}
-	
+
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @param  params
-	 * @return int
-	 * 带条件对数据库进行添加或更新操作。适合SQL的insert语句和update语句 
-	 * 返回一个int值，表示添加或更新的记录数。若返回为0,表示添加或更新失败 ！
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * int i=bd.saveOrUpdate(sql,params); 
-	 * if(i==0){ 
-	 * 		return xx;
-	 * } 
-	 *      return xx;
-	 * @throws SQLException 
+	 * @param sql
+	 * @param params
+	 * @return int 带条件对数据库进行添加或更新操作。适合SQL的insert语句和update语句
+	 *         返回一个int值，表示添加或更新的记录数。若返回为0,表示添加或更新失败 ！ 其他类调用过程如下： BaseDao bd=new
+	 *         BaseDao(); int i=bd.saveOrUpdate(sql,params); if(i==0){ return
+	 *         xx; } return xx;
+	 * @throws SQLException
 	 */
-	public int doSaveOrUpdate(String sql,List params) throws Exception {
+	public int doSaveOrUpdate(String sql, List params) throws Exception {
 		int num = 0;
-		if (sql == null){
+		if (sql == null) {
 			sql = "";
 		}
 		try {
@@ -323,22 +293,20 @@ public class MeteringBaseDao {
 		}
 		return num;
 	}
+
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @param  params
-	 * @return int
-	 * 带条件对数据库进行添加或更新操作。适合SQL的insert语句和update语句 
-	 * 返回一个int值，表示添加或更新的ID 
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * int i=bd.saveOrUpdate(sql,params); 
-	 * @throws SQLException 
+	 * @param sql
+	 * @param params
+	 * @return int 带条件对数据库进行添加或更新操作。适合SQL的insert语句和update语句 返回一个int值，表示添加或更新的ID
+	 *         其他类调用过程如下： BaseDao bd=new BaseDao(); int
+	 *         i=bd.saveOrUpdate(sql,params);
+	 * @throws SQLException
 	 */
-	public String doSaveOrUpdateID(String sql,List params) throws Exception {
-		//int num = 0;
+	public String doSaveOrUpdateID(String sql, List params) throws Exception {
+		// int num = 0;
 		String num = "0";
-		if (sql == null){
+		if (sql == null) {
 			sql = "";
 		}
 		try {
@@ -355,16 +323,15 @@ public class MeteringBaseDao {
 			}
 			pstm.executeUpdate();
 			rs = pstm.getGeneratedKeys();
-            if(rs.next())
-            {
-                //num = rs.getInt(1);
-            	num = rs.getString(1);
-            }
+			if (rs.next()) {
+				// num = rs.getInt(1);
+				num = rs.getString(1);
+			}
 			con.commit();
 		} catch (SQLException e) {
 			con.rollback();
 			e.printStackTrace();
-			//num = 0;
+			// num = 0;
 			num = "0";
 		} finally {
 			con.setAutoCommit(true);
@@ -375,17 +342,14 @@ public class MeteringBaseDao {
 
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @return boolean
-	 * 无条件删除数据库的中数据 
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * bd.delete(sql);
-	 * @throws SQLException 
+	 * @param sql
+	 * @return boolean 无条件删除数据库的中数据 其他类调用过程如下： BaseDao bd=new BaseDao();
+	 *         bd.delete(sql);
+	 * @throws SQLException
 	 */
 	public boolean doDelete(String sql) throws SQLException {
 		boolean ok;
-		if (sql == null){
+		if (sql == null) {
 			sql = "";
 		}
 		try {
@@ -402,21 +366,18 @@ public class MeteringBaseDao {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @param  params
-	 * @return boolean
-	 * 带条件删除数据库的中数据 
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * bd.delete(sql,params);
-	 * @throws SQLException 
+	 * @param sql
+	 * @param params
+	 * @return boolean 带条件删除数据库的中数据 其他类调用过程如下： BaseDao bd=new BaseDao();
+	 *         bd.delete(sql,params);
+	 * @throws SQLException
 	 */
-	public boolean doDelete(String sql,List params) throws Exception {
+	public boolean doDelete(String sql, List params) throws Exception {
 		boolean ok;
-		if (sql == null){
+		if (sql == null) {
 			sql = "";
 		}
 		try {
@@ -442,29 +403,24 @@ public class MeteringBaseDao {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * @author LiuJie
-	 * @param  sql
-	 * @return questions
-	 * 获得SQL语句中有多个参数
+	 * @param sql
+	 * @return questions 获得SQL语句中有多个参数
 	 */
 	private int questionCount(String sql) {
 		int questions = 0;
 		for (int i = 0; i < sql.length(); i++) {
-			if ("?".equals(sql.charAt(i)+"")){
+			if ("?".equals(sql.charAt(i) + "")) {
 				questions++;
 			}
 		}
 		return questions;
 	}
-	
+
 	/**
-	 * @author LiuJie
-	 * 断开数据库连接 
-	 * 其他类调用过程如下： 
-	 * BaseDao bd=new BaseDao();
-	 * bd.closed();
+	 * @author LiuJie 断开数据库连接 其他类调用过程如下： BaseDao bd=new BaseDao(); bd.closed();
 	 */
 	public void closed() {
 		if (rs != null) {
@@ -489,5 +445,5 @@ public class MeteringBaseDao {
 			}
 		}
 	}
-	
+
 }

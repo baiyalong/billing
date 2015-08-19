@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 /**
  * 产品资源信息表
  * 
@@ -44,14 +43,12 @@ public class ProductResourceBean implements java.io.Serializable {
 		IS_AUTO_SIZE = iS_AUTO_SIZE;
 	}
 
-
-
 	private List<ProductResourceBean> productResourceBeans = new ArrayList<ProductResourceBean>();// 子资源
 
 	private List<ProductItemBean> productItemBeans = new ArrayList<ProductItemBean>();// 纬度
 
-	private Integer dict;//节点类型
-	
+	private Integer dict;// 节点类型
+
 	public Integer getDict() {
 		return dict;
 	}
@@ -80,25 +77,24 @@ public class ProductResourceBean implements java.io.Serializable {
 	private String RESOURCE_ID;// 资源编号
 	private String PRODUCT_ID;// 产品编号
 	private String APP_ID;// 应用编号
-	private String RESOURCE_NAME;//资源名称
-	private String NODE_CODE;//节点编码
+	private String RESOURCE_NAME;// 资源名称
+	private String NODE_CODE;// 节点编码
 	private Integer NODE_TYPE;// 节点类型
 	private String C_RESOURCE_ID;// 模板资源编号
 	private String PARENT_ID;// 父资源编号
 	private Integer RESOURCE_STATUS;// 状态
-	private String DEFAULT_VALUE;//默认值
-	private String MAX_VALUE;//最大值
-	private String IS_AUTO_SIZE;//是否自行调整
-	
-	private String container_id;//计量中相对应的容器资源编号
-	private Integer rank;// 级别
-	private String MODEL_ID;//优惠模型
-	
-	private double MONEY;//一次批价
-	private double twoMONEY;//二次批价
-	private double threeMONEY;//三次批价
+	private String DEFAULT_VALUE;// 默认值
+	private String MAX_VALUE;// 最大值
+	private String IS_AUTO_SIZE;// 是否自行调整
 
-	
+	private String container_id;// 计量中相对应的容器资源编号
+	private Integer rank;// 级别
+	private String MODEL_ID;// 优惠模型
+
+	private double MONEY;// 一次批价
+	private double twoMONEY;// 二次批价
+	private double threeMONEY;// 三次批价
+
 	public String getMODEL_ID() {
 		return MODEL_ID;
 	}
@@ -106,7 +102,6 @@ public class ProductResourceBean implements java.io.Serializable {
 	public void setMODEL_ID(String mODEL_ID) {
 		MODEL_ID = mODEL_ID;
 	}
-
 
 	public String getRESOURCE_ID() {
 		return RESOURCE_ID;
@@ -156,7 +151,6 @@ public class ProductResourceBean implements java.io.Serializable {
 		NODE_TYPE = nODETYPE;
 	}
 
-
 	public String getPARENT_ID() {
 		return PARENT_ID;
 	}
@@ -172,7 +166,7 @@ public class ProductResourceBean implements java.io.Serializable {
 	public void setRESOURCE_STATUS(Integer rESOURCESTATUS) {
 		RESOURCE_STATUS = rESOURCESTATUS;
 	}
-	
+
 	public String getContainer_id() {
 		return container_id;
 	}
@@ -180,7 +174,6 @@ public class ProductResourceBean implements java.io.Serializable {
 	public void setContainer_id(String container_id) {
 		this.container_id = container_id;
 	}
-	
 
 	public Integer getRank() {
 		return rank;
@@ -251,18 +244,30 @@ public class ProductResourceBean implements java.io.Serializable {
 		List<ProductResourceBean> beans = new ArrayList<ProductResourceBean>();
 		for (HashMap<String, Object> hashMap : list) {
 			ProductResourceBean bean = new ProductResourceBean();
-			bean.setRESOURCE_ID(hashMap.get("RESOURCE_ID") != null ? hashMap.get("RESOURCE_ID").toString() : null);
-			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get("PRODUCT_ID").toString() : null);
-			bean.setAPP_ID(hashMap.get("APP_ID") != null ? hashMap.get("APP_ID").toString() : null);
-			bean.setRESOURCE_NAME(hashMap.get("RESOURCE_NAME") != null ? hashMap.get("RESOURCE_NAME").toString(): null);
-			bean.setNODE_CODE(hashMap.get("NODE_CODE") != null ? hashMap.get("NODE_CODE").toString(): null);
-			bean.setNODE_TYPE(hashMap.get("NODE_TYPE") != null ? Integer.parseInt(hashMap.get("NODE_TYPE").toString()) : null);
-			bean.setC_RESOURCE_ID(hashMap.get("C_RESOURCE_ID") != null ? hashMap.get("C_RESOURCE_ID").toString(): null);
-			bean.setPARENT_ID(hashMap.get("PARENT_ID") != null ? hashMap.get("PARENT_ID").toString() : null);
-			bean.setRESOURCE_STATUS(hashMap.get("RESOURCE_STATUS") != null ? Integer.parseInt(hashMap.get("RESOURCE_STATUS").toString()): null);
-			bean.setDEFAULT_VALUE(hashMap.get("DEFAULT_VALUE") != null ? hashMap.get("DEFAULT_VALUE").toString(): null);
-			bean.setMAX_VALUE(hashMap.get("MAX_VALUE") != null ? hashMap.get("MAX_VALUE").toString(): null);
-			bean.setIS_AUTO_SIZE(hashMap.get("IS_AUTO_SIZE") != null ? hashMap.get("IS_AUTO_SIZE").toString(): null);
+			bean.setRESOURCE_ID(hashMap.get("RESOURCE_ID") != null ? hashMap
+					.get("RESOURCE_ID").toString() : null);
+			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get(
+					"PRODUCT_ID").toString() : null);
+			bean.setAPP_ID(hashMap.get("APP_ID") != null ? hashMap
+					.get("APP_ID").toString() : null);
+			bean.setRESOURCE_NAME(hashMap.get("RESOURCE_NAME") != null ? hashMap
+					.get("RESOURCE_NAME").toString() : null);
+			bean.setNODE_CODE(hashMap.get("NODE_CODE") != null ? hashMap.get(
+					"NODE_CODE").toString() : null);
+			bean.setNODE_TYPE(hashMap.get("NODE_TYPE") != null ? Integer
+					.parseInt(hashMap.get("NODE_TYPE").toString()) : null);
+			bean.setC_RESOURCE_ID(hashMap.get("C_RESOURCE_ID") != null ? hashMap
+					.get("C_RESOURCE_ID").toString() : null);
+			bean.setPARENT_ID(hashMap.get("PARENT_ID") != null ? hashMap.get(
+					"PARENT_ID").toString() : null);
+			bean.setRESOURCE_STATUS(hashMap.get("RESOURCE_STATUS") != null ? Integer
+					.parseInt(hashMap.get("RESOURCE_STATUS").toString()) : null);
+			bean.setDEFAULT_VALUE(hashMap.get("DEFAULT_VALUE") != null ? hashMap
+					.get("DEFAULT_VALUE").toString() : null);
+			bean.setMAX_VALUE(hashMap.get("MAX_VALUE") != null ? hashMap.get(
+					"MAX_VALUE").toString() : null);
+			bean.setIS_AUTO_SIZE(hashMap.get("IS_AUTO_SIZE") != null ? hashMap
+					.get("IS_AUTO_SIZE").toString() : null);
 			beans.add(bean);
 		}
 		return beans;

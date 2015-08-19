@@ -225,7 +225,7 @@ public class RDetailRecordAbilityBean {
 	private String PRODUCT_ID;// 产品ID
 	private String SUBSCRIBER_ID;// 申购编号
 	private String ITEM_ID;// 维度编号
-	private String ITEM_CODE;//纬度编码 短彩等
+	private String ITEM_CODE;// 纬度编码 短彩等
 	private String PD_ID;// 套餐明细编号
 	private int REMAINING_AMOUNT;// 包次剩余量
 }

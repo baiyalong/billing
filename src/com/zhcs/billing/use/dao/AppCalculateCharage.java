@@ -148,11 +148,9 @@ public class AppCalculateCharage {
 									eventsList = GetBillingBaseDao()
 											.doSelect(
 													"select ID from T_USAGE_EVENTS_"
-															+ dayStr
-																	.substring(
-																			0,
-																			dayStr
-																					.length() - 2));
+															+ dayStr.substring(
+																	0,
+																	dayStr.length() - 2));
 								} catch (Exception e) {
 									log.error(e.getMessage());
 									log.info("不存在 详单表 要新建");
@@ -292,10 +290,10 @@ public class AppCalculateCharage {
 			try {
 				// 往扣费批价接口详细表(主键ID,接口之间的标识符,订单编号,操作类型,时间戳,批价金额（厘）,批价结果,对错误/异常的详细描述信息,创建时间)
 				// 插入数据
-				grantPriceForChargeDao.insertTGrantPriceForcharge(Common
-						.getStrSSS(), BillingID, OrderID, OperationType,
-						TimeStamp, total + "", flag, Description, Common
-								.getDateTimeSSS());
+				grantPriceForChargeDao.insertTGrantPriceForcharge(
+						Common.getStrSSS(), BillingID, OrderID, OperationType,
+						TimeStamp, total + "", flag, Description,
+						Common.getDateTimeSSS());
 			} catch (Exception e) {
 				flag = "false";
 				// Description += " 往扣费批价接口详细表插入数据失败";
@@ -356,8 +354,7 @@ public class AppCalculateCharage {
 		String customerId = ""; // 客户编号
 		int total = 0; // 所有产品的总额
 		// 当前日期
-		String time = new SimpleDateFormat("yyyyMM")
-				.format(new Date());
+		String time = new SimpleDateFormat("yyyyMM").format(new Date());
 		// 根据订单编号查询 订单表 得到客户编号
 		List<HashMap<String, Object>> custList = allRecords
 				.getCustomerIdByOrderId(OrderID);
@@ -377,16 +374,14 @@ public class AppCalculateCharage {
 				+ "配置月租费的维度如下：");
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
-				String itemName=list.get(i).get("ITEM_NAME")+"";
-				String itemCode=list.get(i).get("ITEM_CODE")+"";
-				String fixedValue=list.get(i).get("FIXED_VALUE")+"";
+				String itemName = list.get(i).get("ITEM_NAME") + "";
+				String itemCode = list.get(i).get("ITEM_CODE") + "";
+				String fixedValue = list.get(i).get("FIXED_VALUE") + "";
 				money += Double
 						.parseDouble(list.get(i).get("FIXED_VALUE") + "");
-				log.info("维度名称:" + itemName + ",维度编码："
-						+  itemCode+ ",维度的月租费："
+				log.info("维度名称:" + itemName + ",维度编码：" + itemCode + ",维度的月租费："
 						+ fixedValue);
-				logs.info("维度名称:" + itemName + ",维度编码："
-						+  itemCode+ ",维度的月租费："
+				logs.info("维度名称:" + itemName + ",维度编码：" + itemCode + ",维度的月租费："
 						+ fixedValue);
 			}
 		}
@@ -410,32 +405,33 @@ public class AppCalculateCharage {
 		}
 
 		// monthProductTotal.add(monthProduct);
-		int totalAvgPriceFormat=0;
+		int totalAvgPriceFormat = 0;
 		int days = Common.getThisMonthDays(); // 得到当前月的天数
-//		if (days != Integer.parseInt(Common.getNowDay())){
-			// 求日均 = 订单的总费用(月租) / 当月天数
-			double avgPrice = money / days;
-			// 费用转换
-			totalAvgPriceFormat = Integer.parseInt(new DecimalFormat("0").format(avgPrice));
-			logs.info("日均金额："+totalAvgPriceFormat);
-			log.info("日均金额："+totalAvgPriceFormat);
-//		}
+		// if (days != Integer.parseInt(Common.getNowDay())){
+		// 求日均 = 订单的总费用(月租) / 当月天数
+		double avgPrice = money / days;
+		// 费用转换
+		totalAvgPriceFormat = Integer.parseInt(new DecimalFormat("0")
+				.format(avgPrice));
+		logs.info("日均金额：" + totalAvgPriceFormat);
+		log.info("日均金额：" + totalAvgPriceFormat);
+		// }
 		// 如果当前时间是本月最后一天，就返回差额，如果不是就返回日均费用
 		if (days == Integer.parseInt(Common.getNowDay())) {
 			// 用所有订单的 日均费用和 *（当前月的天数-1）
 			double totalPrices = totalAvgPriceFormat * (days - 1);
-			logs.info("已扣费金额："+totalPrices);
-			log.info("已扣费金额："+totalPrices);
+			logs.info("已扣费金额：" + totalPrices);
+			log.info("已扣费金额：" + totalPrices);
 			// 差额 = (当前订单下所有产品的月租的总和)-(当前订单下所有产品的日均费用的总和*(当前月的天数-1))
 			double balancePrice = money - totalPrices;
 			total = Integer.parseInt(new DecimalFormat("0")
 					.format(balancePrice));
-			logs.info("本月最后一天所扣的费用为："+total+"(补齐的差额)");
-			log.info("本月最后一天所扣的费用为： "+total+"(补齐的差额)");
+			logs.info("本月最后一天所扣的费用为：" + total + "(补齐的差额)");
+			log.info("本月最后一天所扣的费用为： " + total + "(补齐的差额)");
 		} else {
 			total = totalAvgPriceFormat;
-			logs.info("订单总费用除以当月的天数得到每天所扣的日均值为："+total);
-			log.info("订单总费用除以当月的天数得到每天所扣的日均值为："+total);
+			logs.info("订单总费用除以当月的天数得到每天所扣的日均值为：" + total);
+			log.info("订单总费用除以当月的天数得到每天所扣的日均值为：" + total);
 		}
 
 		List<HashMap<String, Object>> usageMonthdlyList = usageEventsDao

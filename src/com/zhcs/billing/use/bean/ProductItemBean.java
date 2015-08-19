@@ -44,38 +44,36 @@ public class ProductItemBean implements java.io.Serializable {
 		REFERENCE_KEY = rEFERENCE_KEY;
 	}
 
+	private static final Integer dict = 16;// 节点类型
 
-
-	private static final Integer dict =16;//节点类型
-	
 	public static Integer getDict() {
 		return dict;
 	}
-	
+
 	private String ITEM_ID;// 维度编号
 	private String PRODUCT_ID;// 产品编号
 	private String RESOURCE_ID;// 资源编号
 	private String ITEM_CODE;// 维度编码
 	private String ITEM_NAME;// 维度名称
 	private String AP_ID;// AP编号
-	private String IS_AUTO_SIZE;//是否自行调整
+	private String IS_AUTO_SIZE;// 是否自行调整
 	private String DEFAULT_VALUE;// 默认值
-	private String MAX_VALUE;//最大值
+	private String MAX_VALUE;// 最大值
 	private Integer PRICE;// 单价
 	private String MEASUE_UNIT;// 计量单位
 	private Integer SEQUENCE_NO;// 排序号
 	private Integer DETAIL_STATUS;// 状态
 	private String DESCRIPTION;// 描述
 	private String REFERENCE_KEY;// 备用字段
-	
+
 	private int USAGE_AMOUNT;// 使用量
-	private int CURRENT_ADD_TOTAL;//单次扫描累积量
-	private double MONEY;//标准
-	private double twoMONEY;//二次批价
-	
-	private String PD_ID; //套餐详细编号
-	private Integer ITEM_AMOUNT;//包内剩余数量
-	private String SI_ID;//申购明细编号
+	private int CURRENT_ADD_TOTAL;// 单次扫描累积量
+	private double MONEY;// 标准
+	private double twoMONEY;// 二次批价
+
+	private String PD_ID; // 套餐详细编号
+	private Integer ITEM_AMOUNT;// 包内剩余数量
+	private String SI_ID;// 申购明细编号
 
 	public String getITEM_ID() {
 		return ITEM_ID;
@@ -188,6 +186,7 @@ public class ProductItemBean implements java.io.Serializable {
 	public void setMAX_VALUE(String mAX_VALUE) {
 		MAX_VALUE = mAX_VALUE;
 	}
+
 	public String getREFERENCE_KEY() {
 		return REFERENCE_KEY;
 	}
@@ -257,21 +256,36 @@ public class ProductItemBean implements java.io.Serializable {
 		List<ProductItemBean> beans = new ArrayList<ProductItemBean>();
 		for (HashMap<String, Object> hashMap : list) {
 			ProductItemBean bean = new ProductItemBean();
-			bean.setITEM_ID(hashMap.get("ITEM_ID") != null ? hashMap.get("ITEM_ID").toString() : null);
-			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get("PRODUCT_ID").toString() : null);
-			bean.setRESOURCE_ID(hashMap.get("RESOURCE_ID") != null ? hashMap.get("RESOURCE_ID").toString() : null);
-			bean.setITEM_CODE(hashMap.get("ITEM_CODE") != null ? hashMap.get("ITEM_CODE").toString() : null);
-			bean.setITEM_NAME(hashMap.get("ITEM_NAME") != null ? hashMap.get("ITEM_NAME").toString() : null);
-			bean.setAP_ID(hashMap.get("AP_ID") != null ? hashMap.get("AP_ID").toString() : null);
-			bean.setIS_AUTO_SIZE(hashMap.get("IS_AUTO_SIZE") != null ? hashMap.get("IS_AUTO_SIZE").toString() : null);
-			bean.setDEFAULT_VALUE(hashMap.get("DEFAULT_VALUE") != null ? hashMap.get("DEFAULT_VALUE").toString(): null);
-			bean.setMAX_VALUE(hashMap.get("MAX_VALUE") != null ? hashMap.get("MAX_VALUE").toString(): null);
-			bean.setPRICE(hashMap.get("PRICE") != null ? Integer.parseInt(hashMap.get("PRICE").toString()) : null);
-			bean.setMEASUE_UNIT(hashMap.get("MEASUE_UNIT") != null ? hashMap.get("MEASUE_UNIT").toString() : null);
-			bean.setSEQUENCE_NO(hashMap.get("SEQUENCE_NO") != null ? Integer.parseInt(hashMap.get("SEQUENCE_NO").toString()) : null);
-			bean.setDETAIL_STATUS(hashMap.get("DETAIL_STATUS") != null ? Integer.parseInt(hashMap.get("DETAIL_STATUS").toString()): null);
-			bean.setDESCRIPTION(hashMap.get("DESCRIPTION") != null ? hashMap.get("DESCRIPTION").toString() : null);
-			bean.setREFERENCE_KEY(hashMap.get("REFERENCE_KEY") != null ? hashMap.get("REFERENCE_KEY").toString(): null);
+			bean.setITEM_ID(hashMap.get("ITEM_ID") != null ? hashMap.get(
+					"ITEM_ID").toString() : null);
+			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get(
+					"PRODUCT_ID").toString() : null);
+			bean.setRESOURCE_ID(hashMap.get("RESOURCE_ID") != null ? hashMap
+					.get("RESOURCE_ID").toString() : null);
+			bean.setITEM_CODE(hashMap.get("ITEM_CODE") != null ? hashMap.get(
+					"ITEM_CODE").toString() : null);
+			bean.setITEM_NAME(hashMap.get("ITEM_NAME") != null ? hashMap.get(
+					"ITEM_NAME").toString() : null);
+			bean.setAP_ID(hashMap.get("AP_ID") != null ? hashMap.get("AP_ID")
+					.toString() : null);
+			bean.setIS_AUTO_SIZE(hashMap.get("IS_AUTO_SIZE") != null ? hashMap
+					.get("IS_AUTO_SIZE").toString() : null);
+			bean.setDEFAULT_VALUE(hashMap.get("DEFAULT_VALUE") != null ? hashMap
+					.get("DEFAULT_VALUE").toString() : null);
+			bean.setMAX_VALUE(hashMap.get("MAX_VALUE") != null ? hashMap.get(
+					"MAX_VALUE").toString() : null);
+			bean.setPRICE(hashMap.get("PRICE") != null ? Integer
+					.parseInt(hashMap.get("PRICE").toString()) : null);
+			bean.setMEASUE_UNIT(hashMap.get("MEASUE_UNIT") != null ? hashMap
+					.get("MEASUE_UNIT").toString() : null);
+			bean.setSEQUENCE_NO(hashMap.get("SEQUENCE_NO") != null ? Integer
+					.parseInt(hashMap.get("SEQUENCE_NO").toString()) : null);
+			bean.setDETAIL_STATUS(hashMap.get("DETAIL_STATUS") != null ? Integer
+					.parseInt(hashMap.get("DETAIL_STATUS").toString()) : null);
+			bean.setDESCRIPTION(hashMap.get("DESCRIPTION") != null ? hashMap
+					.get("DESCRIPTION").toString() : null);
+			bean.setREFERENCE_KEY(hashMap.get("REFERENCE_KEY") != null ? hashMap
+					.get("REFERENCE_KEY").toString() : null);
 			beans.add(bean);
 		}
 		return beans;

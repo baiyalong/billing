@@ -27,14 +27,13 @@ public class ProductInfoBean implements java.io.Serializable {
 	public ProductInfoBean(List<ProductResourceBean> productResourceBeans,
 			List<ProductItemBean> productItemBeans, String pRODUCT_ID,
 			String eXTEND_ID, String gROUP_ID, String pRODUCT_NAME,
-			Integer pRODUCT_CATEGORY, String pRODUCT_TYPE,
-			String pRODUCT_CODE, Integer pRODUCT_STATUS, String pROVINCE_CODE,
-			Date eFFECTIVE_DATE, Date eXPIRE_DATE, Date cREAT_TIME,
-			Date mODIFY_TIME, String nEED_CONSTRUCTION_FLAG,
-			String mULTIPLE_SUBSCRIBE_FLAG, String iMAGE_URL,
-			String dESCRIPTION, String iNDUSTRY_TYPE, String c_TEMPLATE_ID,
-			String pROCESS_ID, String rEFERENCE_KEY, String nEED_SYNC,
-			String sYNC_FLAG) {
+			Integer pRODUCT_CATEGORY, String pRODUCT_TYPE, String pRODUCT_CODE,
+			Integer pRODUCT_STATUS, String pROVINCE_CODE, Date eFFECTIVE_DATE,
+			Date eXPIRE_DATE, Date cREAT_TIME, Date mODIFY_TIME,
+			String nEED_CONSTRUCTION_FLAG, String mULTIPLE_SUBSCRIBE_FLAG,
+			String iMAGE_URL, String dESCRIPTION, String iNDUSTRY_TYPE,
+			String c_TEMPLATE_ID, String pROCESS_ID, String rEFERENCE_KEY,
+			String nEED_SYNC, String sYNC_FLAG) {
 		super();
 		this.productResourceBeans = productResourceBeans;
 		this.productItemBeans = productItemBeans;
@@ -110,15 +109,15 @@ public class ProductInfoBean implements java.io.Serializable {
 	private String EXTEND_ID;// 扩展编号
 	private String GROUP_ID;// 资源组标识
 	private String PROCESS_ID;// 流程编号
-	
+
 	private String NEED_SYNC;// 是否需要同步
 	private String SYNC_FLAG;// 同步标识
 
-//	private String DISCOUNT_ID;// 优惠策略规则编号
+	// private String DISCOUNT_ID;// 优惠策略规则编号
 	private double MONEY;// 一次批价
 	private double twoMONEY;// 二次批价
 	private double SUMARY;// 产品金额(三次批价金额)
-	
+
 	public double getSUMARY() {
 		return SUMARY;
 	}
@@ -331,33 +330,56 @@ public class ProductInfoBean implements java.io.Serializable {
 		return serialVersionUID;
 	}
 
-
 	public List<ProductInfoBean> changeToObject(
 			List<HashMap<String, Object>> list) {
 		List<ProductInfoBean> beans = new ArrayList<ProductInfoBean>();
 		for (HashMap<String, Object> hashMap : list) {
 			ProductInfoBean bean = new ProductInfoBean();
-			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get("PRODUCT_ID").toString() : null);
-			bean.setPRODUCT_NAME(hashMap.get("PRODUCT_NAME") != null ? hashMap.get("PRODUCT_NAME").toString() : null);
-			bean.setPRODUCT_CATEGORY(hashMap.get("PRODUCT_CATEGORY") != null ? Integer.parseInt(hashMap.get("PRODUCT_CATEGORY").toString()): null);
-			bean.setPRODUCT_TYPE(hashMap.get("PRODUCT_TYPE") != null ? hashMap.get("PRODUCT_TYPE").toString(): null);
-			bean.setPRODUCT_CODE(hashMap.get("PRODUCT_CODE") != null ? hashMap.get("PRODUCT_CODE").toString() : null);
-			bean.setPRODUCT_STATUS(hashMap.get("PRODUCT_STATUS") != null ? Integer.parseInt(hashMap.get("PRODUCT_STATUS").toString()): null);
-			bean.setPROVINCE_CODE(hashMap.get("PROVINCE_CODE") != null ? hashMap.get("PROVINCE_CODE").toString(): null);
-			bean.setEFFECTIVE_DATE(hashMap.get("EFFECTIVE_DATE") != null ? Common.StrToDate(hashMap.get("EFFECTIVE_DATE").toString()): null);
-			bean.setEXPIRE_DATE(hashMap.get("EXPIRE_DATE") != null ? Common.StrToDate(hashMap.get("EXPIRE_DATE").toString()): null);
-			bean.setCREAT_TIME(hashMap.get("CREAT_TIME") != null ? Common.StrToDate(hashMap.get("CREAT_TIME").toString()) : null);
-			bean.setMODIFY_TIME(hashMap.get("MODIFY_TIME") != null ? Common.StrToDate(hashMap.get("MODIFY_TIME").toString()): null);
-			bean.setNEED_CONSTRUCTION_FLAG(hashMap.get("NEED_CONSTRUCTION_FLAG") != null ? hashMap.get("NEED_CONSTRUCTION_FLAG").toString() : null);
-			bean.setMULTIPLE_SUBSCRIBE_FLAG(hashMap.get("MULTIPLE_SUBSCRIBE_FLAG") != null ? hashMap.get("MULTIPLE_SUBSCRIBE_FLAG").toString() : null);
-			bean.setIMAGE_URL(hashMap.get("IMAGE_URL") != null ? hashMap.get("IMAGE_URL").toString() : null);
-			bean.setDESCRIPTION(hashMap.get("DESCRIPTION") != null ? hashMap.get("DESCRIPTION").toString() : null);
-			bean.setINDUSTRY_TYPE(hashMap.get("INDUSTRY_TYPE") != null ? hashMap.get("INDUSTRY_TYPE").toString(): null);
-			bean.setC_TEMPLATE_ID(hashMap.get("C_TEMPLATE_ID") != null ? hashMap.get("C_TEMPLATE_ID").toString(): null);
-			bean.setREFERENCE_KEY(hashMap.get("REFERENCE_KEY") != null ? hashMap.get("REFERENCE_KEY").toString(): null);
-			bean.setEXTEND_ID(hashMap.get("EXTEND_ID") != null ? hashMap.get("EXTEND_ID").toString() : null);
-			bean.setGROUP_ID(hashMap.get("GROUP_ID") != null ? hashMap.get("GROUP_ID").toString() : null);
-			bean.setPROCESS_ID(hashMap.get("PROCESS_ID") != null ? hashMap.get("PROCESS_ID").toString() : null);
+			bean.setPRODUCT_ID(hashMap.get("PRODUCT_ID") != null ? hashMap.get(
+					"PRODUCT_ID").toString() : null);
+			bean.setPRODUCT_NAME(hashMap.get("PRODUCT_NAME") != null ? hashMap
+					.get("PRODUCT_NAME").toString() : null);
+			bean.setPRODUCT_CATEGORY(hashMap.get("PRODUCT_CATEGORY") != null ? Integer
+					.parseInt(hashMap.get("PRODUCT_CATEGORY").toString())
+					: null);
+			bean.setPRODUCT_TYPE(hashMap.get("PRODUCT_TYPE") != null ? hashMap
+					.get("PRODUCT_TYPE").toString() : null);
+			bean.setPRODUCT_CODE(hashMap.get("PRODUCT_CODE") != null ? hashMap
+					.get("PRODUCT_CODE").toString() : null);
+			bean.setPRODUCT_STATUS(hashMap.get("PRODUCT_STATUS") != null ? Integer
+					.parseInt(hashMap.get("PRODUCT_STATUS").toString()) : null);
+			bean.setPROVINCE_CODE(hashMap.get("PROVINCE_CODE") != null ? hashMap
+					.get("PROVINCE_CODE").toString() : null);
+			bean.setEFFECTIVE_DATE(hashMap.get("EFFECTIVE_DATE") != null ? Common
+					.StrToDate(hashMap.get("EFFECTIVE_DATE").toString()) : null);
+			bean.setEXPIRE_DATE(hashMap.get("EXPIRE_DATE") != null ? Common
+					.StrToDate(hashMap.get("EXPIRE_DATE").toString()) : null);
+			bean.setCREAT_TIME(hashMap.get("CREAT_TIME") != null ? Common
+					.StrToDate(hashMap.get("CREAT_TIME").toString()) : null);
+			bean.setMODIFY_TIME(hashMap.get("MODIFY_TIME") != null ? Common
+					.StrToDate(hashMap.get("MODIFY_TIME").toString()) : null);
+			bean.setNEED_CONSTRUCTION_FLAG(hashMap
+					.get("NEED_CONSTRUCTION_FLAG") != null ? hashMap.get(
+					"NEED_CONSTRUCTION_FLAG").toString() : null);
+			bean.setMULTIPLE_SUBSCRIBE_FLAG(hashMap
+					.get("MULTIPLE_SUBSCRIBE_FLAG") != null ? hashMap.get(
+					"MULTIPLE_SUBSCRIBE_FLAG").toString() : null);
+			bean.setIMAGE_URL(hashMap.get("IMAGE_URL") != null ? hashMap.get(
+					"IMAGE_URL").toString() : null);
+			bean.setDESCRIPTION(hashMap.get("DESCRIPTION") != null ? hashMap
+					.get("DESCRIPTION").toString() : null);
+			bean.setINDUSTRY_TYPE(hashMap.get("INDUSTRY_TYPE") != null ? hashMap
+					.get("INDUSTRY_TYPE").toString() : null);
+			bean.setC_TEMPLATE_ID(hashMap.get("C_TEMPLATE_ID") != null ? hashMap
+					.get("C_TEMPLATE_ID").toString() : null);
+			bean.setREFERENCE_KEY(hashMap.get("REFERENCE_KEY") != null ? hashMap
+					.get("REFERENCE_KEY").toString() : null);
+			bean.setEXTEND_ID(hashMap.get("EXTEND_ID") != null ? hashMap.get(
+					"EXTEND_ID").toString() : null);
+			bean.setGROUP_ID(hashMap.get("GROUP_ID") != null ? hashMap.get(
+					"GROUP_ID").toString() : null);
+			bean.setPROCESS_ID(hashMap.get("PROCESS_ID") != null ? hashMap.get(
+					"PROCESS_ID").toString() : null);
 			beans.add(bean);
 		}
 		return beans;
