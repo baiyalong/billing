@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import com.zhcs.billing.realTime.ThreadAbility;
 import com.zhcs.billing.threadPool.ThreadPool;
@@ -33,29 +34,22 @@ public class ttest {
 		// Timestamp tt = Timestamp.valueOf(CalendarUtil.today() + " 00:00:00");
 
 		// System.out.println(tt);
-		if (!(a() && b() && c())) {
-			err();
-		}
+		
+		Calendar t = Calendar.getInstance();
+		Date now = t.getTime();
+
+
+		t.add(Calendar.MINUTE, -5);
+		Date before = t.getTime();
+		
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM ddHH:mm:ss 'GMT' yyyy",Locale.US);
+		sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    
+		
+		System.out.println(sdf.format(before));
+		System.out.println(sdf.format(now));
+
 	}
 
-	public static boolean a() {
-		System.out.println("a");
-		return false;
-	}
-
-	public static boolean b() {
-		System.out.println("b");
-		return false;
-	}
-
-	public static boolean c() {
-		System.out.println("c");
-		return true;
-	}
-
-	public static boolean err() {
-		System.out.println("err");
-		return true;
-	}
-
+	
 }

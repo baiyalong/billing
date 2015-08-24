@@ -47,6 +47,9 @@ public class MainR {
 		 * 简单包月费用每天计费结算 Mouse.run(11); // TASK_ACCOUNT_CHECK 每天核账及总账
 		 * Mouse.run(13); // TASK_PARTNER_SETTLEMENT 合作伙伴按月结算
 		 */
+		
+		Mouse.run(8); // TASK_ENGINE 任务引擎
+		Mouse.run(15); // TASK_NET_FLOW 外网流量计费（每5分钟）
 
 		logUtil.info("===计费系统正常启动！===");
 		log.info("===计费系统正常启动！===");
